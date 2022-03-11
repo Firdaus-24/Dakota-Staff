@@ -1,0 +1,239 @@
+<!-- #include file='../connection.asp' -->
+<% 
+dim laporan, urut, area, pegawai, status, bulan, tahun, i, lbnl
+dim agen_cmd, agen
+dim karyawan_cmd, karyawan, karyawanb_cmd, karyawanb
+dim aktifarea, aktifarea_cmd, aktifareab, aktifareab_cmd
+dim jabatan_cmd, jabatan, mutasi_cmd, mutasi, jabatanb_cmd, jabatanb
+dim salary_cmd, salary, salary2, salary2_cmd
+dim orderby
+dim mutasike, mutasidari, jablama, jabnow, nip, nipkrynlama, nipkrynbaru
+
+laporan = Request.Form("laporan")
+urut = Request.Form("urutberdasarkan")
+tgla = Cdate(Request.Form("tgla"))
+tgle = Cdate(Request.Form("tgle"))
+
+'cek order by
+if urut = "nama" then
+    orderby = "ORDER BY HRD_M_Karyawan.Kry_nama ASC"
+elseIf urut = "nip" then
+    orderby = "ORDER BY HRD_M_Karyawan.Kry_Nip"
+else 
+    orderby = "ORDER BY HRD_M_Karyawan.Kry_nama ASC"
+end if 
+
+'mutasi
+set mutasi_cmd = Server.CreateObject("ADODB.Command")
+mutasi_cmd.ActiveConnection = MM_Cargo_string
+
+'mutasi query
+mutasi_cmd.commandText = "SELECT HRD_T_Mutasi.*, HRD_M_Karyawan.Kry_Nama, HRD_M_Karyawan.Kry_Nip, HRD_M_Karyawan.Kry_JmlTanggungan, HRD_M_karyawan.Kry_JmlAnak, HRD_M_Karyawan.Kry_SttSosial, HRD_M_Karyawan.Kry_NPWP, (GLB_M_Agen.Agen_Nama) AS arealama, (HRD_M_Jabatan.Jab_Nama) AS jabatanlama FROM HRD_T_Mutasi INNER JOIN HRD_M_Karyawan ON HRD_T_Mutasi.Mut_Nip = HRD_M_Karyawan.Kry_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_T_Mutasi.Mut_AsalAgenID = GLB_M_Agen.Agen_ID LEFT OUTER JOIN HRD_M_Jabatan ON HRD_T_Mutasi.Mut_AsalJabCode = HRD_M_Jabatan.jab_Code WHERE HRD_T_Mutasi.Mut_Status = '2' AND HRD_T_Mutasi.Mut_AktifYN = 'Y' AND HRD_T_Mutasi.Mut_Tanggal BETWEEN '"& tgla &"' AND '"& tgle &"' "& orderby &" "
+
+set mutasi = mutasi_cmd.execute
+
+ %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan</title>
+    <!-- #include file='../layout/header.asp' -->
+</head>
+<body>
+<div class="btn-group position-absolute top-0 end-0" role="group" aria-label="Basic outlined example">
+  <button type="button" class="btn btn-outline-primary btn-sm" onClick="window.open('exportXls-karyawanrotasi.asp?urut=<%=urut%>&tgla=<%=tgla%>&tgle=<%=tgle%>','_self')">EXPORT</button>
+</div>
+<div class='row'>
+    <div class='col text-sm-start mt-2 header' style="font-size: 12px; line-height:0.3;">
+        <p>PT.Dakota Buana Semesta</p>
+        <p>JL.WIBAWA MUKTI II NO.8 JATIASIH BEKASI</p>
+        <p>BEKASI</p>
+    </div>
+</div>
+<div class='row'>
+    <div class='col text-center judul'>
+        <label class="text-center">DAFTAR KARYAWAN ROTASI</label>
+    </div>
+</div>
+<div class='row'>
+    <div class='col text-center judul'>
+        <label class="text-center">PRIODER <%= tgla &" sampai "& tgle%></label>
+    </div>
+</div>
+<div class='row'>
+    <div class='col col-sm' style="font-size: 10px;">
+        <p>Tanggal Cetak <%= (Now) %></p>
+    </div>
+</div>
+<div class='row'>
+    <div class='col col-md' >
+        <table class="table table-bordered text-center" style="font-size: 10px;">
+            <thead class="text-sm-center">
+                <tr>
+                    <th rowspan="2" scope="col">Bulan</th>
+                    <th rowspan="2" scope="col">No</th>
+                    <th rowspan="2" scope="col">Nip</th>
+                    <th rowspan="2" scope="col">Nama</th>
+                    <th colspan="2" scope="col">Area Kerja</th>
+                    <th colspan="2" scope="col">Jabatan</th>
+                    <th colspan="2" scope="col">Upah Lama</th>
+                    <th colspan="2" scope="col">Upah Baru</th>
+                    <th colspan="2" scope="col">Selisih Perubahan</th>
+                    <th rowspan="2" scope="col">NPWP</th>
+                    <th colspan="2" scope="col">Status</th>
+                </tr>
+                <tr>
+                    <th>Lama</th>
+                    <th>Baru</th>
+                    <th>Lama</th>
+                    <th>Baru</th>
+                    <th>Gapok</th>
+                    <th>Tunjangan</th>
+                    <th>Gapok</th>
+                    <th>Tunjangan</th>
+                    <th>Gapok</th>
+                    <th>Tunjangan</th>
+                    <th>K/TK/HB</th>
+                    <th>Anak</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% 
+            'cek data tanggungan karyawan
+            data = 0 
+            tanggungan = 0 
+            anak = 0
+            hasiltanggungan = 0
+
+            gapok = 0
+            tunjangan = 0
+            gapok1 = 0
+            tunjangan1 = 0
+            selisihgaji = 0
+            selisihtunjangan = 0
+
+            i = 1 'for number asc
+            do until mutasi.eof
+            
+            nip = mutasi("Mut_Nip")
+            'cek asal demosi/mutasi
+            mutasidari = mutasi("Mut_AsalAgenID")
+            mutasike = mutasi("Mut_TujAgenID")
+            jablama = mutasi("Mut_AsalJabCode")
+            jabnow = mutasi("Mut_TujJabCode")
+
+            'cek bulan gajian lama dengan yang baru
+            bulan = month(mutasi("Mut_tanggal"))
+            tahun = year(mutasi("Mut_Tanggal"))
+
+            if bulan = 1 then
+                lbulan = 12
+                ltahun = tahun -1
+            else
+                lbulan = bulan - 1
+                ltahun = tahun 
+            end if
+
+                'cek status 
+                if not mutasi.eof then
+                    data = mutasi("Kry_SttSosial")
+                    tanggungan = mutasi("Kry_JmlTanggungan")
+                    anak = mutasi("Kry_jmlanak")
+                end if
+
+                hasiltanggungan = tanggungan + anak
+
+                if data = 0 then
+                    if hasiltanggungan = 0 then
+                        hasilstatus = "TK"
+                    end if
+                elseIf data = 1 then
+                    if hasiltanggungan = 0 then
+                        hasilstatus = "K"
+                    end if
+                else    
+                    if hasiltanggungan = 0 then
+                        hasilstatus = "HB"
+                    end if
+                end if
+
+
+                    'area lama
+                    mutasi_cmd.commandText = "SELECT agen_nama FROM GLB_M_agen WHERE Agen_ID = '"& mutasike &"'"
+                    ' Response.Write mutasi_cmd.commandText & "<br>"
+                    set areabaru = mutasi_cmd.execute
+
+                    if areabaru.eof = false then
+                        agenbaru = areabaru("agen_nama")
+                    else 
+                        agenbaru = ""
+                    end if
+
+                    'jabatan baru
+                    mutasi_cmd.commandText = "SELECT Jab_nama FROM HRD_M_Jabatan WHERE Jab_Code = '"& jabnow &"'"
+                    set jabatan = mutasi_cmd.execute
+
+                    'gaji lama
+                    mutasi_Cmd.commandText = "SELECT Sal_nip, Sal_gapok, Sal_TunjJbt FROM HRD_T_Salary_Convert WHERE Sal_Nip = '"& mutasi("Kry_nip") &"' and Month(Sal_StartDate) = '"& lbulan &"' AND Year(Sal_StartDate) = '"& ltahun &"' AND Sal_AktifYN = 'Y'"
+                    set lsalary = mutasi_Cmd.execute
+
+                    if not lsalary.eof then
+                        gapok1 = lsalary("Sal_Gapok")
+                        tunjangan1 = lsalary("Sal_TunjJbt")
+                    end if
+
+                    'gaji baru
+                    mutasi_cmd.commandText = "SELECT Sal_nip, Sal_gapok, Sal_TunjJbt FROM HRD_T_Salary_Convert WHERE Sal_Nip = '"& mutasi("Kry_Nip") &"' and Month(Sal_StartDate) = '"& bulan &"' AND Year(Sal_StartDate) = '"& tahun &"' AND Sal_AktifYN = 'Y'"
+                    set salary = mutasi_cmd.execute
+
+                    if not salary.eof then
+                        gapok = salary("Sal_gapok")
+                        tunjangan = salary("Sal_TunjJbt")
+                    end if
+
+                    'hitung selisih gaji lama dan baru
+                    selisihgaji = gapok - gapok1
+                    if selisihgaji < 0 then 
+                        selisihgaji = 0
+                    end if            
+
+                    selisihtunjangan = tunjangan - tunjangan1
+                    if selisihtunjangan < 0 then
+                        selisihtunjangan = 0
+                    end if
+             %>
+                <tr>
+                    <td><%=MonthName(month(mutasi("Mut_tanggal")))%></td>
+                    <td><%=i%></td>
+                    <td><%=mutasi("Kry_Nip")%></td>
+                    <td><%=mutasi("Kry_Nama")%></td>
+                    <td><%=mutasi("arealama")%></td>
+                    <td><%=agenbaru%></td>
+                    <td><%=mutasi("jabatanlama")%></td>
+                    <td><%=jabatan("Jab_Nama")%></td>
+                    <td><%=replace(formatCurrency(gapok1),"$","")%></td>
+                    <td><%=replace(formatCurrency(tunjangan1),"$","")%></td>
+                    <td><%=replace(formatCurrency(gapok),"$","")%></td>
+                    <td><%=replace(formatCurrency(tunjangan),"$","")%></td>
+                    <td><%=replace(formatCurrency(selisihgaji),"$","")%></td>
+                    <td><%=replace(formatCurrency(selisihtunjangan),"$","")%></td>
+                    <td><%=mutasi("Kry_NPWP")%></td>
+                    <td><%=hasilstatus%></td>
+                    <td><%=mutasi("Kry_JmlAnak")%></td>
+                </tr>
+            <% 
+            Response.flush
+            mutasi.movenext
+            i = i + 1
+            loop
+             %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- #include file='../layout/footer.asp' -->

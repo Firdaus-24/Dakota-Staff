@@ -1,0 +1,39 @@
+.content-table {
+  overflow: auto;
+}
+.exportAbsendetail {
+  width: 120px;
+}
+.exportAbsendetail button {
+  height: 40px;
+  margin-right: -50px;
+}
+@media screen and (max-width: 540px) {
+  .tableDetail {
+    font-size: 12px;
+  }
+  .tableDetail button {
+    width: 50px;
+    font-size: 12px;
+  }
+  /* table cuti */
+  .cari-izin {
+    font-size: 12px;
+  }
+  .cari-izin button {
+    width: 50px;
+    font-size: 12px;
+  }
+  /* absensi */
+  .form-floating {
+    margin-bottom: 10px;
+  }
+  .keteranganAbsen {
+    font-size: 12px;
+  }
+  .exportAbsendetail button {
+    max-width: 100px;
+    margin-right: 0;
+    font-size: 12px;
+  }
+}

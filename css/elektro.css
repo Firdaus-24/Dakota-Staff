@@ -1,0 +1,104 @@
+@font-face {
+            font-family: "Oswald";
+            src: url("../layout/font/Oswald.ttf");
+        }
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Oswald', sans-serif;
+}
+
+body{
+  /* background: #04023F; */
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* color:#fff; */
+}
+.card{
+  width: 300px;
+  height: 400px;
+  border: 1px solid #696969;
+  border-radius: 10px;
+  box-shadow: 0 0 10px purple;
+ /* background: url('https://wallpaperboat.com/wp-content/uploads/2019/07/CS-GO-14.jpg'); */
+  /* background-size: cover;
+  background-position: center; */
+  /* position: relative; */
+  cursor: pointer;
+  overflow: hidden;
+  transition: .3s linear;
+}
+
+.layer{
+  width: 100%;
+  height: 100%;
+  background: rgba(15,15,15,0.8);
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  position: absolute;
+  top: 85.5%;
+  transition: .3s ease-in-out .3s;
+  border-radius: 10px;
+}
+.layer p{
+  margin-top: 10px;
+  color: #cccc;
+}
+
+.layer h3{
+  position: absolute;
+  top: 4%;
+  transition: .3s linear .3s;
+}
+.layer p{
+  position: absolute;
+  top: 11%;
+  transition: .3s linear .3s;
+}
+
+.card:hover{
+  border: 0;
+}
+
+.card:hover .layer{
+  top: 0;
+}
+
+.card:hover .layer h3{
+  top: 69%;
+}
+
+.card:hover .layer p{
+  top: 75%;
+}
+
+.layer h3::after{
+  content: '';
+  width: 0%;
+  height: 2px;
+  background: magenta;
+  position: absolute;
+  top: 115%;
+  right: 100%;
+  transform: translate(-50%, -50%);
+  transition: .2s linear;
+  
+}
+
+.card:hover .layer h3::after{
+  width: 200%;
+  right: -200%;
+}
+@media only screen and (max-width: 600px) {
+  .labelHeader {
+    margin-top: 10rem;
+  }
+}

@@ -1,0 +1,76 @@
+* {
+  font-family: "Roboto", sans-serif;
+}
+
+.loader {
+  width: 10%;
+  /* height: 50px; */
+  margin: auto;
+  position: flex;
+  display: none;
+}
+
+.notiv-gagal {
+  width: 400px;
+  height: 200px;
+  padding: 20px;
+  background: #718ee3;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -120px;
+  margin-left: -220px;
+  border-radius: 20px;
+}
+
+.notiv-gagal span {
+  float: right;
+  margin-top: 40px;
+  color: white;
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
+.notiv-gagal img {
+  display: block;
+  width: 100px;
+  height: 120px;
+}
+
+.notiv-gagal a {
+  display: block;
+}
+
+/* done */
+.notiv-berhasil {
+  width: 400px;
+  height: 200px;
+  padding: 20px;
+  background: #718ee3;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -120px;
+  margin-left: -220px;
+  border-radius: 20px;
+}
+
+.notiv-berhasil span {
+  float: left;
+  margin-top: 40px;
+  color: white;
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
+.notiv-berhasil img {
+  display: inline-block;
+  width: 120px;
+  height: 130px;
+  margin-left: 20px;
+}
+
+.notiv-berhasil a {
+  display: block;
+  text-decoration: none;
+}
