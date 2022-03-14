@@ -64,12 +64,11 @@
 
  %>
 <!--judul-->
-<br>
 <section class="content-detail" name="content-detail" id="content-detail">
-		<h3 class="text-center">UPDATE DATA KARYAWAN</h3>
+		<h3 class="text-center mt-3 mb-3">UPDATE DATA KARYAWAN</h3>
     <div class="container mt-2 mb-3 px-4 bg-light data-detail" style="border-radius:5px;">
         <div class="row gx-5">
-		 <!-- start form -->
+		<!-- start form -->
 		<form action="update_add.asp?nip=<%= karyawan("Kry_NIP") %> " method="post" name="formKaryawan" onsubmit="return validasiubahkaryawan()">
             <div class="col-2 image top-50">    
                 <img  id="image" style="width:150px;" src="../../Foto/<%= trim(karyawan("Kry_NIP")) %>.JPG " onerror="this.onerror=null;this.src='../../Foto/NoPhotoAvailable.JPG';"> 
@@ -283,7 +282,7 @@
                             else
                                 Response.Write "" 
                             end if
-                             %>
+                            %>
                             </option>
                             <option value="0">Tetap</option>
                             <option value="1">Harian</option>
@@ -384,12 +383,11 @@
                     <option value="<%= karyawan("Kry_ActiveAgenID") %>"><%= aktifID %></option>
                     <% 
                     do until area.EOF
-                     %> 
+                    %> 
                         <option value="<%= area("agen_ID") %> "><%= area("agen_nama") %> </option>
                     <% area.movenext 
                     loop%> 
                 </select>
-                   
                 <% 
 
                     jabatan_cmd.commandText = "SELECT Jab_Code, Jab_Nama FROM HRD_M_Jabatan WHERE Jab_AktifYN = 'Y' ORDER BY Jab_Nama ASC"
@@ -418,26 +416,23 @@
                     </select>
                 <label>Jenjang</label>
 					<select class="form-select" aria-label="Default select example" name="jenjang" id="Jenjang">
-					 <% 
+					<% 
                         if len(karyawan("Kry_JJID")) >= 1 then
 						jenjang_cmd.commandText = "SELECT JJ_ID, JJ_Nama FROM HRD_M_Jenjang WHERE JJ_ID = "& karyawan("Kry_JJID") &""
 						response.write jenjang_cmd.commandText & "<BR>"
                         set jenjang = jenjang_cmd.execute
-                       
 
                         if jenjang.eof = false then
-                          
-                     %> 
+                    %> 
 						<option  value="<%= jenjang("JJ_ID") %>"><%= jenjang("JJ_Nama") %></option>
-					 <% end if 
+					<% end if 
 						end if
-					 %>
+					%>
 						
 						<% 
 						SETjenjang_cmd.commandText = "SELECT JJ_ID, JJ_Nama FROM HRD_M_Jenjang WHERE JJ_AktifYN = 'Y' ORDER BY JJ_Nama ASC"
 						'response.write SETjenjang_cmd.commandText & "<BR>"
                         set setjenjang = SETjenjang_cmd.execute
-						 
 						
 						do while not setjenjang.EOF %> 
                             <option value="<%= setjenjang("JJ_ID") %> "><%= setjenjang("JJ_Nama") %> </option>
@@ -461,7 +456,7 @@
                             namediv = ""
                         end if
                     %> 
-                     <select class="form-select" aria-label="Default select example" name="divisi" id="divisi">
+                    <select class="form-select" aria-label="Default select example" name="divisi" id="divisi">
                             <option value="<%=iddiv%>"><%=namediv%></option>
                         <% do until divisi.EOF %> 
                         <option value="<%= divisi("Div_Code") %> "><%= divisi("Div_Nama") %> </option>
@@ -513,10 +508,19 @@
             <div class="col-lg-4">
                 <div class="row">
                     <div class="col">
+                        <label>No SIM</label>
+                            <input type="number" name="nsim" class="form-control" id="nsim" value="<%= karyawan("Kry_NoSIM") %>">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>Berlaku SIM</label>
+                            <input type="text" name="berlakuSIM" class="form-control" id="berlakuSIM" <% if karyawan("Kry_SimValidDate") = "1/1/1900" then %> value="" <% else %> value="<%= karyawan("Kry_SIMValidDate") %>" <% end if %> onfocus="return ChangeDateSim()">
+                    </div>
+                    <div class="col">
                         <label>Jenis SIM</label>
                         <select class="form-select" aria-label="Default select example" name="jsim" id="jsim" value="<%=  karyawan("Kry_JnsSIM") %> ">
-                            
-								 <% if karyawan("Kry_JnsSIM") = "0" then%> 
+								<% if karyawan("Kry_JnsSIM") = "0" then%> 
 									<option value="0">A</option>
 								<% elseIf karyawan("Kry_JnsSIM") = "1" then %> 
 									<option value="1">B1</option>
@@ -541,14 +545,28 @@
                         </select>
                     </div>
                 </div>
+            </div>
+            <div class="col">
                 <div class="row">
                     <div class="col">
-                        <label>Berlaku SIM</label>
-                            <input type="text" name="berlakuSIM" class="form-control" id="berlakuSIM" <% if karyawan("Kry_SimValidDate") = "1/1/1900" then %> value="" <% else %> value="<%= karyawan("Kry_SIMValidDate") %>" <% end if %> onfocus="return ChangeDateSim()">
+                        <label>Jenis Vaksin</label>
+                        <input type="text" name="vaksin" class="form-control" id="vaksin" maxlength="100" <%if not karyawan.eof then%> value="<%= karyawan("Kry_JenisVaksin") %>" <%end if%>>
                     </div>
-                    <div class="col">
-                        <label>No SIM</label>
-                            <input type="number" name="nsim" class="form-control" id="nsim" value="<%= karyawan("Kry_NoSIM") %>">
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label>Golongan Darah</label>
+                        <select class="form-select" aria-label="Default select example" name="goldarah" id="goldarah">
+                            <%if karyawan.eof then %>
+                                <option value="">Pilih</option>
+                            <%else%>
+                                <option value="<%= karyawan("Kry_golDarah") %>"><%=karyawan("Kry_golDarah")%></option>
+                            <%end if%>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="AB">AB</option>
+                            <option value="O">O</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -557,7 +575,7 @@
             <div class="col-lg-3 mt-3 " >
                 <button type="submit" name="submit" id="submit" onclick="return confirm('Yakin untuk diupdate??')"class="btn btn-primary submit">Update</button>
 		</form>
-		 <!-- end form -->
+		<!-- end form -->
                 <button type="button" onclick="window.location.href='../index.asp?nip=<%=nip%>'" class="btn btn-danger kembali">Kembali</button>
             </div>
         </div>

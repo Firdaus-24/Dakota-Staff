@@ -50,6 +50,8 @@ nsim = trim(request.form("nsim"))
 kesehatan = trim(request.form("kesehatan"))
 berlakusim = trim(request.form("berlakuSIM"))
 bpjskes = trim(request.form("bpjskes"))
+vaksin = trim(request.form("vaksin"))
+goldarah = trim(request.form("goldarah"))
 
 
 'cek nip
@@ -77,7 +79,7 @@ tambah_cmd.commandText = "SELECT * FROM HRD_M_Karyawan WHERE Kry_Nama = '"& nama
 set tambah = tambah_cmd.execute
 
 if tambah.eof then
-    tambah_cmd.commandText = "exec sp_AddHrd_M_Karyawan_web '"& ppegawai &"','"& divisi &"','"& subcabang &"','"& subcabang &"','"& jabatan &"','',"& jenjang &",'"& nama &"','"& alamat &"','"& kelurahan &"','"& kota &"','"& pos &"','"& tlp1 &"','"& tlp2 &"','','"& email &"','"& jkelamin &"','"& tmpt &"','"& tglL &"',"& ssosial &","& janak &","& saudara &","& anakke &","& agama &","& pendidikan &",'"& ktp &"','','','"& nsim &"','"& jsim &"','','','',"& tanggungan &","& jcuti &",'"& tglmasuk &"','','"& tglagaji &"','', '','','','','',"& bank &",'"& norek &"','',"& spegawai &",'','','','','Y','"& session("username") &"','','"& npwp &"','"&tenagakerja &"','','"& bpjs &"','"& kesehatan &"','"& bpjskes &"',"& pegawai &",'"& noJP &"','','','','','','','',''"
+    tambah_cmd.commandText = "exec sp_AddHrd_M_Karyawan_web '"& ppegawai &"','"& divisi &"','"& subcabang &"','"& subcabang &"','"& jabatan &"','',"& jenjang &",'"& nama &"','"& alamat &"','"& kelurahan &"','"& kota &"','"& pos &"','"& tlp1 &"','"& tlp2 &"','','"& email &"','"& jkelamin &"','"& tmpt &"','"& tglL &"',"& ssosial &","& janak &","& saudara &","& anakke &","& agama &","& pendidikan &",'"& ktp &"','','','"& nsim &"','"& jsim &"','','','',"& tanggungan &","& jcuti &",'"& tglmasuk &"','','"& tglagaji &"','', '','','','','',"& bank &",'"& norek &"','',"& spegawai &",'','','','','Y','"& session("username") &"','','"& npwp &"','"&tenagakerja &"','','"& bpjs &"','"& kesehatan &"','"& bpjskes &"',"& pegawai &",'"& noJP &"','','','','','','','','','"& goldarah &"','"& vaksin &"'"
     ' Response.Write tambah.commandText
     tambah_cmd.execute
 else 

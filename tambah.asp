@@ -42,89 +42,89 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
     <title>Tambah Karyawan</title>
     <!--#include file="layout/header.asp"-->
     <style> 
-    .container .display-1
-    {
-        font-size: 50px;
-        font-weight: 500;
-        display: block;
-       
-    }
-    .container .row .box-panel
-    {
-        width:100%;
-        height:auto;
-        background-color:linear-gradient(to right, #000046, #1cb5e0);
-        position:relative;
-    }
+        .container .display-1
+        {
+            font-size: 50px;
+            font-weight: 500;
+            display: block;
+        
+        }
+        .container .row .box-panel
+        {
+            width:100%;
+            height:auto;
+            background-color:linear-gradient(to right, #000046, #1cb5e0);
+            position:relative;
+        }
     </style>
     <script>
-    function validasitambahkaryawan() {
-        // validasi
-        // cari data
-        var nama = document.forms["formKaryawan"]["nama"].value;
-        var alamat = document.forms["formKaryawan"]["alamat"].value;
-        var kelurahan = document.forms["formKaryawan"]["kelurahan"].value;
-        var email = document.forms["formKaryawan"]["email"].value;
-        var tlp1 = document.forms["formKaryawan"]["tlp1"].value;
-        var tlp2 = document.forms["formKaryawan"]["tlp2"].value;
-        var kota = document.forms["formKaryawan"]["kota"].value;
-        var Pos = document.forms["formKaryawan"]["pos"].value;
-        var tmpt = document.forms["formKaryawan"]["tempat"].value;
-        var norek = document.forms["formKaryawan"]["norek"].value;
-        var tenagakerja = document.forms["formKaryawan"]["tenagakerja"].value;
-        var ktp = document.forms["formKaryawan"]["ktp"].value;
-        var npwp = document.forms["formKaryawan"]["npwp"].value;
-        var nsim = document.forms["formKaryawan"]["nsim"].value;
-        var kesehatan = document.forms["formKaryawan"]["kesehatan"].value;
-    // kodisikan
-    if (nama.length > 30) {
-        alert("Nama MAXIMAL karakter 30");
-        return false;
-    } else if (alamat.length > 50) {
-        alert("Alamat MAXIMAL alamat 50 karakter");
-        return false;
-    } else if (kelurahan.length > 50) {
-        alert("Kelurahan MAXIMAL 50 karakter");
-        return false;
-    } else if (email.length > 30) {
-        alert("Email MAXIMAL 30 karakter");
-        return false;
-    } else if (tlp1.length > 15) {
-        alert("Telphone MAXIMAL 15 karakter");
-        return false;
-    } else if (tlp2.length > 15) {
-        alert("Telphone MAXIMAL 15 karakter");
-        return false;
-    } else if (kota.length > 30) {
-        alert("Kota MAXIMAL kota 30 karakter");
-        return false;
-    } else if (Pos.length > 5) {
-        alert("Pos MAXIMAL kode Pos 5 karakter");
-        return false;
-    } else if (tmpt.length > 30) {
-        alert("Tempat lahir MAXIMAL pos 30 karakter");
-        return false;
-    } else if (norek.length > 20) {
-        alert("No.Rekening MAXIMAL pos 20 karakter");
-        return false;
-    } else if (tenagakerja.length > 20) {
-        alert("Data BPJS tenaga kerja harus angka kk dan maximal datapun cuma 20 karakter");
-        return false;
-    } else if (ktp.length > 30) {
-        alert("Data nomor KTP harus angka kk dan maximal datapun cuma 30 karakter");
-        return false;
-    } else if (npwp.length > 30) {
-        alert("Data harus angka kk dan maximal datapun cuma 30 karakter");
-        return false;
-    } else if (nsim.length > 30) {
-        alert("maximal nomor sim 30 karakter");
-        return false;
-    } else if (kesehatan.length > 20) {
-        alert("MAXIMAL 20 karakter ya!!");
-        return false;
-    }
+        function validasitambahkaryawan() {
+            // validasi
+            // cari data
+            var nama = document.forms["formKaryawan"]["nama"].value;
+            var alamat = document.forms["formKaryawan"]["alamat"].value;
+            var kelurahan = document.forms["formKaryawan"]["kelurahan"].value;
+            var email = document.forms["formKaryawan"]["email"].value;
+            var tlp1 = document.forms["formKaryawan"]["tlp1"].value;
+            var tlp2 = document.forms["formKaryawan"]["tlp2"].value;
+            var kota = document.forms["formKaryawan"]["kota"].value;
+            var Pos = document.forms["formKaryawan"]["pos"].value;
+            var tmpt = document.forms["formKaryawan"]["tempat"].value;
+            var norek = document.forms["formKaryawan"]["norek"].value;
+            var tenagakerja = document.forms["formKaryawan"]["tenagakerja"].value;
+            var ktp = document.forms["formKaryawan"]["ktp"].value;
+            var npwp = document.forms["formKaryawan"]["npwp"].value;
+            var nsim = document.forms["formKaryawan"]["nsim"].value;
+            var kesehatan = document.forms["formKaryawan"]["kesehatan"].value;
+            // kodisikan
+            if (nama.length > 30) {
+                alert("Nama MAXIMAL karakter 30");
+                return false;
+            } else if (alamat.length > 50) {
+                alert("Alamat MAXIMAL alamat 50 karakter");
+                return false;
+            } else if (kelurahan.length > 50) {
+                alert("Kelurahan MAXIMAL 50 karakter");
+                return false;
+            } else if (email.length > 30) {
+                alert("Email MAXIMAL 30 karakter");
+                return false;
+            } else if (tlp1.length > 15) {
+                alert("Telphone MAXIMAL 15 karakter");
+                return false;
+            } else if (tlp2.length > 15) {
+                alert("Telphone MAXIMAL 15 karakter");
+                return false;
+            } else if (kota.length > 30) {
+                alert("Kota MAXIMAL kota 30 karakter");
+                return false;
+            } else if (Pos.length > 5) {
+                alert("Pos MAXIMAL kode Pos 5 karakter");
+                return false;
+            } else if (tmpt.length > 30) {
+                alert("Tempat lahir MAXIMAL pos 30 karakter");
+                return false;
+            } else if (norek.length > 20) {
+                alert("No.Rekening MAXIMAL pos 20 karakter");
+                return false;
+            } else if (tenagakerja.length > 20) {
+                alert("Data BPJS tenaga kerja harus angka kk dan maximal datapun cuma 20 karakter");
+                return false;
+            } else if (ktp.length > 30) {
+                alert("Data nomor KTP harus angka kk dan maximal datapun cuma 30 karakter");
+                return false;
+            } else if (npwp.length > 30) {
+                alert("Data harus angka kk dan maximal datapun cuma 30 karakter");
+                return false;
+            } else if (nsim.length > 30) {
+                alert("maximal nomor sim 30 karakter");
+                return false;
+            } else if (kesehatan.length > 20) {
+                alert("MAXIMAL 20 karakter ya!!");
+                return false;
+            }
 
-}
+        }
     </script>
 </head>
 <body>
@@ -135,12 +135,12 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
 		<h3 class="text-center">TAMBAH DATA KARYAWAN</h3>
     <div class="container mt-2 mb-3 px-4 bg-light data-detail" style="border-radius:5px;">
         <div class="row gx-5">
-		 <!-- start form -->
+		<!-- start form -->
 		<form action="tambah_kar.asp" method="post" name="formKaryawan" id="formKaryawan" onsubmit="return validasitambahkaryawan()">
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-sm-6 mt-2">
-                         <!-- nip hidden -->
+                        <!-- nip hidden -->
                         <label>Nip</label>
                             <input type="text" name="nip" class="form-control" id="nip" readonly>
                         <label>Nama</label>
@@ -232,7 +232,7 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
                 <div class="row">
                     <div class="col-md-8">
                         <label>Jenis Kelamin</label>
-                           <select class="form-select" aria-label="Default select example" name="jkelamin" id="jkelammin" required>
+                        <select class="form-select" aria-label="Default select example" name="jkelamin" id="jkelammin" required>
                                 <option value="">pilih</option>
                                 <option value="P">Laki-Laki</option>
                                 <option value="W">Wanita</option>
@@ -447,9 +447,19 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
             <div class="col-lg-4">
                 <div class="row">
                     <div class="col">
+                        <label>No SIM</label>
+                        <input type="number" name="nsim" class="form-control" id="nsim">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>Berlaku SIM</label>
+                            <input type="date" name="berlakuSIM" class="form-control" id="berlakuSIM">
+                    </div>
+                    <div class="col">
                         <label>Jenis SIM</label>
                         <select class="form-select" aria-label="Default select example" name="jsim" id="jsim">
-                            <option value="">pilih</option>
+                            <option value="">Pilih</option>
                             <option value="0">A</option>
                             <option value="1">B1</option>
 							<option value="2">B1 UMUM</option>
@@ -459,24 +469,33 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
                         </select>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <label>Berlaku SIM</label>
-                            <input type="date" name="berlakuSIM" class="form-control" id="berlakuSIM">
-                    </div>
-                    <div class="col">
-                        <label>No SIM</label>
-                            <input type="number" name="nsim" class="form-control" id="nsim">
-                    </div>
+            </div>
+            <div class="col">
+            <div class="row">
+                <div class="col">
+                    <label>Jenis Vaksin</label>
+                    <input type="text" name="vaksin" class="form-control" id="vaksin" maxlength="100">
                 </div>
             </div>
-            
+            <div class="row">
+                <div class="col-6">
+                    <label>Golongan Darah</label>
+                    <select class="form-select" aria-label="Default select example" name="goldarah" id="goldarah">
+                        <option value="">Pilih</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="AB">AB</option>
+                        <option value="O">O</option>
+                    </select>
+                </div>
+            </div>
+        </div>
         </div>  
         <div class="row mt-3 p-2 ">  
             <div class="col-lg-3 mt-3 " >
                 <button type="submit" name="submit" id="submit" value="Submit" class="btn btn-primary submit" onclick="retrun confirm('Data yang anda masukan sudah benar??')" >Tambah</button>
 		</form>
-		 <!-- end form -->
+		<!-- end form -->
                 <button type="button" onclick="window.location.href='index.asp'" class="btn btn-danger kembali">Kembali</button>
             </div>
         </div>
