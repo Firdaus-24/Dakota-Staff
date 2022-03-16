@@ -48,7 +48,7 @@ set karyawan = karyawan.execute
                     <% 
                     karyawan.movenext
                     loop
-                     %>
+                    %>
                 </tbody>
             </table>
         </div>

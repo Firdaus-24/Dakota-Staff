@@ -1,20 +1,20 @@
 <!-- #include file='../connection.asp' -->
 <% 
-set mutasi = Server.CreateObject("ADODB.Command")
-mutasi.ActiveConnection = MM_cargo_STRING
+    set mutasi = Server.CreateObject("ADODB.Command")
+    mutasi.ActiveConnection = MM_cargo_STRING
 
-mutasi.commandText = "SELECT Jab_Nama,Jab_code FROM HRD_M_Jabatan WHERE (ISNULL(Jab_Code, '') <>'') AND Jab_AktifYN = 'Y' ORDER BY Jab_Nama ASC"
-set jabatan = mutasi.execute
+    mutasi.commandText = "SELECT Jab_Nama,Jab_code FROM HRD_M_Jabatan WHERE (ISNULL(Jab_Code, '') <>'') AND Jab_AktifYN = 'Y' ORDER BY Jab_Nama ASC"
+    set jabatan = mutasi.execute
 
-mutasi.commandText = "SELECT JJ_ID, JJ_Nama FROM HRD_M_Jenjang WHERE (ISNULL(JJ_ID, '') <>'') AND JJ_AktifYN = 'Y' ORDER BY JJ_Nama ASC"
-set jenjang = mutasi.execute
+    mutasi.commandText = "SELECT JJ_ID, JJ_Nama FROM HRD_M_Jenjang WHERE (ISNULL(JJ_ID, '') <>'') AND JJ_AktifYN = 'Y' ORDER BY JJ_Nama ASC"
+    set jenjang = mutasi.execute
 
-mutasi.commandText = "SELECT Div_Code, Div_Nama FROM HRD_M_Divisi WHERE (ISNULL(Div_Code, '') <>'') AND Div_AktifYN = 'Y' ORDER BY Div_Nama ASC"
-set divisi = mutasi.execute
+    mutasi.commandText = "SELECT Div_Code, Div_Nama FROM HRD_M_Divisi WHERE (ISNULL(Div_Code, '') <>'') AND Div_AktifYN = 'Y' ORDER BY Div_Nama ASC"
+    set divisi = mutasi.execute
 
-mutasi.commandText = "SELECT Agen_ID, Agen_Nama FROM GLB_M_Agen WHERE (ISNULL(Agen_ID, '') <>'') AND Agen_AktifYN = 'Y' AND Agen_Nama NOT LIKE '%XXX%' ORDER BY Agen_Nama ASC"
-set agen = mutasi.execute
- %>
+    mutasi.commandText = "SELECT Agen_ID, Agen_Nama FROM GLB_M_Agen WHERE (ISNULL(Agen_ID, '') <>'') AND Agen_AktifYN = 'Y' AND Agen_Nama NOT LIKE '%XXX%' ORDER BY Agen_Nama ASC"
+    set agen = mutasi.execute
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,79 +26,79 @@ set agen = mutasi.execute
     <!-- #include file='../layout/header.asp' -->
     <script src="<%= url %>/js/jquery-3.5.1.min.js"></script> 
     <script>
-    $(document).ready(function () {
-        $('#nama').on('keyup', function () {
-            let nama = $("#nama").val().replace('%20',' ');
-            // if (nama != ''){
-                $(".openName").show();
-                $( ".openName" ).load( "cariNama.asp?key=" + nama);
-            // }
+        $(document).ready(function () {
+            $('#nama').on('keyup', function () {
+                let nama = $("#nama").val().replace('%20',' ');
+                // if (nama != ''){
+                    $(".openName").show();
+                    $( ".openName" ).load( "cariNama.asp?key=" + nama);
+                // }
+            });
         });
-    });
-    function getName(nip,nama,tglmasuk,agen,jj,jab,div,agenid,jjid,jabid,divcode){
-        $(".openName").hide();
-        $("#tglmasuk").val(tglmasuk);
-        $("#nama").val(nama);
-        $("#nip").val(nip);
-        $("#jablama").val(jabid);
-        $("#jjlama").val(jjid);
-        $("#divlama").val(divcode);
-        $("#agenlama").val(agenid);
-        $("#labeljab").val(jab);
-        $("#labeljj").val(jj);
-        $("#labeldiv").val(div);
-        $("#labelAgen").val(agen);
-    }
-    function validateRadio (radios)
-    {
-        for (i = 0; i < radios.length; ++ i)
-        {
-            if (radios [i].checked) return true;
+        function getName(nip,nama,tglmasuk,agen,jj,jab,div,agenid,jjid,jabid,divcode){
+            $(".openName").hide();
+            $("#tglmasuk").val(tglmasuk);
+            $("#nama").val(nama);
+            $("#nip").val(nip);
+            $("#jablama").val(jabid);
+            $("#jjlama").val(jjid);
+            $("#divlama").val(divcode);
+            $("#agenlama").val(agenid);
+            $("#labeljab").val(jab);
+            $("#labeljj").val(jj);
+            $("#labeldiv").val(div);
+            $("#labelAgen").val(agen);
         }
-        return false;
-    }
-    function validateForm(){
-        let nomor = $("#nomor").val();
-        let catatan = $("#catatan").val();
-        if (nomor.length > 20){
-            Swal.fire(
-                'WARNING!!',
-                'Maximal Nomor 20 charakter',
-                'warning'
-            );
+        function validateRadio (radios)
+        {
+            for (i = 0; i < radios.length; ++ i)
+            {
+                if (radios [i].checked) return true;
+            }
             return false;
         }
-        if (catatan.length > 50 ){
-             Swal.fire(
-                'WARNING',
-                'Maximal Catatan 50 charakter',
-                'warning'
-            );
-            return false;
+        function validateForm(){
+            let nomor = $("#nomor").val();
+            let catatan = $("#catatan").val();
+            if (nomor.length > 20){
+                Swal.fire(
+                    'WARNING!!',
+                    'Maximal Nomor 20 charakter',
+                    'warning'
+                );
+                return false;
+            }
+            if (catatan.length > 50 ){
+                Swal.fire(
+                    'WARNING',
+                    'Maximal Catatan 50 charakter',
+                    'warning'
+                );
+                return false;
+            }
+            //cek tombol radio yang di pilih
+            if(validateRadio (document.forms["formStatus"]["radioStatus"]))
+            {
+                return true;
+            }
+            else
+            {
+                Swal.fire(
+                    'WARNING',
+                    'Pilih Salah Satu Perubahan',
+                    'warning'
+                );
+                return false;
+            }
         }
-        //cek tombol radio yang di pilih
-       if(validateRadio (document.forms["formStatus"]["radioStatus"]))
-        {
-            return true;
-        }
-        else
-        {
-             Swal.fire(
-                'WARNING',
-                'Pilih Salah Satu Perubahan',
-                'warning'
-            );
-            return false;
-        }
-    }
     </script>
     <style>
-    .openName{
-        display:none;
-        font-size:12px;
-        max-height:17rem;
-        overflow:scroll;
-    }
+        .openName{
+            display:none;
+            font-size:12px;
+            max-height:17rem;
+            overflow:scroll;
+        }
     </style>
 </head>
 <body>
@@ -211,7 +211,7 @@ set agen = mutasi.execute
                             <% 
                             jenjang.movenext
                             loop
-                             %>
+                            %>
                         </select>
                     </div>
                 </div>
@@ -230,7 +230,7 @@ set agen = mutasi.execute
                             <% 
                             divisi.movenext
                             loop
-                             %>
+                            %>
                         </select>
                     </div>
                 </div>
@@ -249,7 +249,7 @@ set agen = mutasi.execute
                             <% 
                             agen.movenext
                             loop
-                             %>
+                            %>
                         </select>
                     </div>
                 </div>

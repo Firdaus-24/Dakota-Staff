@@ -1,45 +1,41 @@
 <!-- #include file='../connection.asp' -->
-<%
-' keharusan user login sebelum masuk ke menu utama aplikasi
-if session("username") = "" then
-response.Redirect("../login.asp")
-end if
-%>
+<!-- #include file='mutasi/func_getMutasi.asp' -->
+
 <% 
-dim mutasi_cmd, mutasi
-dim nip 
+    dim mutasi_cmd, mutasi
+    dim nip 
 
-nip = Request.QueryString("nip")
+    nip = Request.QueryString("nip")
 
-set mutasi_cmd = Server.CreateObject("ADODB.Command")
-mutasi_cmd.activeConnection = MM_Cargo_String
+    set mutasi_cmd = Server.CreateObject("ADODB.Command")
+    mutasi_cmd.activeConnection = MM_Cargo_String
 
-mutasi_cmd.commandText = "SELECT HRD_T_Mutasi.*, HRD_M_Jabatan.Jab_Nama, GLB_M_Agen.Agen_Nama, HRD_M_Jenjang.JJ_Nama, HRD_M_Divisi.Div_Nama, HRD_M_Karyawan.Kry_Nip, HRD_M_Karyawan.Kry_Nama FROM HRD_T_Mutasi LEFT OUTER JOIN GLB_M_Agen ON HRD_T_Mutasi.Mut_TujAgenID = GLB_M_Agen.Agen_ID LEFT OUTER JOIN HRD_M_Jabatan ON HRD_T_Mutasi.Mut_TujJabCode = HRD_M_Jabatan.Jab_Code LEFT OUTER JOIN HRD_M_Jenjang ON HRD_T_Mutasi.Mut_TujJJID = HRD_M_Jenjang.JJ_ID LEFT OUTER JOIN HRD_M_DIvisi ON HRD_T_Mutasi.Mut_TujDDBID = HRD_M_Divisi.Div_Code LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_Mutasi.Mut_Nip = HRD_M_Karyawan.Kry_Nip WHERE HRD_T_Mutasi.Mut_NIP = '"& nip &"' AND HRD_T_Mutasi.Mut_status = '0' AND HRD_T_Mutasi.Mut_AktifYN = 'Y' ORDER BY Mut_Tanggal DESC"
-' Response.Write mutasi_cmd.commandText & "<br>"
-set mutasi = mutasi_cmd.execute
+    mutasi_cmd.commandText = "SELECT HRD_T_Mutasi.*, HRD_M_Jabatan.Jab_Nama, GLB_M_Agen.Agen_Nama, HRD_M_Jenjang.JJ_Nama, HRD_M_Divisi.Div_Nama, HRD_M_Karyawan.Kry_Nip, HRD_M_Karyawan.Kry_Nama FROM HRD_T_Mutasi LEFT OUTER JOIN GLB_M_Agen ON HRD_T_Mutasi.Mut_TujAgenID = GLB_M_Agen.Agen_ID LEFT OUTER JOIN HRD_M_Jabatan ON HRD_T_Mutasi.Mut_TujJabCode = HRD_M_Jabatan.Jab_Code LEFT OUTER JOIN HRD_M_Jenjang ON HRD_T_Mutasi.Mut_TujJJID = HRD_M_Jenjang.JJ_ID LEFT OUTER JOIN HRD_M_DIvisi ON HRD_T_Mutasi.Mut_TujDDBID = HRD_M_Divisi.Div_Code LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_Mutasi.Mut_Nip = HRD_M_Karyawan.Kry_Nip WHERE HRD_T_Mutasi.Mut_NIP = '"& nip &"' AND HRD_T_Mutasi.Mut_status = '0' AND HRD_T_Mutasi.Mut_AktifYN = 'Y' ORDER BY Mut_Tanggal DESC"
+    ' Response.Write mutasi_cmd.commandText & "<br>"
+    set mutasi = mutasi_cmd.execute
 
-'cabang
-mutasi_cmd.commandText = "SELECT Agen_id, Agen_nama FROM GLB_M_agen ORDER BY Agen_Nama ASC"
-set cabang = mutasi_cmd.execute
+    'cabang
+    mutasi_cmd.commandText = "SELECT Agen_id, Agen_nama FROM GLB_M_agen ORDER BY Agen_Nama ASC"
+    set cabang = mutasi_cmd.execute
 
-'jabatan
-mutasi_cmd.commandText = "SELECT Jab_Code, Jab_Nama FROM HRD_M_Jabatan ORDER BY Jab_Nama ASC"
-set jabatan = mutasi_cmd.execute
+    'jabatan
+    mutasi_cmd.commandText = "SELECT Jab_Code, Jab_Nama FROM HRD_M_Jabatan ORDER BY Jab_Nama ASC"
+    set jabatan = mutasi_cmd.execute
 
-'jenjang
-mutasi_cmd.commandText = "SELECT JJ_ID, JJ_Nama FROM HRD_M_Jenjang ORDER BY JJ_Nama ASC"
-set jenjang = mutasi_cmd.execute
+    'jenjang
+    mutasi_cmd.commandText = "SELECT JJ_ID, JJ_Nama FROM HRD_M_Jenjang ORDER BY JJ_Nama ASC"
+    set jenjang = mutasi_cmd.execute
 
-'divisi
-mutasi_cmd.commandText = "SELECT Div_Code, Div_Nama FROM HRD_M_Divisi ORDER BY DIv_Nama ASC"
-set divisi = mutasi_cmd.execute
-nip = ""
-nama = ""
-if not mutasi.eof then
-    nip = mutasi("Kry_Nip")
-    nama = mutasi("Kry_nama")
-end if
- %>
+    'divisi
+    mutasi_cmd.commandText = "SELECT Div_Code, Div_Nama FROM HRD_M_Divisi ORDER BY DIv_Nama ASC"
+    set divisi = mutasi_cmd.execute
+    nip = ""
+    nama = ""
+    if not mutasi.eof then
+        nip = mutasi("Kry_Nip")
+        nama = mutasi("Kry_nama")
+    end if
+%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -121,6 +117,11 @@ end if
         }
     }
     </script>
+    <style>
+        .table tr:first-child{
+            white-space: nowrap;
+        }
+    </style>
 </head>
 <!-- #include file='../landing.asp' -->
 <!--#include file="template-detail.asp"-->
@@ -154,7 +155,7 @@ end if
                         <th scope="col">Jenjang</th>
                         <th scope="col">Divis</th>
                         <th scope="col">Aktif</th>
-                        <th scope="col text-center">Aksi</th>
+                        <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -268,6 +269,8 @@ end if
                     <label for="cabang" class="col-form-label">Cabang</label>
                 </div>
                 <div class="col">
+                
+                    <input type="text" class="form-input" name="cabang" id="cabang" value="">
                     <select class="form-select" aria-label="Default select example" name="cabang" id="cabang" required>
                         <option value="">Pilih</option>
                         <% do until cabang.eof %>
@@ -276,7 +279,7 @@ end if
                         cabang.movenext
                         loop
                         cabang.MoveFirst 
-                         %>
+                        %>
                     </select>
                 </div>
             </div>

@@ -15,7 +15,8 @@ mutasi_cmd.commandText = "SELECT * FROM HRD_T_Mutasi WHERE Mut_ExecutedYN = 'N' 
 set mutasi = mutasi_cmd.execute
 
 do while not mutasi.eof
-    karyawan_cmd.commandText = "UPDATE HRD_M_Karyawan SET Kry_AgenID = '"& mutasi("Mut_TujAgenID") &"' WHERE Kry_Nip = '"& mutasi("Mut_Nip") &"'"
+    karyawan_cmd.commandText = "UPDATE HRD_M_Karyawan SET Kry_AgenID = '"& mutasi("Mut_TujAgenID") &"', Kry_DDBID = '"& mutasi("Mut_TujDDBID") &"', Kry_JabCode = '"& mutasi("Mut_TujJabCode") &"', Kry_JJID = '"& mutasi("Mut_TujJJID") &"' WHERE Kry_Nip = '"& mutasi("Mut_Nip") &"'"
+    ' Response.Write karyawan.commandText & "<br>"
     karyawan_cmd.execute
     
     updateMutasi.commandText = "UPDATE HRD_T_MUTASI SET Mut_ExecutedYN = 'Y' WHERE Mut_ID = '"& mutasi("Mut_ID") &"'"

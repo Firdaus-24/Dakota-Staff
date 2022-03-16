@@ -1,60 +1,60 @@
 <!-- #include file='../connection.asp' -->
 <% 
-if session("HL5")= "" then 
-    if  session("HL5B")= "" then
-	    response.redirect("../dashboard.asp")
-    end if
-end if 
-'untuk notiv pencarian berdasarkan nama
-id = Request.QueryString("id")
+    if session("HL5")= "" then 
+        if  session("HL5B")= "" then
+            response.redirect("../dashboard.asp")
+        end if
+    end if 
+    'untuk notiv pencarian berdasarkan nama
+    id = Request.QueryString("id")
 
-set mutasi = Server.CreateObject("ADODB.Command")
-mutasi.ActiveConnection = MM_cargo_STRING
+    set mutasi = Server.CreateObject("ADODB.Command")
+    mutasi.ActiveConnection = MM_cargo_STRING
 
-mutasi.commandText = "SELECT HRD_T_Mutasi.*, HRD_M_Karyawan.Kry_Nama FROM HRD_T_Mutasi LEFT OUTER JOIN HRD_M_karyawan ON HRD_T_Mutasi.Mut_Nip = HRD_M_Karyawan.Kry_Nip WHERE HRD_T_Mutasi.Mut_ID = '"& id &"'"
+    mutasi.commandText = "SELECT HRD_T_Mutasi.*, HRD_M_Karyawan.Kry_Nama FROM HRD_T_Mutasi LEFT OUTER JOIN HRD_M_karyawan ON HRD_T_Mutasi.Mut_Nip = HRD_M_Karyawan.Kry_Nip WHERE HRD_T_Mutasi.Mut_ID = '"& id &"'"
 
-set update  = mutasi.execute
+    set update  = mutasi.execute
+    
+    ' set jablama
+    mutasi.commandText = "SELECT Jab_Nama, Jab_code FROM HRD_M_Jabatan WHERE jab_code = '"& update("Mut_AsalJabCode") &"'"
+    set asaljab = mutasi.execute
+    ' set divlama
+    mutasi.commandText = "SELECT div_Nama,div_Code FROM HRD_M_divisi WHERE div_Code = '"& update("Mut_AsalDDBID") &"'"
+    set asaldiv = mutasi.execute
+    ' set jenjanglama
+    mutasi.commandText = "SELECT JJ_Nama,JJ_ID FROM HRD_M_Jenjang WHERE JJ_ID = '"& update("Mut_AsalJJID") &"'"
+    set asalJJ = mutasi.execute
+    ' set agenlama
+    mutasi.commandText = "SELECT AGen_Nama,AGen_ID FROM GLB_M_Agen WHERE AGen_ID = '"& update("Mut_AsalAgenID") &"'"
+    set asalAgen = mutasi.execute
 
-' set jablama
-mutasi.commandText = "SELECT Jab_Nama,Jab_code FROM HRD_M_Jabatan WHERE jab_code = '"& update("Mut_AsalJabCode") &"'"
-set asaljab = mutasi.execute
-' set divlama
-mutasi.commandText = "SELECT div_Nama,div_Code FROM HRD_M_divisi WHERE div_Code = '"& update("Mut_AsalDDBID") &"'"
-set asaldiv = mutasi.execute
-' set jenjanglama
-mutasi.commandText = "SELECT JJ_Nama,JJ_ID FROM HRD_M_Jenjang WHERE JJ_ID = '"& update("Mut_AsalJJID") &"'"
-set asalJJ = mutasi.execute
-' set agenlama
-mutasi.commandText = "SELECT AGen_Nama,AGen_ID FROM GLB_M_Agen WHERE AGen_ID = '"& update("Mut_AsalAgenID") &"'"
-set asalAgen = mutasi.execute
+    ' set jabbaru
+    mutasi.commandText = "SELECT Jab_Nama,Jab_code FROM HRD_M_Jabatan WHERE jab_code = '"& update("Mut_TujJabCode") &"'"
 
-' set jabbaru
-mutasi.commandText = "SELECT Jab_Nama,Jab_code FROM HRD_M_Jabatan WHERE jab_code = '"& update("Mut_TujJabCode") &"'"
-
-set njab = mutasi.execute
-' set divbaru
-mutasi.commandText = "SELECT div_Nama,div_Code FROM HRD_M_divisi WHERE div_Code = '"& update("Mut_TujDDBID") &"'"
-set ndiv = mutasi.execute
-' set jenjangbaru
-mutasi.commandText = "SELECT JJ_Nama,JJ_ID FROM HRD_M_Jenjang WHERE JJ_ID = '"& update("Mut_TujJJID") &"'"
-set njj = mutasi.execute
-' set agenbaru
-mutasi.commandText = "SELECT AGen_Nama,AGen_ID FROM GLB_M_Agen WHERE AGen_ID = '"& update("Mut_TujAgenID") &"'"
-set nagen = mutasi.execute
+    set njab = mutasi.execute
+    ' set divbaru
+    mutasi.commandText = "SELECT div_Nama,div_Code FROM HRD_M_divisi WHERE div_Code = '"& update("Mut_TujDDBID") &"'"
+    set ndiv = mutasi.execute
+    ' set jenjangbaru
+    mutasi.commandText = "SELECT JJ_Nama,JJ_ID FROM HRD_M_Jenjang WHERE JJ_ID = '"& update("Mut_TujJJID") &"'"
+    set njj = mutasi.execute
+    ' set agenbaru
+    mutasi.commandText = "SELECT AGen_Nama,AGen_ID FROM GLB_M_Agen WHERE AGen_ID = '"& update("Mut_TujAgenID") &"'"
+    set nagen = mutasi.execute
 
 
-mutasi.commandText = "SELECT Jab_Nama,Jab_code FROM HRD_M_Jabatan WHERE (ISNULL(Jab_Code, '') <>'') AND Jab_AktifYN = 'Y' ORDER BY Jab_Nama ASC"
-set jabatan = mutasi.execute
+    mutasi.commandText = "SELECT Jab_Nama,Jab_code FROM HRD_M_Jabatan WHERE (ISNULL(Jab_Code, '') <>'') AND Jab_AktifYN = 'Y' ORDER BY Jab_Nama ASC"
+    set jabatan = mutasi.execute
 
-mutasi.commandText = "SELECT JJ_ID, JJ_Nama FROM HRD_M_Jenjang WHERE (ISNULL(JJ_ID, '') <>'') AND JJ_AktifYN = 'Y' ORDER BY JJ_Nama ASC"
-set jenjang = mutasi.execute
+    mutasi.commandText = "SELECT JJ_ID, JJ_Nama FROM HRD_M_Jenjang WHERE (ISNULL(JJ_ID, '') <>'') AND JJ_AktifYN = 'Y' ORDER BY JJ_Nama ASC"
+    set jenjang = mutasi.execute
 
-mutasi.commandText = "SELECT Div_Code, Div_Nama FROM HRD_M_Divisi WHERE (ISNULL(Div_Code, '') <>'') AND Div_AktifYN = 'Y' ORDER BY Div_Nama ASC"
-set divisi = mutasi.execute
+    mutasi.commandText = "SELECT Div_Code, Div_Nama FROM HRD_M_Divisi WHERE (ISNULL(Div_Code, '') <>'') AND Div_AktifYN = 'Y' ORDER BY Div_Nama ASC"
+    set divisi = mutasi.execute
 
-mutasi.commandText = "SELECT Agen_ID, Agen_Nama FROM GLB_M_Agen WHERE (ISNULL(Agen_ID, '') <>'') AND Agen_AktifYN = 'Y' ORDER BY Agen_Nama ASC"
-set agen = mutasi.execute
- %>
+    mutasi.commandText = "SELECT Agen_ID, Agen_Nama FROM GLB_M_Agen WHERE (ISNULL(Agen_ID, '') <>'') AND Agen_AktifYN = 'Y' ORDER BY Agen_Nama ASC"
+    set agen = mutasi.execute
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -66,58 +66,58 @@ set agen = mutasi.execute
     <!-- #include file='../layout/header.asp' -->
     <script src="<%= url %>/js/jquery-3.5.1.min.js"></script> 
     <script>
-    function validateRadio (radios)
-        {
-            for (i = 0; i < radios.length; ++ i)
+        function validateRadio (radios)
             {
-                if (radios [i].checked) return true;
+                for (i = 0; i < radios.length; ++ i)
+                {
+                    if (radios [i].checked) return true;
+                }
+                return false;
             }
-            return false;
+        function validateForm(){
+            let nomor = $("#nomor").val();
+            let catatan = $("#catatan").val();
+            if (nomor.length > 20){
+                Swal.fire(
+                    'WARNING!!',
+                    'Maximal Nomor 20 charakter',
+                    'warning'
+                );
+                return false;
+            }
+            if (catatan.length > 50 ){
+                Swal.fire(
+                    'WARNING',
+                    'Maximal Catatan 50 charakter',
+                    'warning'
+                );
+                return false;
+            }
+            //cek tombol radio yang di pilih
+        if(validateRadio (document.forms["formStatus"]["radioStatus"]))
+            {
+                return true;
+            }else{
+                Swal.fire(
+                    'WARNING',
+                    'Pilih Salah Satu Perubahan',
+                    'warning'
+                );
+                return false;
+            }
         }
-    function validateForm(){
-        let nomor = $("#nomor").val();
-        let catatan = $("#catatan").val();
-        if (nomor.length > 20){
-            Swal.fire(
-                'WARNING!!',
-                'Maximal Nomor 20 charakter',
-                'warning'
-            );
-            return false;
-        }
-        if (catatan.length > 50 ){
-             Swal.fire(
-                'WARNING',
-                'Maximal Catatan 50 charakter',
-                'warning'
-            );
-            return false;
-        }
-        //cek tombol radio yang di pilih
-       if(validateRadio (document.forms["formStatus"]["radioStatus"]))
-        {
-            return true;
-        }else{
-             Swal.fire(
-                'WARNING',
-                'Pilih Salah Satu Perubahan',
-                'warning'
-            );
-            return false;
-        }
-    }
     </script>
     <style>
-    .openName{
-        display:none;
-        font-size:12px;
-        max-height:17rem;
-        overflow:scroll;
-    }
-    .table{
-        margin:0;
-        padding:0;
-    }
+        .openName{
+            display:none;
+            font-size:12px;
+            max-height:17rem;
+            overflow:scroll;
+        }
+        .table{
+            margin:0;
+            padding:0;
+        }
     </style>
 </head>
 <body>
@@ -224,7 +224,7 @@ set agen = mutasi.execute
                             <% 
                             jenjang.movenext
                             loop
-                             %>
+                            %>
                         </select>
                     </div>
                 </div>
@@ -243,7 +243,7 @@ set agen = mutasi.execute
                             <% 
                             divisi.movenext
                             loop
-                             %>
+                            %>
                         </select>
                     </div>
                 </div>
@@ -262,7 +262,7 @@ set agen = mutasi.execute
                             <% 
                             agen.movenext
                             loop
-                             %>
+                            %>
                         </select>
                     </div>
                 </div>
@@ -271,7 +271,7 @@ set agen = mutasi.execute
                 <div class='mb-3 row'>
                     <label for="nip" class="col-sm-2 col-form-label">Catatan/Memo</label>
                     <div class="col-sm-10">
-                        <textarea class="form-control" id="catatan" name="catatan" rows="3" required>"<%= update("Mut_Memo") %></textarea>
+                        <textarea class="form-control" id="catatan" name="catatan" rows="3" required><%= update("Mut_Memo") %></textarea>
                     </div>
                 </div> 
                 <div class='row mb-3 '>
