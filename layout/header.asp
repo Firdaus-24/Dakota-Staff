@@ -7,7 +7,7 @@
      <link rel="preconnect" href="https://fonts.gstatic.com">
      <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Poppins:wght@200&display=swap" rel="stylesheet">
     <!-- landing html baru -->
-    <link rel="stylesheet" href="<%= url %>/layout/font-awesome/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="<%= url %>/layout/font-awesome/css/font-awesome.min.css">
     <!-- link aos -->
     <link href="<%= url %>/layout/aos-master/dist/aos.css" rel="stylesheet">
     <!-- evo-calender -->

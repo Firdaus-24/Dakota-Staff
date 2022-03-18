@@ -23,7 +23,7 @@
     </style>
       <% 
       if karyawan.eof then 
-       %>
+      %>
       <div class='row'>
         <div class='col'>
           <p style="color:red;">DATA NAMA TIDAK DI TEMUKAN</p>

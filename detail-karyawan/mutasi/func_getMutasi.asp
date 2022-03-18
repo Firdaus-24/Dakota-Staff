@@ -22,13 +22,13 @@
 
     sub getJabatan(jab,s)
         getData_cmd.commandText = "SELECT Jab_Code, Jab_Nama FROM HRD_M_Jabatan WHERE Jab_COde = '"& jab &"'"
-        set jabatan = getData_cmd.execute
+        set jabcode = getData_cmd.execute
 
         nama = ""
         id = ""
-        if not jabatan.eof then
-            nama = jabatan("jab_nama")
-            id = jabatan("Jab_code")
+        if not jabcode.eof then
+            nama = jabcode("jab_nama")
+            id = jabcode("Jab_code")
         end if
 
         if s = "nama" then
@@ -40,7 +40,7 @@
 
     function getDivisi(div,s)
         getData_cmd.commandText = "SELECT Div_Code, Div_Nama FROM HRD_M_Divisi WHERE Div_Code = "& div &""
-        Response.Write getData_cmd.commandText & "<br>"
+        ' Response.Write getData_cmd.commandText & "<br>"
         set divisi = getData_cmd.execute
 
         nama = ""
@@ -57,21 +57,22 @@
         end if
     end function
 
-    sub getLastMutasi (nip,s)
-        getData_cmd.commandText = "SELECT Mut_AsalDDBID, Mut_AsalJabCode, Mut_asalAgenID FROM HRD_T_Mutasi WHERE Mut_Nip = '"& nip &"' ORDER BY MUt_Tanggal DESC"
+    sub getJenjang(jj,s)
+        getData_cmd.commandText = "SELECT JJ_ID, JJ_Nama FROM HRD_M_Jenjang WHERE JJ_ID = "& jj &""
+        ' Response.Write getData_cmd.commandText & "<br>"
+        set jenjang = getData_cmd.execute
 
-        set lastMutasi = getData_cmd.execute
+        nama = ""
+        id = ""
+        if not jenjang.eof then
+            nama = jenjang("JJ_nama")
+            id = jenjang("JJ_ID")
+        end if
 
-        if not lastMutasi.eof then
-            if s = "jab" then
-                Response.Write lastMutasi("Mut_AsalJabCode") 
-            elseIf s = "div" then
-                Response.Write lastMutasi("Mut_AsalDDBID") 
-            else
-                Response.Write lasMutasi("Mut_AsalAGenID") 
-            end if
+        if s = "nama" then
+            Response.Write nama
         else
-            Response.Write "Belum Ada Data Yang Terdaftar"
+            Response.Write id
         end if
     end sub
 %>
