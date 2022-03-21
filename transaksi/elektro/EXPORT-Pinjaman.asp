@@ -1,11 +1,5 @@
-<!-- #include file='../../constend/constanta.asp' -->
 <!-- #include file='../../connection.asp' -->
 <% 
-' keharusan user login sebelum masuk ke menu utama aplikasi
-if session("username") = "" then
-response.Redirect("../../login.asp")
-end if
-
 dim p 
 dim pinjaman, cicilan
 
@@ -29,7 +23,7 @@ cicilan = pinjaman("TPK_PP") / pinjaman("TPK_Lama")
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRANSAKSI PEMINJAMAN KARYAWAN</title>
+    <title>LAPORAN PINJAMAN BARANG ELEKTRONIK</title>
     <!-- #include file='../../layout/header.asp' -->
     <link rel="stylesheet" href="<%= url %>/layout/buttonsdatatable/datatablebutton.css">
     <link rel="stylesheet" href="<%= url %>/layout/datatable/button.css">

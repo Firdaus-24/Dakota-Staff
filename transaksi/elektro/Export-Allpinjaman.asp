@@ -115,7 +115,7 @@
         </tr>
         <tr>
             <td colspan="11" style="text-align: center;">
-                 Pembelian Elektronik-Transfer ke Bp Wawan DLI VIA GAJI BULANAN 							
+                Pembelian Elektronik-Transfer ke Bp Wawan DLI VIA GAJI BULANAN 							
             </td>
         </tr>
         <tr >

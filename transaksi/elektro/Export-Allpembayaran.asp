@@ -89,7 +89,7 @@
             
         <tr >
             <td colspan="6" style="text-align: center;">
-                LAPORAN PINJAMAN KARYAWAN
+                LAPORAN PEMBAYARAN BARANG ELEKTRONIK
             </td>
         </tr>
         <tr >
@@ -117,13 +117,13 @@
                 <td><%= print("TPK_Tanggal") %></td>
                 <td style="mso-number-format:\@;"><%= print("TPK_Nip") %></td>
                 <td><%= print("Kry_Nama") %></td>
-                <td><%= print("TPK_Ket") %></td>
+                <td  style="mso-number-format:\@;"><%= print("TPK_Ket") %></td>
                 <td><%= replace(formatCurrency(print("TPK_PP")),"$","Rp.") %></td>
             </tr>
             <% 
             print.movenext
             loop
-             %>
+            %>
         </tbody>
         <tr>
             <td></td>
