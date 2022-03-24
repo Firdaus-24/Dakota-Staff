@@ -1,7 +1,7 @@
 <!-- #include file='../connection.asp' -->
 <% 
-if session("username") = "" then
-response.Redirect("../login.asp")
+if session("HA8E") = false then
+    response.Redirect(url &"/transaksi/index.asp")
 end if
 
 dim proses_cmd,proses, tanggal, tgl, tahun, tahunBaru, newYear

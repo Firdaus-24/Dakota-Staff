@@ -1,63 +1,63 @@
 <!-- #include file='../connection.asp' -->
 <!-- #include file='../md5.asp' -->
-<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<!-- #include file='../layout/header.asp' -->
     <style>
-    .notiv-gagal{
-        width:400px;
-        height:200px;
-        padding:20px;
-        background:#718ee3;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        margin-top: -120px;
-        margin-left: -220px;
-        border-radius:20px;
-    }
-    .notiv-gagal span{
-        float:right;
-        margin-top:40px;
-        color:white;
-        font-size:20px;
-        text-transform:uppercase;
-    }
-    .notiv-gagal img{
-        display:block;
-        width:100px;
-        height:130px;
-    }   
-    .notiv-gagal a{
-        display:block;
-    }
-    /* done */
-      .notiv-berhasil{
-        width:400px;
-        height:200px;
-        padding:20px;
-        background:#718ee3;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        margin-top: -120px;
-        margin-left: -220px;
-        border-radius:20px;
-    }
-    .notiv-berhasil span{
-        float:left;
-        margin-top:40px;
-        color:white;
-        font-size:20px;
-        text-transform:uppercase;
-    }
-    .notiv-berhasil img{
-        display:inline-block;
-        width:120px;
-        height:130px;
-        margin-left:20px;
-    }   
-    .notiv-berhasil a{
-        display:block;
-    }
+        .notiv-gagal{
+            width:400px;
+            height:200px;
+            padding:20px;
+            background:#718ee3;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: -120px;
+            margin-left: -220px;
+            border-radius:20px;
+        }
+        .notiv-gagal span{
+            float:right;
+            margin-top:40px;
+            color:white;
+            font-size:20px;
+            text-transform:uppercase;
+        }
+        .notiv-gagal img{
+            display:block;
+            width:100px;
+            height:130px;
+        }   
+        .notiv-gagal a{
+            display:block;
+        }
+        /* done */
+        .notiv-berhasil{
+            width:400px;
+            height:200px;
+            padding:20px;
+            background:#718ee3;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: -120px;
+            margin-left: -220px;
+            border-radius:20px;
+        }
+        .notiv-berhasil span{
+            float:left;
+            margin-top:40px;
+            color:white;
+            font-size:20px;
+            text-transform:uppercase;
+        }
+        .notiv-berhasil img{
+            display:inline-block;
+            width:120px;
+            height:130px;
+            margin-left:20px;
+        }   
+        .notiv-berhasil a{
+            display:block;
+        }
     </style>
 <% 
 dim username, password, aktifyn, serverid, suername
@@ -79,7 +79,7 @@ userop_cmd.commandText = "SELECT * FROM webLogin WHERE username = '"& username &
 set userop = userop_cmd.execute
 
 if userop.eof = false then
-    Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data Sudah Terdaftar</span><img src='../logo/berhasil_dakota.PNG'><a href='index.asp' class='btn btn-primary'>kembali</a></div>"
+    Response.Write "<div class='notiv-gagal' data-aos='fade-up'><span>Data Sudah Terdaftar</span><img src='../logo/gagal_dakota.PNG'><a href='index.asp' class='btn btn-primary'>kembali</a></div>"
 else
     adduser.commandText = "INSERT INTO WebLogin (username,password,user_AktifYN,ServerID,realName,LastLogin,LastIPLogin,PT_ID) VALUES ('"& username &"','"& password &"','Y','"& serverid &"', '"& surename &"','"& date &"','192.168.22.3','A' )"
     'Response.Write adduser.commandText

@@ -1,7 +1,7 @@
 <!-- #include file='../connection.asp' -->
 <% 
-if session("username") = "" then
-response.Redirect("../login.asp")
+if session("HA8") = false then
+  response.Redirect(url & "/dashboard.asp")
 end if
  %>
 <!DOCTYPE html>
@@ -151,9 +151,9 @@ end if
 
       .info {
         font-size: 1.2em;
-        display: flex;
+        display: block;
         padding: 1em 3em;
-        height: 3em;
+        height: 4em;
       }
 
       .info img {
@@ -210,9 +210,10 @@ end if
 <body>
 <!-- #include file='../landing.asp' -->
 <section class="info">
-  <h3>TRANSAKSI KARYAWAN</h3>
+  <h3 class="text-center">TRANSAKSI KARYAWAN</h3>
 </section>
 <section class="cards-wrapper">
+  <%if session("HA8A") = true then%>
   <div class="card-grid-space">
     <a class="card" href="pinjaman/pinjamanKaryawan.asp" style="--bg-img: url(../logo/dolarpinjaman.jpg)">
       <div>
@@ -225,6 +226,8 @@ end if
       </div>
     </a>
   </div>
+  <%end if%>
+  <%if session("HA8B") = true then%>
   <div class="card-grid-space">
     <a class="card" href="pembayaran/index.asp" style="--bg-img: url('../logo/pembayaran.jpg')">
       <div>
@@ -237,6 +240,8 @@ end if
       </div>
     </a>
   </div>
+  <%end if%>
+  <%if session("HA8C") = true then%>
   <div class="card-grid-space">
     <a class="card" href="mutasi" style="--bg-img: url('../logo/mutasipinjaman.jpg')">
       <div>
@@ -249,6 +254,8 @@ end if
       </div>
     </a>
   </div>
+  <%end if%>
+  <%if session("HA8D") = true then%>
   <div class="card-grid-space">
     <a class="card" href="elektro/" style="--bg-img: url('../logo/elektro.jpg')">
       <div>
@@ -261,6 +268,8 @@ end if
       </div>
     </a>
   </div>
+  <%end if%>
+  <%if session("HA8E") = true then%>
   <div class="card-grid-space">
     <a class="card" href="proses.asp" style="--bg-img: url('../logo/prosestransaksi.jpg')">
       <div>
@@ -274,5 +283,6 @@ end if
       </div>
     </a>
   </div>
+  <%end if%>
 </section>
 <!-- #include file='../layout/footer.asp' -->

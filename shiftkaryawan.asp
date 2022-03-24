@@ -1,10 +1,10 @@
 <!--#include file="connection.asp"-->
 <% 
-    if session("username") = "" then
-        response.Redirect("login.asp")
+    if session("HA2B") = false then
+        response.Redirect(url &"/shift_view.asp")
     end if
 
-      ' filter tanggal dan bulan 
+    ' filter tanggal dan bulan 
     bulana = trim(Request.QueryString("bulana"))
     if bulana = "" then
         bulana = trim(Request.Form("bulana"))

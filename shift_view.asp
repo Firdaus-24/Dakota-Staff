@@ -1,10 +1,9 @@
 <!-- #include file='connection.asp' -->
 <% 
-if session("username") = "" then
-    Response.Redirect("login.asp")
-end if
-
- %>
+    if session("HA2") = false then
+        Response.Redirect(url&"/dasboard.asp")
+    end if
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,75 +14,74 @@ end if
     <title>SHIFT KARYAWAN</title>
     <!-- #include file='layout/header.asp' -->
     <style>
-    .cards-list {
-        z-index: 0;
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-    }
-    a{
-        text-decoration:none;
-    }
-    .card {
-        margin: 30px auto;
-        width: 300px;
-        height: 300px;
-        border-radius: 40px;
-        box-shadow: 5px 5px 30px 7px rgba(0,0,0,0.25), -5px -5px 30px 7px rgba(0,0,0,0.22);
-        cursor: pointer;
-        transition: 0.4s;
-    }
-
-    .card .card_image {
-        width: inherit;
-        height: inherit;
-        border-radius: 40px;
-    }
-
-    .card .card_image img {
-        width: inherit;
-        height: inherit;
-        border-radius: 40px;
-        object-fit: cover;
-    }
-
-    .card .card_title {
-        text-align: center;
-        border-radius: 0px 0px 40px 40px;
-        font-family: sans-serif;
-        font-weight: bold;
-        font-size: 30px;
-        margin-top: -80px;
-        height: 40px;
-        color:#ffd700;
-    }
-
-    .card:hover {
-        transform: scale(0.9, 0.9);
-        box-shadow: 5px 5px 30px 15px rgba(0,0,0,0.25), -5px -5px 30px 15px rgba(0,0,0,0.22);
-    }
-
-    .title-white {
-        color: white;
-    }
-
-    .title-black {
-        color: black;
-    }
-
-    @media all and (max-width: 500px) {
-        .card-list {
-            /* On small screens, we are no longer using row direction but column */
-            flex-direction: column;
+        .cards-list {
+            z-index: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
         }
-    }
+        a{
+            text-decoration:none;
+        }
+        .card {
+            margin: 30px auto;
+            width: 300px;
+            height: 300px;
+            border-radius: 40px;
+            box-shadow: 5px 5px 30px 7px rgba(0,0,0,0.25), -5px -5px 30px 7px rgba(0,0,0,0.22);
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .card .card_image {
+            width: inherit;
+            height: inherit;
+            border-radius: 40px;
+        }
+
+        .card .card_image img {
+            width: inherit;
+            height: inherit;
+            border-radius: 40px;
+            object-fit: cover;
+        }
+
+        .card .card_title {
+            text-align: center;
+            border-radius: 0px 0px 40px 40px;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 30px;
+            margin-top: -80px;
+            height: 40px;
+            color:#ffd700;
+        }
+
+        .card:hover {
+            transform: scale(0.9, 0.9);
+            box-shadow: 5px 5px 30px 15px rgba(0,0,0,0.25), -5px -5px 30px 15px rgba(0,0,0,0.22);
+        }
+
+        .title-white {
+            color: white;
+        }
+
+        .title-black {
+            color: black;
+        }
+
+        @media all and (max-width: 500px) {
+            .card-list {
+                /* On small screens, we are no longer using row direction but column */
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 
 <body>
 <!-- #include file='landing.asp' -->
-
 <div class='container'>
     <div class='row'>
         <div class='col-lg text-center mt-3'>
@@ -91,6 +89,7 @@ end if
         </div>
     </div>
     <div class='row'>
+        <%if session("HA2A") = true then%>
         <div class='col-lg-6'>
             <a href="tambahShiftkerja.asp">
             <div class="card 3">
@@ -103,6 +102,8 @@ end if
             </div>
             </a>
         </div>
+        <%end if%>
+        <%if session("HA2B") = true then%>
         <div class='col-lg-6'>
             <a href="shiftkaryawan.asp">
             <div class="card 4">
@@ -114,7 +115,8 @@ end if
                 </div>
             </div>
             </a>
-        </div>  
+        </div> 
+        <%end if%> 
     </div>
 </div>
 

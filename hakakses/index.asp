@@ -7,7 +7,7 @@ dim user_id, user, serverid
 set agen_cmd = Server.CreateObject("ADODB.Command")
 agen_cmd.activeConnection = MM_Cargo_string
 
-agen_cmd.commandText = "SELECT agen_id, agen_nama FROM GLB_M_Agen WHERE agen_aktifYN = 'Y'"
+agen_cmd.commandText = "SELECT agen_id, agen_nama FROM GLB_M_Agen WHERE agen_aktifYN = 'Y' order by agen_nama ASC"
 set agen = agen_cmd.execute
 
 set user_id = Server.CreateObject("ADODB.Command")

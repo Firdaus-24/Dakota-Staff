@@ -1,5 +1,8 @@
 <!-- #include file='../../connection.asp' -->
 <% 
+    if session("HA8C") = false then
+        Response.Redirect(url &"/transaksi/index.asp")
+    end if
     dim mutasi_cmd, mutasi
     dim bulan, tahun, nip, nama, area, radio, saldoakhir, tpinjaman, tbayar
 
@@ -232,7 +235,7 @@
             padding:10px;
             background-color:#fff;
             border-radius:10px;
-            margin-top:10px;
+            margin-top:5px;
             background: rgb(2,0,36);
             background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(210,220,222,1) 0%, rgba(255,255,255,1) 100%);
         }
@@ -297,11 +300,13 @@
                 <hr>
             </div>
             <div class='col'>
-                <button type="submit" class="btn btn-primary btn-sm">Proses</button>
-                <button type="button" class="btn btn-danger btn-sm" onclick="window.location.href='../index.asp'">Kembali</button>
-                <% if bulan <> "" OR tahun <> "" then%>
-                <button type="button" class="btn btn-success btn-sm" onclick="window.location.href='exportXls-proses.asp?bulan=<%=bulan%>&tahun=<%=tahun%>&nama=<%=nama%>&radio=<%=radio%>'">Convert</button>
-                <% end if %>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="window.location.href='../index.asp'">Kembali</button>
+                    <% if bulan <> "" OR tahun <> "" then%>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='exportXls-proses.asp?bulan=<%=bulan%>&tahun=<%=tahun%>&nama=<%=nama%>&radio=<%=radio%>'">Export</button>
+                    <% end if %>
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="icon-cogs"></i> Proses</button>
+                </div>
             </div>
         </div>
         </form>

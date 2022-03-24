@@ -1,5 +1,9 @@
 <!-- #include file='../../connection.asp' -->
 <% 
+  if session("HA8DA") = false then 
+    Response.Redirect(url&"/transaksi/elektro/index.asp")
+  end if
+
   dim pinjaman_cmd,pinjaman, no, tgla, tgle, nama, nip, area, root
 
   ckTgl = Request.Form("ckTgl")
@@ -42,10 +46,13 @@
     area = Request.QueryString("area")
   end if
 
+  set agen_cmd = Server.CreateObject("ADODB.Command")
+  agen_cmd.activeConnection = mm_cargo_String
+
   set pinjaman_cmd = Server.CreateObject("ADODB.Command")
   pinjaman_cmd.activeConnection = mm_cargo_String
 
-  query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_T_PK.TPK_ID, HRD_T_PK.TPK_Tanggal, HRD_T_PK.TPK_Nip, HRD_T_PK.TPK_Ket, HRD_T_PK.TPK_PP, HRD_T_PK.TPK_Bunga, HRD_T_PK.TPK_Lama, HRD_T_PK.TPK_AktifYN FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_PK ON HRD_M_karyawan.Kry_Nip = HRD_T_PK.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE HRD_M_Karyawan.Kry_AktifYN = 'Y' AND HRD_T_PK.TPK_Ket LIKE '%ELEKTRONIK%' AND TPK_ID IS NOT NULL"
+  query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_T_PK.TPK_ID, HRD_T_PK.TPK_Tanggal, HRD_T_PK.TPK_Nip, HRD_T_PK.TPK_Ket, HRD_T_PK.TPK_PP, HRD_T_PK.TPK_Bunga, HRD_T_PK.TPK_Lama, HRD_T_PK.TPK_AktifYN FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_PK ON HRD_M_karyawan.Kry_Nip = HRD_T_PK.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE HRD_M_Karyawan.Kry_AktifYN = 'Y' AND HRD_T_PK.TPK_Ket LIKE '%elektronik ke-%' AND TPK_ID IS NOT NULL"
 
   if tgla <> "" and tgle <> "" then
     filterTgl = " AND HRD_T_PK.TPK_tanggal BETWEEN '"& Cdate(tgla) &"' AND '"& Cdate(tgle) &"'"
@@ -87,8 +94,8 @@
   set pinjaman = pinjaman_cmd.execute
 
   ' select area aktif
-  pinjaman_cmd.commandText = "SELECT Agen_id, Agen_Nama FROM GLB_M_Agen WHERE Agen_AktifYN = 'Y' ORDER BY Agen_Nama ASC"
-  set agen = pinjaman_cmd.execute
+  agen_cmd.commandText = "SELECT Agen_id, Agen_Nama FROM GLB_M_Agen WHERE Agen_AktifYN = 'Y' ORDER BY Agen_Nama ASC"
+  set agen = agen_cmd.execute
 
   ' paggination
   Set Connection = Server.CreateObject("ADODB.Connection")
@@ -346,10 +353,14 @@
       <div class='col'>
         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
           <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='index.asp'"><i class="fa fa-backward" aria-hidden="true"></i> Kembali</button>
-          <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPimjaman" onclick="return tambahPinjaman()"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
-          <% if tgla <> "" OR tgle <> "" OR nama <> "" OR area <> "" then %>
-          <button type="button" class="btn btn-success btn-sm" onclick="window.open('Export-AllPinjaman.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&nama=<%=nama%>&area=<%=area%>&ckTgl=<%= ckTgl %>&ckNama=<%= ckNama %>&ckArea=<%= ckArea %>')"><i class="fa fa-print" aria-hidden="true"></i> Cetak</button>
-          <% end if %>
+          <% if session("HA8DA1") = true then %>
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPimjaman" onclick="return tambahPinjaman()"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
+          <%end if%>
+          <%if session("HA8DA4") = true then%>
+            <% if tgla <> "" OR tgle <> "" OR nama <> "" OR area <> "" then %>
+              <button type="button" class="btn btn-success btn-sm" onclick="window.open('Export-AllPinjaman.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&nama=<%=nama%>&area=<%=area%>&ckTgl=<%= ckTgl %>&ckNama=<%= ckNama %>&ckArea=<%= ckArea %>')"><i class="fa fa-print" aria-hidden="true"></i> Cetak</button>
+            <% end if %>
+          <%end if%>
         </div>
       </div>
     </div>
@@ -402,7 +413,7 @@
                 <% 
                 agen.movenext
                 loop
-                 %>
+                %>
               </select>
               <hr>
             </div>
@@ -425,7 +436,7 @@
     <div class='row'>
         <div class='col'>
             <table class="table">
-            <thead>
+            <thead class="bg-secondary text-light">
                 <tr>
                 <th scope="col">No</th>
                 <th scope="col">Tanggal</th>
@@ -435,7 +446,9 @@
                 <th scope="col">Bunga</th>
                 <th scope="col">Pinjaman</th>
                 <th scope="col">Aktif</th>
-                <th scope="col" class="text-center">Aksi</th>
+                <%if session("HA8DA2") = true OR session("HA8DA3") = true OR session("HA8DA4") = true then%>
+                  <th scope="col" class="text-center">Aksi</th>
+                <%end if%>
                 </tr>
             </thead>
             <tbody>
@@ -456,13 +469,19 @@
                     <td><%if rs("TPK_AktifYN") = "Y" then %>Aktif <% else %> NonAktif <% end if %></td>
                     <td>
                       <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                        <button type="button" class="btn btn-primary btn-sm py-0 px-2" onclick="return updatePinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_Nip") %>','<%= rs("TPK_Tanggal") %>','<%= rs("Kry_Nama") %>','<%= rs("TPK_ket") %>','<%= rs("TPK_pp") %>','<%= rs("TPK_Bunga") %>','<%= rs("TPK_lama") %>')" data-bs-toggle="modal" data-bs-target="#modalPimjaman">Edit</button>
-                        <% if rs("TPK_AktifYN") = "Y" then %>
-                          <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return aktifPinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">NonAktif</button>
-                        <% else %>
-                          <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return aktifPinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">Aktif</button>
+                        <%if session("HA8DA2") = true then%>
+                          <button type="button" class="btn btn-primary btn-sm py-0 px-2" onclick="return updatePinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_Nip") %>','<%= rs("TPK_Tanggal") %>','<%= rs("Kry_Nama") %>','<%= rs("TPK_ket") %>','<%= rs("TPK_pp") %>','<%= rs("TPK_Bunga") %>','<%= rs("TPK_lama") %>')" data-bs-toggle="modal" data-bs-target="#modalPimjaman">Edit</button>
+                        <%end if%>
+                        <%if session("HA8DA3") = true then%>
+                          <% if rs("TPK_AktifYN") = "Y" then %>
+                            <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return aktifPinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">NonAktif</button>
+                          <% else %>
+                            <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return aktifPinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">Aktif</button>
+                          <% end if %>
                         <% end if %>
+                        <%if session("HA8DA4") = true then%>
                           <button type="button" class="btn btn-secondary btn-sm py-0 px-2" onclick="window.open('EXPORT-Pinjaman.asp?p=<%= rs("TPK_ID") %>')">Cetak</button>
+                        <%end if%>
                       </div>
                     </td>
                 </tr>

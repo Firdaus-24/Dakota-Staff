@@ -1,5 +1,8 @@
 <!-- #include file='../../connection.asp' -->
 <% 
+  if session("HA8A") = false then
+    Response.Redirect(url&"/transaksi/index.asp")
+  end if
   dim pinjaman_cmd,pinjaman, no, tgla, tgle, nama, nip, area, root
 
   ckTgl = Request.Form("ckTgl")
@@ -346,9 +349,13 @@
       <div class='col'>
         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
           <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='../index.asp'"><i class="fa fa-backward" aria-hidden="true"></i> Kembali</button>
-          <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPimjaman" onclick="return tambahPinjaman()"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
-          <% if tgla <> "" OR tgle <> "" OR nama <> "" OR area <> "" then %>
-          <button type="button" class="btn btn-success btn-sm" onclick="window.open('Export-AllPinjaman.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&nama=<%=nama%>&area=<%=area%>&ckTgl=<%= ckTgl %>&ckNama=<%= ckNama %>&ckArea=<%= ckArea %>')"><i class="fa fa-print" aria-hidden="true"></i> Cetak</button>
+          <%if session("HA8AA") = true then%>
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPimjaman" onclick="return tambahPinjaman()"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
+          <%end if%>
+          <%if session("HA8AD") = true then%>
+            <% if tgla <> "" OR tgle <> "" OR nama <> "" OR area <> "" then %>
+            <button type="button" class="btn btn-success btn-sm" onclick="window.open('Export-AllPinjaman.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&nama=<%=nama%>&area=<%=area%>&ckTgl=<%= ckTgl %>&ckNama=<%= ckNama %>&ckArea=<%= ckArea %>')"><i class="fa fa-print" aria-hidden="true"></i> Cetak</button>
+            <% end if %>
           <% end if %>
         </div>
       </div>
@@ -435,7 +442,9 @@
                 <th scope="col">Bunga</th>
                 <th scope="col">Pinjaman</th>
                 <th scope="col">Aktif</th>
+                <%if session("HA8AA") = true OR session("HA8AB") = true OR session("HA8AC") = true OR session("HA8AD") = true then%>
                 <th scope="col" class="text-center">Aksi</th>
+                <%end if%>
                 </tr>
             </thead>
             <tbody>
@@ -456,13 +465,19 @@
                     <td><%if rs("TPK_AktifYN") = "Y" then %>Aktif <% else %> NonAktif <% end if %></td>
                     <td>
                       <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                        <button type="button" class="btn btn-primary btn-sm py-0 px-2" onclick="return updatePinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_Nip") %>','<%= rs("TPK_Tanggal") %>','<%= rs("Kry_Nama") %>','<%= rs("TPK_ket") %>','<%= rs("TPK_pp") %>','<%= rs("TPK_Bunga") %>','<%= rs("TPK_lama") %>')" data-bs-toggle="modal" data-bs-target="#modalPimjaman">Edit</button>
-                        <% if rs("TPK_AktifYN") = "Y" then %>
-                          <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return aktifPinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">NonAktif</button>
-                        <% else %>
-                          <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return aktifPinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">Aktif</button>
-                        <% end if %>
+                        <%if session("HA8AB") = true then%>
+                          <button type="button" class="btn btn-primary btn-sm py-0 px-2" onclick="return updatePinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_Nip") %>','<%= rs("TPK_Tanggal") %>','<%= rs("Kry_Nama") %>','<%= rs("TPK_ket") %>','<%= rs("TPK_pp") %>','<%= rs("TPK_Bunga") %>','<%= rs("TPK_lama") %>')" data-bs-toggle="modal" data-bs-target="#modalPimjaman">Edit</button>
+                        <%end if%>
+                        <% if session("HA8AC") = true then%>
+                          <% if rs("TPK_AktifYN") = "Y" then %>
+                            <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return aktifPinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">NonAktif</button>
+                          <% else %>
+                            <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return aktifPinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">Aktif</button>
+                          <% end if %>
+                        <%end if%>
+                        <%if session("HA8AD") = true then%>
                           <button type="button" class="btn btn-secondary btn-sm py-0 px-2" onclick="window.open('EXPORT-Pinjaman.asp?p=<%= rs("TPK_ID") %>')">Cetak</button>
+                        <%end if%>
                       </div>
                     </td>
                 </tr>
@@ -636,32 +651,6 @@
   </div>
 </div>
 <script>
-// $('#ckTgl').click(function (){
-//   $('#form-tgla').attr('disabled', false);
-//   $('#form-tgle').attr('disabled', false);
-//   $('#form-nip').attr('disabled', true);
-//   $('#form-nama').attr('disabled', true);
-//   $('#area').attr('disabled', true);
-
-//   $('#form-nip').text('');
-//   $('#form-nama').text('');
-//   $('#area').text('');
-
-// });
-// $('#ckNip').click(function (){
-//   $('#form-tgla').attr('disabled', true);
-//   $('#form-tgle').attr('disabled', true);
-//   $('#form-nip').attr('disabled', false);
-//   $('#form-nama').attr('disabled', false);
-//   $('#area').attr('disabled', true);
-// });
-// $('#ckArea').click(function (){
-//   $('#form-tgla').attr('disabled', true);
-//   $('#form-tgle').attr('disabled', true);
-//   $('#form-nip').attr('disabled', true);
-//   $('#form-nama').attr('disabled', true);
-//   $('#area').attr('disabled', false);
-// });
 $('#nama').on('keyup', function (result) {
      $.get(`cariKaryawan.asp?key=${$('#nama').val().toUpperCase().replace(' ', '%20')}`, function (data) {
       $(".tableKaryawan").show();

@@ -1,4 +1,9 @@
 <!-- #include file='../../connection.asp' -->
+<%
+    if session("HA8D") = false then
+        Response.Redirect(url &"/transaksi/index.asp")
+    end if
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,6 +23,7 @@
         </div>
     </div>
     <div class="row">
+        <% if session("HA8DA") = true then%>
         <div class="col-sm-4 mb-3 d-flex justify-content-center">
             <a href="pinjaman.asp">
                 <div class="card" style="background:url(../../logo/elektro1.jpg);background-size: cover;background-position: center; position: relative;">
@@ -28,6 +34,8 @@
                 </div>
             </a>
         </div>
+        <%end if%>
+        <%if session("HA8DB") = true then%>
         <div class="col-sm-4 mb-3  d-flex justify-content-center" >
             <a href="pembayaran.asp" >
                 <div class="card" style="background:url(../../logo/elektro2.jpg);background-size: cover;background-position: center; position: relative;">
@@ -38,6 +46,8 @@
                 </div>
             </a>
         </div>
+        <%end if%>
+        <%if session("HA8DC") = true then%>
         <div class="col-sm-4 mb-3  d-flex justify-content-center" >
             <a href="laporan_elektro.asp" >
                 <div class="card" style="background:url(../../logo/elektro4.jpg);background-size: cover;background-position: center; position: relative;">
@@ -48,6 +58,7 @@
                 </div>
             </a>
         </div>
+        <%end if%>
     </div>
     <div class="row">
         <div class="col-sm-12 text-center" >

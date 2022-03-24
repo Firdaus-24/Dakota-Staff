@@ -56,11 +56,13 @@
           </a>
           <% end if %>
         </li>
+        <%if session("HA8") = true then%>
         <li class="icon-item">
           <a href="<%=url%>/transaksi" class="icon-link">            
             <i class="fa fa-cog" aria-hidden="true"></i>TRANSAKSI
           </a>
         </li>
+        <%end if%>
         <li class="icon-item">
           <a href="<%=url%>/logout.asp" class="icon-link">
             <i class="fa fa-sign-out" aria-hidden="true"></i>LOGOUT

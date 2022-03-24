@@ -1,5 +1,9 @@
 <!-- #include file='../../connection.asp' -->
 <% 
+  if session("HA8B") = false then
+    Response.Redirect(url &"/transaksi/index.asp")
+  end if
+  
   dim pembayaran_cmd, pembayaran
   dim root, tgla, tgle, nip, nama, area
 
@@ -44,7 +48,8 @@
   end if
 
   ' setting default query 
-  query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_T_BK.TPK_ID, HRD_T_BK.TPK_Tanggal, HRD_T_BK.TPK_Nip, HRD_T_BK.TPK_Ket, HRD_T_BK.TPK_PP, HRD_T_BK.TPK_AktifYN, HRD_T_BK.TPK_UpdateID, HRD_T_BK.TPK_UpdateTime FROM HRD_M_Karyawan RIGHT OUTER JOIN HRD_T_BK ON HRD_M_karyawan.Kry_Nip = HRD_T_BK.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE HRD_M_Karyawan.kry_AktifYN = 'Y' "
+  ' query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_T_BK.TPK_ID, HRD_T_BK.TPK_Tanggal, HRD_T_BK.TPK_Nip, HRD_T_BK.TPK_Ket, HRD_T_BK.TPK_PP, HRD_T_BK.TPK_AktifYN, HRD_T_BK.TPK_UpdateID, HRD_T_BK.TPK_UpdateTime FROM HRD_M_Karyawan RIGHT OUTER JOIN HRD_T_BK ON HRD_M_karyawan.Kry_Nip = HRD_T_BK.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID LEFT OUTER JOIN HRD_T_PK ON SUBSTRING(HRD_T_BK.TPK_Ket,1,18) = HRD_T_PK.TPK_ID WHERE HRD_M_Karyawan.kry_AktifYN = 'Y' AND SUBSTRING(HRD_T_BK.TPK_Ket,1,18) <> HRD_T_PK.TPK_ID"
+  query = "SELECT TOP (100) PERCENT dbo.HRD_M_Karyawan.Kry_Nama, dbo.HRD_T_BK.TPK_ID, dbo.HRD_T_BK.TPK_Tanggal, dbo.HRD_T_BK.TPK_NIP, dbo.HRD_T_BK.TPK_Ket, dbo.HRD_T_BK.TPK_PP, dbo.HRD_T_BK.TPK_AktifYN, dbo.HRD_T_BK.TPK_UpdateID, dbo.HRD_T_BK.TPK_UpdateTime FROM dbo.HRD_T_BK RIGHT OUTER JOIN dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.HRD_M_Karyawan.Kry_AgenID = dbo.GLB_M_Agen.Agen_ID ON dbo.HRD_T_BK.TPK_NIP = dbo.HRD_M_Karyawan.Kry_NIP WHERE (dbo.HRD_M_Karyawan.Kry_AktifYN = 'Y') AND not EXISTS (SELECT TPK_ID FROM dbo.HRD_T_PK WHERE (TPK_ID = SUBSTRING(dbo.HRD_T_BK.TPK_Ket, 1, 18))) and TPK_Ket not like '%PK-%'"
 
   if tgla <> "" And tgle <> "" then
     filterTgl =  " AND HRD_T_BK.TPK_tanggal BETWEEN '"& Cdate(tgla) &"' AND '"& Cdate(tgle) &"'"
@@ -87,6 +92,7 @@
   pembayaran_cmd.activeConnection = mm_cargo_string
 
   pembayaran_cmd.commandText = root
+  ' Response.Write pembayaran_cmd.commandText & "<br>"
   set pembayaran = pembayaran_cmd.execute
 
   ' pencarian berdasarkan agen
@@ -283,9 +289,13 @@
       <div class='col'>
         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
           <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='../index.asp'"><i class="fa fa-backward" aria-hidden="true"></i> Kembali</button>
+          <%if session("HA8BA") = true then%>
           <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPembayaran" onclick="return tambahPembayaran()"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
-          <% if tgla <> "" OR tgle <> "" OR nama <> "" OR area <> "" then %>
-            <button type="button" class="btn btn-success btn-sm" onclick="window.open('printAll.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&nip=<%=nip%>&nama=<%=nama%>&area=<%=area%>&ckTgl=<%=ckTgl%>&ckNama=<%=ckNama%>&ckArea=<%=ckArea%>')"><i class="fa fa-print" aria-hidden="true"></i> Cetak</button>
+          <%end if%>
+          <%if session("HA8BD") = true then%>
+            <% if tgla <> "" OR tgle <> "" OR nama <> "" OR area <> "" then %>
+              <button type="button" class="btn btn-success btn-sm" onclick="window.open('printAll.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&nip=<%=nip%>&nama=<%=nama%>&area=<%=area%>&ckTgl=<%=ckTgl%>&ckNama=<%=ckNama%>&ckArea=<%=ckArea%>')"><i class="fa fa-print" aria-hidden="true"></i> Cetak</button>
+            <% end if %>
           <% end if %>
         </div>
       </div>
@@ -371,7 +381,9 @@
                     <th scope="col">Nama</th>
                     <th scope="col">Ketarangan</th>
                     <th scope="col">Aktif</th>
-                    <th scope="col" class="text-center">Aksi</th>
+                    <%if session("HA8BB") = true OR session("HA8BC") = true OR session("HA8BD") = true then %>
+                      <th scope="col" class="text-center">Aksi</th>
+                    <%end if%>
                     </tr>
                 </thead>
                 <tbody>
@@ -396,17 +408,24 @@
                     </td>
                     <td>
                       <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                        <button type="button" class="btn btn-primary btn-sm py-0 px-2" onclick="return updatePembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_tanggal") %>','<%= rs("TPK_Nip") %>','<%= rs("Kry_Nama") %>','<%= rs("TPK_Ket") %>','<%= rs("TPK_PP") %>')" data-bs-toggle="modal" data-bs-target="#modalPembayaran">Edit</button>
-                        <% if rs("TPK_AktifYN") = "Y" then %>
-                          <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return aktifPembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">NonAktif</button>
-                        <% else %>
-                          <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return aktifPembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">Aktif</button>
+                        <%if session("HA8BB") = true then%>
+                          <button type="button" class="btn btn-primary btn-sm py-0 px-2" onclick="return updatePembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_tanggal") %>','<%= rs("TPK_Nip") %>','<%= rs("Kry_Nama") %>','<%= rs("TPK_Ket") %>','<%= rs("TPK_PP") %>')" data-bs-toggle="modal" data-bs-target="#modalPembayaran">Edit</button>
+                        <%end if%>
+                        <%if session("HA8BC") = true then%>
+                          <% if rs("TPK_AktifYN") = "Y" then %>
+                            <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return aktifPembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">NonAktif</button>
+                          <% else %>
+                            <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return aktifPembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">Aktif</button>
+                          <% end if %>
                         <% end if %>
+                        <%if session("HA8BD") = true then%>
                           <button type="button" class="btn btn-secondary btn-sm py-0 px-2" onclick="window.open('EXPORT-Pembayaran.asp?p=<%= rs("TPK_ID") %>')">Cetak</button>
+                        <%end if%>
                       </div>
                     </td>
                 </tr>
                 <% 
+                response.flush
                	showrecords = showrecords - 1
                 rs.movenext
                 if rs.EOF then

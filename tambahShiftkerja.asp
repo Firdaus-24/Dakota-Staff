@@ -1,17 +1,15 @@
 <!-- #include file="connection.asp"-->
-<!--#include file="constend/constanta.asp"-->
-<!--#include file="landing.asp"-->
 <% 
-    if session("username") = "" then
-        Response.Redirect("login.asp")
+    if Session("HA2A") = false then
+        Response.Redirect(url&"/shift_view.asp")
     end if
     'set master shift
     dim shift, berhasil
 
-    berhasil = request.queryString("berhasil")
-    if berhasil <> "" then
-        Response.Write "<script>alert('DATA BERHASIL DI TAMBAHKAN')</script>"
-    End if
+    ' berhasil = request.queryString("berhasil")
+    ' if berhasil <> "" then
+    '     Response.Write "<script>alert('DATA BERHASIL DI TAMBAHKAN')</script>"
+    ' End if
 
     set shift = server.createobject("ADODB.Command")
     shift.activeConnection = MM_Cargo_string
@@ -56,18 +54,18 @@
 
     <script type="text/javascript">
 
-    $(document).ready(function(){
-        var date_input=$('input[name="myrosterdate"]'); //our date input has the name "myrosterdate"
-        var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-        var options={
-            multidate:true,
-            format: 'yyyy-mm-dd',
-            container: container,
-            todayHighlight: true,
-            autoclose: false,
-        };
-            date_input.datepicker(options);
-    });
+        $(document).ready(function(){
+            var date_input=$('input[name="myrosterdate"]'); //our date input has the name "myrosterdate"
+            var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+            var options={
+                multidate:true,
+                format: 'yyyy-mm-dd',
+                container: container,
+                todayHighlight: true,
+                autoclose: false,
+            };
+                date_input.datepicker(options);
+        });
     </script>   
      <!--CSS-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -77,6 +75,7 @@
     <!--#include file="layout/header.asp"-->
 </head>
 <body>
+<!--#include file="landing.asp"-->
 <div class="container">
     <div class='row mt-3'>
         <div class='col-lg'>
@@ -138,11 +137,15 @@
         <div class="d-flex mb-3">
             <div class="p-2 btn-group" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-danger" onclick="window.location.href='shift_view.asp'">Kembali</button>
+                <%if session("HA2AB") = true then%>
                 <button type="button" class="btn btn-warning" onclick="window.location.href='updateShiftKerja.asp'">Update</button>
+                <%end if%>
             </div>
+            <% if session("HA2AA") = true then%>
             <div class="ms-auto p-2">
                 <button class="btn btn-primary " name="submit" type="submit">Submit</button>
             </div>
+            <%end if%>
             </form>
         </div>
     </div>

@@ -1,5 +1,9 @@
 <!-- #include file='../../connection.asp' -->
 <% 
+  if session("HA8DB") = false then
+    Response.Redirect(url&"/transaksi/elektro/index.asp")
+  end if
+
   dim pembayaran_cmd, pembayaran
   dim root, tgla, tgle, nip, nama, area
 
@@ -289,9 +293,13 @@
       <div class='col'>
         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
           <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='index.asp'"><i class="fa fa-backward" aria-hidden="true"></i> Kembali</button>
-          <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPembayaran" onclick="return tambahPembayaran()"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
-          <% if tgla <> "" OR tgle <> "" OR nama <> "" OR area <> "" then %>
-            <button type="button" class="btn btn-success btn-sm" onclick="window.open('Export-Allpembayaran.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&nip=<%=nip%>&nama=<%=nama%>&area=<%=area%>&ckTgl=<%=ckTgl%>&ckNama=<%=ckNama%>&ckArea=<%=ckArea%>')"><i class="fa fa-print" aria-hidden="true"></i> Cetak</button>
+          <%if session("HA8DB1") = true then%>
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPembayaran" onclick="return tambahPembayaran()"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
+          <%end if%>
+          <%if session("HA8DB4") = true then%>
+            <% if tgla <> "" OR tgle <> "" OR nama <> "" OR area <> "" then %>
+              <button type="button" class="btn btn-success btn-sm" onclick="window.open('Export-Allpembayaran.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&nip=<%=nip%>&nama=<%=nama%>&area=<%=area%>&ckTgl=<%=ckTgl%>&ckNama=<%=ckNama%>&ckArea=<%=ckArea%>')"><i class="fa fa-print" aria-hidden="true"></i> Cetak</button>
+            <% end if %>
           <% end if %>
         </div>
       </div>
@@ -346,7 +354,7 @@
                 <% 
                 agen.movenext
                 loop
-                 %>
+                %>
               </select>
               <hr>
             </div>
@@ -369,7 +377,7 @@
     <div class='row'>
         <div class='col'>
             <table class="table">
-                <thead>
+                <thead class="bg-secondary text-light">
                     <tr>
                     <th scope="col">Nomor</th>
                     <th scope="col">Tanggal</th>
@@ -377,7 +385,9 @@
                     <th scope="col">Nama</th>
                     <th scope="col">Ketarangan</th>
                     <th scope="col">Aktif</th>
-                    <th scope="col" class="text-center">Aksi</th>
+                    <%if session("HA8DB2") = true OR session("HA8DB3") = true OR session("HA8DB4") = true then%>
+                      <th scope="col" class="text-center">Aksi</th>
+                    <%end if%>
                     </tr>
                 </thead>
                 <tbody>
@@ -402,13 +412,19 @@
                     </td>
                     <td>
                       <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                        <button type="button" class="btn btn-primary btn-sm py-0 px-2" onclick="return updatePembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_tanggal") %>','<%= rs("TPK_Nip") %>','<%= rs("Kry_Nama") %>','<%= rs("TPK_Ket") %>','<%= rs("TPK_PP") %>')" data-bs-toggle="modal" data-bs-target="#modalPembayaran">Edit</button>
-                        <% if rs("TPK_AktifYN") = "Y" then %>
-                          <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return aktifPembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">NonAktif</button>
-                        <% else %>
-                          <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return aktifPembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">Aktif</button>
+                        <%if session("HA8DB2") = true then%>
+                          <button type="button" class="btn btn-primary btn-sm py-0 px-2" onclick="return updatePembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_tanggal") %>','<%= rs("TPK_Nip") %>','<%= rs("Kry_Nama") %>','<%= rs("TPK_Ket") %>','<%= rs("TPK_PP") %>')" data-bs-toggle="modal" data-bs-target="#modalPembayaran">Edit</button>
+                        <%end if%>
+                        <%if session("HA8DB3") = true then%>
+                          <% if rs("TPK_AktifYN") = "Y" then %>
+                            <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return aktifPembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">NonAktif</button>
+                          <% else %>
+                            <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return aktifPembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">Aktif</button>
+                          <% end if %>
                         <% end if %>
+                        <%if session("HA8DB4") = true then%>
                           <button type="button" class="btn btn-secondary btn-sm py-0 px-2" onclick="window.open('EXPORT-Pembayaran.asp?p=<%= rs("TPK_ID") %>')">Cetak</button>
+                        <%end if%>
                       </div>
                     </td>
                 </tr>

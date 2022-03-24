@@ -1,5 +1,9 @@
 <!-- #include file='../../connection.asp' -->
 <%
+    if session("HA8DC") = false then
+        Response.Redirect(url & "/transaksi/elektro/index.asp")
+    end if
+
     tgla = trim(Request.Form("tgla"))
     tgle = trim(Request.Form("tgle"))
     nama = trim(Request.Form("nama"))
@@ -84,7 +88,7 @@
     <div class="row">
         <div class="col-md-12">
             <table class="table" style="font-size:12px;display:block;overflow:auto;">
-                <thead>
+                <thead class="bg-secondary text-light">
                     <tr>
                         <th scope="col">No</th>
                         <th scope="col">Cabang</th>
@@ -128,6 +132,7 @@
                         <td><%= karyawan("TPK_Lama") %></td>
                     </tr>
                     <%
+                        response.flush
                         karyawan.movenext
                         loop
                     %>
