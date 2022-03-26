@@ -121,7 +121,7 @@
                         
                         <tr>
                             <td><%= nomor %></td>
-                            <td><%= cuti("Kry_Nip") %></td>
+                            <td style="mso-number-format:\@;"><%= cuti("Kry_Nip") %></td>
                             <td><%= cuti("Kry_nama") %></td>
                             <td><%= cuti("Kry_TglMasuk") %></td>
                             <td><%= cuti("Kry_JmlCuti") %></td>
