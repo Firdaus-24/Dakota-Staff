@@ -1,7 +1,6 @@
 <!-- koneksi untuk ke database -->
 <!-- #include file="connection.asp"-->
 <!--#include file="landing.asp"-->
-<!-- #include file="constend/constanta.asp" -->
 
 <%
 ' keharusan user login sebelum masuk ke menu utama aplikasi
@@ -152,8 +151,11 @@ loop
 	<title>Master Karyawan</title>
 	<!-- #include file='layout/header.asp' -->
 	<style>
-	@media screen and (max-width:540px)
-	{
+		#table tr:first-child{
+			white-space: nowrap;
+		}
+		@media screen and (max-width:540px)
+		{
 		.container h1
 		{
 			font-size:25px;
@@ -204,7 +206,7 @@ loop
 	<div class="container">
 		<div class="row">
 			<div class="col md-3">
-				<h1 class="mt-3 mb-1 text-center">DAFTAR KARYAWAN HARIAN</h1>
+				<h2 class="mt-3 mb-1 text-center">DAFTAR KARYAWAN HARIAN</h2>
 					<div class='row'>
 					<!--
 						<div class='d-grid gap-2 d-md-block'>
@@ -234,7 +236,7 @@ loop
 							<% 
 							cabang.movenext
 							loop
-							 %> 
+							%> 
 							</select>
 						</div>
 						<div class="col-3">
@@ -264,27 +266,27 @@ loop
 			</div>
 				<div id="container2" style="overflow-x:auto;">
 					<input name="urut" id="urut"  type="hidden" value="<%response.write angka%>" size="1" hidden="">	
-						<table class="table table-dark table-striped" cellpadding="10" cellspacing="0" id="table">
+						<table class="table table-dark table-striped" cellpadding="10" cellspacing="0" id="table" style="font-size:14px;">
 						<tr>
 							<th>
 								<% if orderBy = "ORDER BY Kry_Nip ASC" then %>
-									<a href="index.asp?a=OBK_N&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> NIP</a> 
+									<a href="karyawanharian.asp?a=OBK_N&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> NIP</a> 
 								<% else %>
-									<a href="index.asp?q=OBK_N&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> NIP</a>
+									<a href="karyawanharian.asp?q=OBK_N&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> NIP</a>
 								<% end if %>
 							</th>
 							<th>
 								<% if orderBy = "ORDER BY Kry_Nama ASC" then %>
-									<a href="index.asp?b=OBK_N&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> NAMA</a>
+									<a href="karyawanharian.asp?b=OBK_N&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> NAMA</a>
 								<% else %>
-									<a href="index.asp?r=OBK_NM&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> NAMA</a>
+									<a href="karyawanharian.asp?r=OBK_NM&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> NAMA</a>
 								<% end if %>
 							</th>
 							<th>
 								<% if orderBy = "ORDER BY Kry_ActiveAgenID ASC" then %>
-									<a href="index.asp?c=OBK_N&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> PENGGAJIAN DI</a>
+									<a href="karyawanharian.asp?c=OBK_N&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> PENGGAJIAN DI</a>
 								<% else %>
-									<a href="index.asp?s=OBK_A&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> PENGGAJIAN DI</a>
+									<a href="karyawanharian.asp?s=OBK_A&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> PENGGAJIAN DI</a>
 								<% end if %>
 							</th>
 							<th>
@@ -292,16 +294,16 @@ loop
 							</th>
 							<th>
 								<% if orderBy = "ORDER BY Kry_TglMasuk ASC" then %>
-									<a href="index.asp?d=OBK_N&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> TANGGAL MASUK</a>
+									<a href="karyawanharian.asp?d=OBK_N&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> TANGGAL MASUK</a>
 								<% else %>
-									<a href="index.asp?t=OBK_TM&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> TANGGAL MASUK</a>
+									<a href="karyawanharian.asp?t=OBK_TM&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> TANGGAL MASUK</a>
 								<% end if %>
 							</th>
 							<th>
 								<% if orderBy = "ORDER BY Kry_TglKeluar ASC" then %>
-									<a href="index.asp?e=OBK_N&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> TANGGAL KELUAR</a>
+									<a href="karyawanharian.asp?e=OBK_N&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> TANGGAL KELUAR</a>
 								<% else %>
-									<a href="index.asp?u=OBK_TK&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> TANGGAL KELUAR</a>
+									<a href="karyawanharian.asp?u=OBK_TK&p=<%= p %>" style="text-decoration:none;color:#fff;"><i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> TANGGAL KELUAR</a>
 								<% end if %>
 							</th>
 							<th class="text-center" id="thaktif">AKTIF</th>
@@ -356,7 +358,7 @@ loop
 								<% end if %>
 							</td>
 							<td>
-								<a href="detail-karyawan/index.asp?nip=<%= rs("Kry_NIP")%>" class="btn btn-outline-info btn-sm" name="detail">Detail</a>
+								<a href="detail-karyawan/karyawanharian.asp?nip=<%= rs("Kry_NIP")%>" class="btn btn-outline-info btn-sm" name="detail">Detail</a>
             				</td>
 						</tr>
 								
@@ -378,7 +380,7 @@ loop
 						<ul class="pagination">
 							<li class="page-item">
 								<% if requestrecords <> 0 then %>
-								<a class="page-link" href="index.asp?offset=<%= requestrecords - recordsonpage%>&angka=<%=angka%>&p=<%=p%>&q=<%= q %>&r=<%= r %>&s=<%= s %>&t=<%= t %>&u=<%= u %>&a=<%= a %>&b=<%= b %>&c=<%= c %>&d=<%= d %>&e=<%= e %>">&#x25C4; Previous </a>
+								<a class="page-link" href="karyawanharian.asp?offset=<%= requestrecords - recordsonpage%>&angka=<%=angka%>&p=<%=p%>&q=<%= q %>&r=<%= r %>&s=<%= s %>&t=<%= t %>&u=<%= u %>&a=<%= a %>&b=<%= b %>&c=<%= c %>&d=<%= d %>&e=<%= e %>">&#x25C4; Previous </a>
 								<% else %>
 								<p class="page-link-p">&#x25C4; Previous </p>
 								<% end if %>
@@ -393,7 +395,7 @@ loop
 								pagelistcounter = pagelistcounter + 1
 
 								%>	
-									<a class="page-link hal d-flex active" href="index.asp?offset=<%= pagelist %>&angka=<%=angka%>&p=<%=p%>&q=<%= q %>&r=<%= r %>&s=<%= s %>&t=<%= t %>&u=<%= u %>&a=<%= a %>&b=<%= b %>&c=<%= c %>&d=<%= d %>&e=<%= e %>"><%= pagelistcounter %></a>  
+									<a class="page-link hal d-flex active" href="karyawanharian.asp?offset=<%= pagelist %>&angka=<%=angka%>&p=<%=p%>&q=<%= q %>&r=<%= r %>&s=<%= s %>&t=<%= t %>&u=<%= u %>&a=<%= a %>&b=<%= b %>&c=<%= c %>&d=<%= d %>&e=<%= e %>"><%= pagelistcounter %></a>  
 								<%
 								pagelist = pagelist + recordsonpage
 								loop
@@ -401,7 +403,7 @@ loop
 							</li>
 							<li class="page-item">
 								<% if(recordcounter > 1) and (lastrecord <> 1) then %>
-								<a class="page-link next" href="index.asp?offset=<%= requestrecords + recordsonpage %>&angka=<%=angka%>&p=<%=p%>&q=<%= q %>&r=<%= r %>&s=<%= s %>&t=<%= t %>&u=<%= u %>&a=<%= a %>&b=<%= b %>&c=<%= c %>&d=<%= d %>&e=<%= e %>">Next &#x25BA;</a>
+								<a class="page-link next" href="karyawanharian.asp?offset=<%= requestrecords + recordsonpage %>&angka=<%=angka%>&p=<%=p%>&q=<%= q %>&r=<%= r %>&s=<%= s %>&t=<%= t %>&u=<%= u %>&a=<%= a %>&b=<%= b %>&c=<%= c %>&d=<%= d %>&e=<%= e %>">Next &#x25BA;</a>
 								<% else %>
 								<p class="page-link next-p">Next &#x25BA;</p>
 								<% end if %>

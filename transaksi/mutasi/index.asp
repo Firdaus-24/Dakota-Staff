@@ -15,210 +15,243 @@
     set mutasi_cmd = Server.CreateObject("ADODB.Command")
     mutasi_cmd.activeConnection = mm_cargo_string
 
-    if radio = "detail" then
-        if nama = "" then
-            if bulan = "1" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal , HRD_M_Karyawan.Kry_nama order by HRD_M_Karyawan.Kry_Nama ASC"
-                ' Response.Write mutasi_cmd.commandText & "<br>"
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "2" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01) - (SAPK_Bayar01)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01) - (SAPK_Bayar01)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+    set noname_cmd = Server.CreateObject("ADODB.Command")
+    noname_cmd.activeConnection = mm_cargo_string
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "3" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+    if bulan = "" then
+        if radio = "detail" then
+            if nama = "" then
+                noname_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+                ' Response.Write noname_cmd.commandText & "<br>"
+                set mutasi = noname_cmd.execute
+            else
+                noname_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "4" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "5" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "6" then 
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "7" then 
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "8" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "9" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-                ' Response.Write mutasi_cmd.commandText & "<br>"
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "10" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "11" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "12" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
+                set mutasi = noname_cmd.execute
             end if
         else
-            if bulan = "1" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal , HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-                ' Response.Write mutasi_cmd.commandText & "<br>"
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "2" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01) - (SAPK_Bayar01)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01) - (SAPK_Bayar01)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-                ' Response.Write mutasi_cmd.commandText & "<br>"
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "3" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+            if nama = "" then
+                noname_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "4" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+                set mutasi = noname_cmd.execute
+            else
+                noname_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "5" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "6" then 
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "7" then 
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "8" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "9" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "10" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP, sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "11" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "12" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-
-                set mutasi = mutasi_cmd.execute
+                set mutasi = noname_cmd.execute
             end if
         end if
     else
-        if nama = "" then
-            if bulan = "1" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal , HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
-                ' Response.Write mutasi_cmd.commandText & "<br>"
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "2" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01) - (SAPK_Bayar01)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01) - (SAPK_Bayar01)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+        if radio = "detail" then
+            if nama = "" then
+                if bulan = "1" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal , HRD_M_Karyawan.Kry_nama order by HRD_M_Karyawan.Kry_Nama ASC"
+                    ' Response.Write mutasi_cmd.commandText & "<br>"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "2" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01) - (SAPK_Bayar01)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01) - (SAPK_Bayar01)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "3" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "3" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "4" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "4" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "5" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "5" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "6" then 
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "6" then 
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "7" then 
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "7" then 
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "8" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "8" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "9" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
-                
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "10" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "9" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+                    ' Response.Write mutasi_cmd.commandText & "<br>"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "10" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "11" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "11" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "12" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "12" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+                    set mutasi = mutasi_cmd.execute
+                end if
+            else
+                if bulan = "1" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal , HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+                    ' Response.Write mutasi_cmd.commandText & "<br>"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "2" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01) - (SAPK_Bayar01)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01) - (SAPK_Bayar01)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+                    ' Response.Write mutasi_cmd.commandText & "<br>"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "3" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
 
-                set mutasi = mutasi_cmd.execute
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "4" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "5" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "6" then 
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "7" then 
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "8" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "9" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "10" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP, sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "11" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "12" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+
+                    set mutasi = mutasi_cmd.execute
+                end if
             end if
         else
-            if bulan = "1" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal , HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
-                ' Response.Write mutasi_cmd.commandText & "<br>"
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "2" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01) - (SAPK_Bayar01)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01) - (SAPK_Bayar01)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
-                ' Response.Write mutasi_cmd.commandText & "<br>"
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "3" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+            if nama = "" then
+                if bulan = "1" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal , HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama ASC"
+                    ' Response.Write mutasi_cmd.commandText & "<br>"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "2" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01) - (SAPK_Bayar01)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01) - (SAPK_Bayar01)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "4" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "3" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "5" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "4" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "6" then 
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "5" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "7" then 
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "6" then 
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "8" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "7" then 
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "9" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "8" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "10" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "9" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "10" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "11" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "11" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
 
-                set mutasi = mutasi_cmd.execute
-            elseIf bulan = "12" then
-                mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "12" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
 
-                set mutasi = mutasi_cmd.execute
+                    set mutasi = mutasi_cmd.execute
+                end if
+            else
+                if bulan = "1" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal , HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    ' Response.Write mutasi_cmd.commandText & "<br>"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "2" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01) - (SAPK_Bayar01)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01) - (SAPK_Bayar01)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+                    ' Response.Write mutasi_cmd.commandText & "<br>"
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "3" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02) - (SAPK_Bayar01+SAPK_Bayar02)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "4" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "5" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "6" then 
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "7" then 
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "8" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "9" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"') and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "10" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "11" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+
+                    set mutasi = mutasi_cmd.execute
+                elseIf bulan = "12" then
+                    mutasi_cmd.commandText = "SELECT SAPK_NIP,  sapk_awal +  ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)) as saldoawal, HRD_M_Karyawan.Kry_nama FROM HRD_T_SA_PK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_SA_PK.SAPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE (SAPK_Tahun = '"& tahun &"')and isnull(sapk_nip,'')<>'' AND HRD_M_Karyawan.Kry_nama LIKE '%"& nama &"%' AND sapk_awal <> 0 GROUP BY SAPK_NIP,  sapk_awal + ((SAPK_Pinjam01 + SAPK_Pinjam02 + SAPK_Pinjam03 + SAPK_Pinjam04 + SAPK_Pinjam05 + SAPK_Pinjam06 + SAPK_Pinjam07 + SAPK_Pinjam08 + SAPK_Pinjam09 + SAPK_Pinjam10 + SAPK_Pinjam11) - (SAPK_Bayar01+SAPK_Bayar02+SAPK_Bayar03+SAPK_Bayar04 + SAPK_Bayar05 + SAPK_Bayar06 + SAPK_Bayar07 + SAPK_Bayar08 + SAPK_Bayar09 + SAPK_Bayar10 + SAPK_Bayar11)), HRD_M_Karyawan.Kry_nama ORDER BY HRD_M_Karyawan.Kry_Nama"
+
+                    set mutasi = mutasi_cmd.execute
+                end if
             end if
         end if
+    end if
+
+    ' filter bulan for query
+    if bulan <> "" then
+        filterBln = "Month(TPK_Tanggal) = '"& bulan &"' AND"
+    else
+        filterBln = ""
     end if
  %>
  <!DOCTYPE html>
@@ -270,7 +303,7 @@
                 <label>Priode Bulan</label>
             </div>
             <div class='col-sm-2'>
-                <input type="number" id="bulan" name="bulan" class="form-control" autocomplete="off" min="1" max="12" required>
+                <input type="number" id="bulan" name="bulan" class="form-control" autocomplete="off" min="1" max="12">
                 <hr>
             </div>
             <div class='col-auto mt-2'>
@@ -312,7 +345,8 @@
         </form>
     </div>
     <!--kontent -->
-    <div class='header' <% if bulan = "" then %> style="display: none;" <% end if %>>
+    <%if tahun <> "" then%>
+    <div class='header'>
         <div class='row mt-2 '>
             <div class='col'>
                 <ul style="list-style:none;">
@@ -326,7 +360,11 @@
         <div class='row'>
             <div class='col text-center'>
                 <label><b><u>MUTASI PINJAMAN KARYAWAN DETAIL</u></b></label></br>
+                <%if bulan <> "" then%>
                 <label>Priode Bulan <%= MonthName(bulan) &" Tahun "& tahun%></label>
+                <%else%>
+                    <label>Priode Tahun <%= tahun%></label>
+                <%end if%>
             </div>
         </div>
         <div class='row'>
@@ -336,7 +374,7 @@
             </div>
         </div>
     </div>
-    <div class='row' <% if bulan = "" then %> style="display: none;" <% end if %>>
+    <div class='row'>
         <div class='col'>
             <table class="table">
                 <thead>
@@ -351,17 +389,18 @@
                 </thead>
                 <tbody>
                     <%
-                        if bulan <> "" And nama = "" then
+                        if nama = "" then
+                        
 
                         tpinjaman = 0
                         tbayar = 0
                         saldoakhir = 0
-                        do until mutasi.eof 
-                            mutasi_cmd.commandText = "SELECT TPK_Tanggal, TPK_ID, TPK_Ket, TPK_PP FROM HRD_T_PK WHERE Month(TPK_Tanggal) = '"& bulan &"' AND Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
+                        do while not mutasi.eof 
+                            mutasi_cmd.commandText = "SELECT TPK_Tanggal, TPK_ID, TPK_Ket, TPK_PP FROM HRD_T_PK WHERE "& filterBln &" Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
                             ' Response.Write mutasi_cmd.commandText & "<br>"
                             set pk = mutasi_cmd.execute
 
-                            mutasi_cmd.commandText = "SELECT TPK_Tanggal, TPK_ID, TPK_Ket, TPK_PP FROM HRD_T_BK WHERE Month(TPK_Tanggal) = '"& bulan &"' AND Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
+                            mutasi_cmd.commandText = "SELECT TPK_Tanggal, TPK_ID, TPK_Ket, TPK_PP FROM HRD_T_BK WHERE "& filterBln &" Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
 
                             set bk = mutasi_cmd.execute                        
                     %>
@@ -448,11 +487,11 @@
                             tpinjaman = 0
                             tbayar = 0
                             saldoakhir = 0
-                                mutasi_cmd.commandText = "SELECT TPK_Tanggal, TPK_ID, TPK_Ket, TPK_PP FROM HRD_T_PK WHERE Month(TPK_Tanggal) = '"& bulan &"' AND Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
+                                mutasi_cmd.commandText = "SELECT TPK_Tanggal, TPK_ID, TPK_Ket, TPK_PP FROM HRD_T_PK WHERE "& filterBln &" Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
                                 ' Response.Write mutasi_cmd.commandText & "<br>"
                                 set pk = mutasi_cmd.execute
 
-                                mutasi_cmd.commandText = "SELECT TPK_Tanggal, TPK_ID, TPK_Ket, TPK_PP FROM HRD_T_BK WHERE Month(TPK_Tanggal) = '"& bulan &"' AND Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
+                                mutasi_cmd.commandText = "SELECT TPK_Tanggal, TPK_ID, TPK_Ket, TPK_PP FROM HRD_T_BK WHERE "& filterBln &" Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
 
                                 set bk = mutasi_cmd.execute                        
                     %>
@@ -537,7 +576,11 @@
         <div class='row'>
             <div class='col text-center'>
                 <label><b><u>MUTASI PINJAMAN KARYAWAN REKAPITULASI</u></b></label></br>
-                <label>Priode Bulan <%= MonthName(bulan) &" Tahun "& tahun%></label>
+                <%if bulan <> "" then%>
+                    <label>Priode Bulan <%= MonthName(bulan) &" Tahun "& tahun%></label>
+                <%else%>
+                    <label>Priode Tahun <%= tahun%></label>
+                <%end if%>
             </div>
         </div>
         <div class='row'>
@@ -562,7 +605,7 @@
                 </thead>
                 <tbody>
                     <%
-                        if bulan <> "" And nama = "" then
+                        if nama = "" then
 
                         nol = 0 'untuk value yang tidak ada isinya
                         tsaldoawal = 0 'totalkeseluruhan saldo awal
@@ -580,11 +623,11 @@
                                 tsaldoawal = tsaldoawal + Abs(mutasi("saldoawal"))
                             end if
 
-                            mutasi_cmd.commandText = "SELECT TPK_PP FROM HRD_T_PK WHERE Month(TPK_Tanggal) = '"& bulan &"' AND Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
+                            mutasi_cmd.commandText = "SELECT TPK_PP FROM HRD_T_PK WHERE "& filterBln &" Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
                             ' Response.Write mutasi_cmd.commandText & "<br>"
                             set pk = mutasi_cmd.execute
 
-                            mutasi_cmd.commandText = "SELECT TPK_PP FROM HRD_T_BK WHERE Month(TPK_Tanggal) = '"& bulan &"' AND Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
+                            mutasi_cmd.commandText = "SELECT TPK_PP FROM HRD_T_BK WHERE "& filterBln &" Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
 
                             set bk = mutasi_cmd.execute                        
                     %>
@@ -662,11 +705,11 @@
                             pinjam = 0
                             bayar = 0
 
-                                mutasi_cmd.commandText = "SELECT TPK_Tanggal, TPK_ID, TPK_Ket, TPK_PP FROM HRD_T_PK WHERE Month(TPK_Tanggal) = '"& bulan &"' AND Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
-                                ' Response.Write mutasi_cmd.commandText & "<br>"
+                                mutasi_cmd.commandText = "SELECT TPK_Tanggal, TPK_ID, TPK_Ket, TPK_PP FROM HRD_T_PK WHERE "& filterBln &" Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
+
                                 set pk = mutasi_cmd.execute
 
-                                mutasi_cmd.commandText = "SELECT TPK_Tanggal, TPK_ID, TPK_Ket, TPK_PP FROM HRD_T_BK WHERE Month(TPK_Tanggal) = '"& bulan &"' AND Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
+                                mutasi_cmd.commandText = "SELECT TPK_Tanggal, TPK_ID, TPK_Ket, TPK_PP FROM HRD_T_BK WHERE "& filterBln &" Year(TPK_Tanggal) = '"& tahun &"' AND TPK_AktifYN = 'Y' AND TPK_Nip = '"& mutasi("SAPK_Nip") &"'"
 
                                 set bk = mutasi_cmd.execute                        
                     %>
@@ -745,6 +788,7 @@
     </div>
     <% end if %>
     <!--end kontent -->
+    <% end if %>
 </div>
 
 <!-- #include file='../../layout/footer.asp' -->

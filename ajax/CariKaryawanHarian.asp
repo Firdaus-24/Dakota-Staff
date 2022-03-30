@@ -1,5 +1,4 @@
 <!-- #include file="../connection.asp"-->
-<!--#include file="../constend/constanta.asp"-->
 <% 
 if session("username") = "" then
 response.Redirect("../login.asp")
