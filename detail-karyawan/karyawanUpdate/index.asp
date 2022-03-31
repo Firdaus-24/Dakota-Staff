@@ -182,20 +182,19 @@
                                 
                                 <% 
                                 do until setagama.eof 
-                                 %>
+                                %>
                                 <option value="<%=setagama("agama_ID")%>"><%=setagama("agama_Nama")%></option>
                                 <% 
                                 setagama.movenext
                                 loop
-                                 %>
+                                %>
                             </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-8">
                         <label>Jenis Kelamin</label>
-                           <select class="form-select" aria-label="Default select example" name="jkelamin" id="jkelammin" >
-						   
+                            <select class="form-select" aria-label="Default select example" name="jkelamin" id="jkelammin" >
                                 <% if ucase(karyawan("Kry_sex")) = "P" then  %> 
                                     <option value="P">Laki-Laki</option>
                                 <% else %>
@@ -247,8 +246,8 @@
                     idpddk = ""
                     namepddk = ""
                 end if
-                 %> 
-                 <div class="row">
+                %> 
+                <div class="row">
                     <div class="col-md-6">
                         <label>Pendidikan</label>
                         <select class="form-select" aria-label="Default select example" name="pendidikan" id="pendidikan">
@@ -444,7 +443,7 @@
                         divisi_cmd.commandText = "select Div_Code, Div_Nama from HRD_M_Divisi WHERE Div_AktifYN = 'Y' ORDER BY Div_Nama ASC"
                         set divisi = divisi_cmd.execute
                         
-                        divisi_cmd.commandText = "select Div_Code, Div_Nama from HRD_M_Divisi WHERE Div_Code = "& karyawan("Kry_DDBID") &""
+                        divisi_cmd.commandText = "select Div_Code, Div_Nama from HRD_M_Divisi WHERE Div_Code = '"& karyawan("Kry_DDBID") &"'"
 
                         set setdivisi = divisi_cmd.execute
 
