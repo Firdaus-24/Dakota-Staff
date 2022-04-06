@@ -37,11 +37,11 @@ set aktifarea_cmd = Server.CreateObject("ADODB.Command")
 aktifarea_cmd.ActiveConnection = MM_Cargo_string
 
 if area <> "" then
-    aktifarea_cmd.commandText = "SELECT GLB_M_Agen.agen_nama, GLB_M_Agen.agen_ID FROM HRD_T_Salary_convert LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_salary_convert.Sal_NIP = HRD_M_Karyawan.Kry_NIp LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE GLB_M_Agen.Agen_ID = "& area &" and GLB_M_Agen.Agen_AktifYN = 'Y' AND Month(HRD_T_Salary_convert.Sal_StartDate) = '"& bulan &"' AND YEAR(HRD_T_Salary_convert.Sal_StartDate) = '"& tahun &"' ORDER BY GLB_M_Agen.Agen_Nama"
+    aktifarea_cmd.commandText = "SELECT GLB_M_Agen.Agen_Nama, GLB_M_Agen.Agen_ID FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_Salary_Convert ON HRD_M_Karyawan.Kry_Nip = HRD_T_Salary_convert.Sal_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE GLB_M_Agen.Agen_ID = "& area &" and GLB_M_Agen.Agen_AktifYN = 'Y' AND Month(HRD_T_Salary_Convert.Sal_StartDate) = '"& bulan &"' AND YEAR(HRD_T_Salary_Convert.Sal_StartDate) = '"& tahun &"' AND HRD_T_Salary_Convert.Sal_AktifYN = 'Y' AND HRD_M_Karyawan.Kry_AktifYN = 'Y' AND (ISNULL(HRD_M_Karyawan.Kry_Nip, '') <> '') ORDER BY GLB_M_Agen.Agen_Nama"
     ' Response.Write aktifarea_cmd.commandText & "<br>"
     set aktifarea = aktifarea_cmd.execute
 else
-    aktifarea_cmd.commandText = "SELECT dbo.GLB_M_Agen.Agen_Nama, dbo.GLB_M_Agen.Agen_ID FROM dbo.HRD_T_Salary_convert LEFT OUTER JOIN dbo.HRD_M_Karyawan ON dbo.HRD_T_Salary_convert.Sal_NIP = dbo.HRD_M_Karyawan.Kry_NIP LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.HRD_M_Karyawan.Kry_AgenID = dbo.GLB_M_Agen.Agen_ID WHERE (dbo.HRD_M_Karyawan.Kry_AktifYN = 'Y') AND (dbo.GLB_M_Agen.Agen_Nama <> '') AND Month(HRD_T_Salary_convert.Sal_StartDate) = '"& bulan &"' and YEAR(HRD_T_Salary_convert.Sal_StartDate) = '"& tahun &"' GROUP BY dbo.GLB_M_Agen.Agen_Nama, dbo.GLB_M_Agen.Agen_ID ORDER BY dbo.GLB_M_Agen.Agen_Nama"
+    aktifarea_cmd.commandText = "SELECT GLB_M_Agen.Agen_Nama, GLB_M_Agen.Agen_ID FROM HRD_M_karyawan LEFT OUTER JOIN HRD_T_Salary_Convert ON HRD_M_Karyawan.kry_Nip = HRD_T_salary_convert.Sal_nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_Id WHERE (dbo.HRD_M_Karyawan.Kry_AktifYN = 'Y') AND GLB_M_Agen.Agen_AktifYN = 'Y' AND Month(HRD_T_Salary_Convert.Sal_StartDate) = '"& bulan &"' and YEAR(HRD_T_Salary_Convert.Sal_StartDate) = '"& tahun &"'  AND HRD_T_Salary_Convert.Sal_AktifYN = 'Y' AND (ISNULL(HRD_M_Karyawan.Kry_Nip, '') <> '')  GROUP BY dbo.GLB_M_Agen.Agen_Nama, dbo.GLB_M_Agen.Agen_ID ORDER BY dbo.GLB_M_Agen.Agen_Nama"
     ' Response.Write aktifarea_cmd.commandText & "<br>"
     set aktifarea = aktifarea_cmd.execute
 end if
@@ -131,145 +131,157 @@ karyawan_cmd.ActiveConnection = MM_Cargo_string
                 </tr>
             </thead>
             <tbody>
-            <%     
-            if  pegawai = "" AND status = "" then
-                karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, HRD_M_JenjangDidik.JDdk_Nama, HRD_M_Divisi.Div_Nama FROM HRD_T_Salary_convert LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_Salary_convert.Sal_Nip = HRD_M_Karyawan.Kry_Nip LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_Id LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_Code WHERE HRD_M_Karyawan.Kry_AgenID = '"& id &"' and HRD_M_Karyawan.Kry_AktifYN = 'Y' and month(HRD_T_Salary_convert.Sal_StartDate) = '"& bulan &"' and year(HRD_T_Salary_convert.Sal_StartDate)= '"& tahun &"' "& orderby &""
-                ' Response.Write karyawan_cmd.commandText & "<br>"
-                set karyawan = karyawan_cmd.execute
-            elseIf pegawai <> "" then
-                karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, HRD_M_JenjangDidik.JDdk_Nama, HRD_M_Divisi.Div_Nama FROM HRD_T_Salary_convert LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_Salary_convert.Sal_Nip = HRD_M_Karyawan.Kry_Nip LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_Id LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_Code WHERE HRD_M_Karyawan.Kry_AgenID = '"& id &"' AND HRD_M_Karyawan.Kry_Pegawai = '"& pegawai &"' and HRD_M_Karyawan.Kry_AktifYN = 'Y' and month(HRD_T_Salary_convert.Sal_StartDate) = '"& bulan &"' and year(HRD_T_Salary_convert.Sal_StartDate)= '"& tahun &"' "& orderby &""
-                ' Response.Write karyawan_cmd.commandText & "<br>"
-                set karyawan = karyawan_cmd.execute
-            else 
-                karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, HRD_M_JenjangDidik.JDdk_Nama, HRD_M_Divisi.Div_Nama FROM HRD_T_Salary_convert LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_Salary_convert.Sal_Nip = HRD_M_Karyawan.Kry_Nip LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_Id LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_Code WHERE HRD_M_Karyawan.Kry_AgenID = '"& id &"' AND HRD_M_Karyawan.Kry_Pegawai = '"& pegawai &"' and and HRD_M_Karyawan.Kry_SttKerja = '"& status &"' and HRD_M_Karyawan.Kry_AktifYN = 'Y' and month(HRD_T_Salary_convert.Sal_StartDate) = '"& bulan &"' and year(HRD_T_Salary_convert.Sal_StartDate)= '"& tahun &"' "& orderby &""
-                ' Response.Write karyawan_cmd.commandText & "<br>"
-                set karyawan = karyawan_cmd.execute
-            end if
-
-            do until karyawan.eof
-            '  'cek peria dan wanita
-                pl = ""
-                if karyawan("Kry_Sex") = "W" then
-                    pl = "Wanita"
+            <% 
+                if  pegawai = "" AND status = "" then
+                    karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, HRD_M_JenjangDidik.JDdk_Nama, HRD_M_Divisi.Div_Nama, HRD_M_Jabatan.Jab_NAma FROM HRD_M_Karyawan  LEFT OUTER JOIN HRD_T_Salary_Convert ON HRD_M_Karyawan.Kry_Nip = HRD_T_Salary_Convert.Sal_Nip LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_Id LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_Code LEFT OUTER JOIN HRD_M_jabatan ON HRD_M_Karyawan.Kry_JabCode = HRD_M_Jabatan.Jab_Code WHERE HRD_M_Karyawan.Kry_AgenID = '"& id &"' and HRD_M_Karyawan.Kry_AktifYN = 'Y' and month(HRD_T_Salary_Convert.Sal_StartDate) = '"& bulan &"' and year(HRD_T_Salary_Convert.Sal_StartDate)= '"& tahun &"' AND HRD_T_Salary_Convert.Sal_AktifYN = 'Y' AND HRD_M_Karyawan.Kry_AktifYN = 'Y' "& orderby &""
+                    ' Response.Write karyawan_cmd.commandText & "<br>"
+                    set karyawan = karyawan_cmd.execute
+                elseIf pegawai <> "" and status = "" then
+                    karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, HRD_M_JenjangDidik.JDdk_Nama, HRD_M_Divisi.Div_Nama, HRD_M_Jabatan.Jab_Nama FROM HRD_T_Salary_Convert LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_Salary_Convert.Sal_Nip = HRD_M_Karyawan.Kry_Nip LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_Id LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_Code LEFT OUTER JOIN HRD_M_Jabatan ON HRD_M_Karyawan.Kry_JabCode = HRD_M_Jabatan.Jab_Code WHERE HRD_M_Karyawan.Kry_AgenID = '"& id &"' AND HRD_M_Karyawan.Kry_Pegawai = '"& pegawai &"' and HRD_M_Karyawan.Kry_AktifYN = 'Y' and month(HRD_T_Salary_Convert.Sal_StartDate) = '"& bulan &"' and year(HRD_T_Salary_Convert.Sal_StartDate)= '"& tahun &"' "& orderby &""
+                    ' Response.Write karyawan_cmd.commandText & "<br>"
+                    set karyawan = karyawan_cmd.execute
                 else 
-                    pl = "Laki-Laki"
+                    karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, HRD_M_JenjangDidik.JDdk_Nama, HRD_M_Divisi.Div_Nama, HRD_M_Jabatan.Jab_Nama FROM HRD_T_Salary_Convert LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_Salary_Convert.Sal_Nip = HRD_M_Karyawan.Kry_Nip LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_Id LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_Code LEFT OUTER JOIN HRD_M_Jabatan ON HRD_M_Karyawan.Kry_JabCode = HRD_M_Jabatan.Jab_Code WHERE HRD_M_Karyawan.Kry_AgenID = '"& id &"' AND HRD_M_Karyawan.Kry_Pegawai = '"& pegawai &"' and and HRD_M_Karyawan.Kry_SttKerja = '"& status &"' and HRD_M_Karyawan.Kry_AktifYN = 'Y' and month(HRD_T_Salary_Convert.Sal_StartDate) = '"& bulan &"' and year(HRD_T_Salary_Convert.Sal_StartDate)= '"& tahun &"' "& orderby &""
+                    ' Response.Write karyawan_cmd.commandText & "<br>"
+                    set karyawan = karyawan_cmd.execute
                 end if
 
-            'cek status sosial
-                ssos = ""
-                if karyawan("Kry_SttSosial") = 0 then
-                    ssos = "Belum Menikah"
-                elseIf karyawan("Kry_SttSosial") = 1 then
-                    ssos = "Menikah"
-                elseIf karyawan("Kry_SttSosial") = 2 then
-                    ssos = "Janda/Duda"
-                else
+                do until karyawan.eof
+                'cek peria dan wanita
+                    pl = ""
+                    if karyawan("Kry_Sex") = "W" then
+                        pl = "Wanita"
+                    else 
+                        pl = "Laki-Laki"
+                    end if
+
+                'cek status sosial
                     ssos = ""
-                end if
+                    if karyawan("Kry_SttSosial") = 0 then
+                        ssos = "Belum Menikah"
+                    elseIf karyawan("Kry_SttSosial") = 1 then
+                        ssos = "Menikah"
+                    elseIf karyawan("Kry_SttSosial") = 2 then
+                        ssos = "Janda/Duda"
+                    else
+                        ssos = ""
+                    end if
 
-            'untuk umur
-                fromdate = karyawan("Kry_TglLahir")
-                todate = date
-                umur = DateDiff("YYYY",fromdate,todate) 
+                'untuk umur
+                    fromdate = karyawan("Kry_TglLahir")
+                    todate = date
+                    umur = DateDiff("YYYY",fromdate,todate) 
 
-            'cek pendidikan data yang kosong
-                vpend_nama=""
-                vdiv_nama=""
-                if not karyawan.eof then
-                    vpend_nama=karyawan("JDdk_Nama")
-                    vdiv_nama=karyawan("Div_Nama")
-                else 
-                    vpend_nama = ""
-                end if 
+                'cek pendidikan data yang kosong
+                    vpend_nama=""
+                    vdiv_nama=""
+                    if not karyawan.eof then
+                        vpend_nama=karyawan("JDdk_Nama")
+                    else 
+                        vpend_nama = ""
+                    end if 
 
-            'untuk masa kerja
-                dim mulai
-                mulai = ""
-                'cek karyawan masa kerja
-                if karyawan("Kry_TglKeluar") = "" OR karyawan("Kry_TglKeluar") = "1/1/1900" then
-                    mulai = DateDiff("YYYY",karyawan("Kry_TglMasuk"),todate)
-                else
-                    mulai = DateDiff("YYYY",karyawan("Kry_TglMasuk"),karyawan("Kry_TglKeluar"))
-                end if
-            ' Response.Write karyawan("Kry_TglMasuk")
+                'untuk masa kerja
+                    dim mulai
+                    mulai = ""
+                    'cek karyawan masa kerja
+                    if karyawan("Kry_TglKeluar") = "" OR karyawan("Kry_TglKeluar") = "1/1/1900" then
+                        mulai = DateDiff("YYYY",karyawan("Kry_TglMasuk"),todate)
+                    else
+                        mulai = DateDiff("YYYY",karyawan("Kry_TglMasuk"),karyawan("Kry_TglKeluar"))
+                    end if
 
-            'jenis sim
-                jsim = ""
-                if karyawan("Kry_JnsSIM") = 4 then
-                    jsim = "B2 Umum"
-                elseIf karyawan("Kry_JnsSIM") = 0 then
-                    jsim = "A"
-                elseIf karyawan("Kry_JnsSIM") = 1 then
-                    jsim = "B1"
-                elseIf karyawan("Kry_JnsSIM") = 2 then
-                    jsim = "B1Umum"
-                elseIf karyawan("Kry_JnsSIM") = 3 then
-                    jsim = "B2"
-                elseIf karyawan("Kry_JnsSIM") = 5 then
-                    jsim = "C"
-                else
+                'jenis sim
                     jsim = ""
-                end if
+                    if karyawan("Kry_JnsSIM") = 4 then
+                        jsim = "B2 Umum"
+                    elseIf karyawan("Kry_JnsSIM") = 0 then
+                        jsim = "A"
+                    elseIf karyawan("Kry_JnsSIM") = 1 then
+                        jsim = "B1"
+                    elseIf karyawan("Kry_JnsSIM") = 2 then
+                        jsim = "B1Umum"
+                    elseIf karyawan("Kry_JnsSIM") = 3 then
+                        jsim = "B2"
+                    elseIf karyawan("Kry_JnsSIM") = 5 then
+                        jsim = "C"
+                    else
+                        jsim = ""
+                    end if
 
-            'status kerja
-                sttkerja = ""
-                if karyawan("Kry_SttKerja") = 0 then
-                    sttkerja = "Borongan"
-                elseIf karyawan("Kry_SttKerja") = 1 then
-                    sttkerja = "Harian"
-                elseIf karyawan("Kry_SttKerja") = 2 then 
-                    sttkerja = "Kontrak"
-                elseIf karyawan("Kry_SttKerja") = 3 then
-                    sttkerja = "Magang"
-                elseIf karyawan("Kry_SttKerja") = 4 then
-                    sttkerja = "Tetap"
-                else 
+                'status kerja
                     sttkerja = ""
-                end if
+                    if karyawan("Kry_SttKerja") = 0 then
+                        sttkerja = "Borongan"
+                    elseIf karyawan("Kry_SttKerja") = 1 then
+                        sttkerja = "Harian"
+                    elseIf karyawan("Kry_SttKerja") = 2 then 
+                        sttkerja = "Kontrak"
+                    elseIf karyawan("Kry_SttKerja") = 3 then
+                        sttkerja = "Magang"
+                    elseIf karyawan("Kry_SttKerja") = 4 then
+                        sttkerja = "Tetap"
+                    else 
+                        sttkerja = ""
+                    end if
 
-            'hilangkan tanggal keluar 
-            tglkeluar = ""
-            if karyawan("Kry_TglKeluar") = "1/1/1900" then  
-                tglkeluar = ""
-            else
-                tglkeluar = karyawan("Kry_TglKeluar")
-            end if
-            validsim = ""
-            if karyawan("Kry_SIMValidDate") = "1/1/1900" then  
-                validsim = ""
-            else
-                validsim = karyawan("Kry_SIMValidDate")
-            end if
+                'hilangkan tanggal keluar 
+                    tglkeluar = ""
+                    if karyawan("Kry_TglKeluar") = "1/1/1900" then  
+                        tglkeluar = ""
+                    else
+                        tglkeluar = karyawan("Kry_TglKeluar")
+                    end if
+                    validsim = ""
+                    if karyawan("Kry_SIMValidDate") = "1/1/1900" then  
+                        validsim = ""
+                    else
+                        validsim = karyawan("Kry_SIMValidDate")
+                    end if
+                
+                ' cek divisi 
+                    if karyawan("Div_Nama") = "-1" OR karyawan("Div_nama") = "" then  
+                        vdiv_nama = ""
+                    else
+                        vdiv_nama=karyawan("Div_Nama")
+                    end if
+                
+                ' cek jabatan 
+                    if karyawan("Jab_Nama") = -1 OR karyawan("Jab_Nama") = "" then
+                        jabnama = ""
+                    else
+                        jabnama = karyawan("Jab_Nama")
+                    end if
 
-            %>
-                <tr>
-                    <th scope="row"><%=k%></th>
-                    <th style="mso-number-format:\@;"><%= karyawan("Kry_Nip") %></th>
-                    <td><%=karyawan("Kry_nama")%></td>
-                    <td><%=pl%></td>
-                    <td><%=karyawan("Kry_Addr1")%></td>
-                    <td><%=karyawan("Kry_Kota")%></td>
-                    <td><%=karyawan("Kry_TmpLahir")%></td>
-                    <td><%=karyawan("Kry_TglLahir")%></td>
-                    <td><%=ssos%></td>
-                    <td><%=karyawan("Kry_JmlAnak")%></td>
-                    <td><%=karyawan("Kry_JmlTanggungan")%></td>
-                    <td><%=umur%></td>
-                    <td><%=vpend_nama%></td>
-                    <td><%=karyawan("Kry_TglMasuk")%></td>
-                    <td><%=tglkeluar%></td>
-                    <td><%=mulai%></td>
-                    <td style="mso-number-format:\@;"><%=karyawan("Kry_NoID")%></td>
-                    <td><%=karyawan("Kry_JabCode")%></td>
-                    <td><%=vdiv_nama%></td>              
-                    <td><%=jsim%></td>
-                    <td><%=validsim%></td>
-                    <td><%=sttkerja%></td>
-                    <td style="mso-number-format:\@;"><%=karyawan("Kry_NoRekening")%></td>
-                    <td style="mso-number-format:\@;"><%=karyawan("Kry_NoBPJS")%></td>
-                    <td style="mso-number-format:\@;"><%=karyawan("Kry_NoJamsostek")%></td>
-                    <td style="mso-number-format:\@;"><%=karyawan("Kry_NPWP")%></td>
-                </tr>
+                %>
+                    <tr>
+                        <th scope="row"><%=k%></th>
+                        <th scope="row" style="mso-number-format:\@;"><%= karyawan("Kry_Nip") %></th>
+                        <td><%=karyawan("Kry_nama")%></td>
+                        <td><%=pl%></td>
+                        <td><%=karyawan("Kry_Addr1")%></td>
+                        <td><%=karyawan("Kry_Kota")%></td>
+                        <td><%=karyawan("Kry_TmpLahir")%></td>
+                        <td><%=karyawan("Kry_TglLahir")%></td>
+                        <td><%=ssos%></td>
+                        <td><%=karyawan("Kry_JmlAnak")%></td>
+                        <td><%=karyawan("Kry_JmlTanggungan")%></td>
+                        <td><%=umur%></td>
+                        <td><%=vpend_nama%></td>
+                        <td><%=karyawan("Kry_TglMasuk")%></td>
+                        <td><%=tglkeluar%></td>
+                        <td><%=mulai%></td>
+                        <td style="mso-number-format:\@;"><%=karyawan("Kry_NoID")%></td>
+                        <td><%=jabnama%></td>
+                        <td><%=vdiv_nama%></td>              
+                        <td><%=jsim%></td>
+                        <td><%=validsim%></td>
+                        <td><%=sttkerja%></td>
+                        <td style="mso-number-format:\@;"><%=karyawan("Kry_NoRekening")%></td>
+                        <td style="mso-number-format:\@;"><%=karyawan("Kry_NoBPJS")%></td>
+                        <td style="mso-number-format:\@;"><%=karyawan("Kry_NoJamsostek")%></td>
+                        <td style="mso-number-format:\@;"><%=karyawan("Kry_NPWP")%></td>
+                    </tr>
             <% 
             Response.flush
             karyawan.movenext
@@ -280,10 +292,9 @@ karyawan_cmd.ActiveConnection = MM_Cargo_string
         <%
         else 
         do until aktifarea.eof
-        ' Response.Write aktifarea("Agen_ID") & "<br>"
         id = aktifarea("Agen_ID")
         
-         %>
+        %>
         <table class="table" style="font-size: 12px;">
         <%= aktifarea("agen_nama")%>
             <thead>
@@ -318,114 +329,125 @@ karyawan_cmd.ActiveConnection = MM_Cargo_string
             </thead>
             <tbody>
             <%     
-            if  pegawai = "" AND status = "" then
-                karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, HRD_M_JenjangDidik.JDdk_Nama, HRD_M_Divisi.Div_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_Salary_convert ON HRD_M_Karyawan.Kry_Nip = HRD_T_Salary_convert.Sal_Nip LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_Id LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_Code WHERE HRD_M_Karyawan.Kry_ActiveAgenID = '"& id &"' and HRD_M_Karyawan.Kry_AktifYN = 'Y' and month(HRD_T_Salary_convert.Sal_StartDate) = '"& bulan &"' and year(HRD_T_Salary_convert.Sal_StartDate)= '"& tahun &"' "& orderby &""
-                ' Response.Write karyawan_cmd.commandText & "<br>"
-                set karyawan = karyawan_cmd.execute
-            elseIf status = "" then
-                karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, HRD_M_JenjangDidik.JDdk_Nama, HRD_M_Divisi.Div_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_Salary_convert ON HRD_M_Karyawan.Kry_Nip = HRD_T_Salary_convert.Sal_Nip LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_Id LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_Code  WHERE HRD_M_Karyawan.Kry_ActiveAgenID = '"& id &"' and HRD_M_Karyawan.Kry_Pegawai = '"& pegawai &"' and HRD_M_Karyawan.Kry_AktifYN = 'Y' and month(HRD_T_Salary_convert.Sal_StartDate) = '"& bulan &"' and year(HRD_T_Salary_convert.Sal_StartDate) = '"& tahun &"' "& orderby &""
-                'Response.Write karyawan_cmd.commandText
-                set karyawan = karyawan_cmd.execute
-            else 
-                karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, HRD_M_JenjangDidik.JDdk_Nama, HRD_M_Divisi.Div_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_Salary_convert ON HRD_M_Karyawan.Kry_Nip = HRD_T_Salary_convert.Sal_Nip LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_Id LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_Code  WHERE HRD_M_Karyawan.Kry_ActiveAgenID = '"& id &"' and HRD_M_Karyawan.Kry_SttKerja = '"& status &"' and HRD_M_Karyawan.Kry_Pegawai = '"& pegawai &"' and month(HRD_T_Salary_convert.Sal_StartDate) = '"& bulan &"' and year(HRD_T_Salary_convert.Sal_StartDate) = '"& tahun &"' "& orderby &""
-                'Response.Write karyawan_cmd.commandText
-                set karyawan = karyawan_cmd.execute
-            end if
+                if  pegawai = "" AND status = "" then
+                        karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, HRD_M_JenjangDidik.JDdk_Nama, HRD_M_Divisi.Div_Nama, HRD_M_Jabatan.Jab_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_Salary_Convert ON HRD_M_Karyawan.Kry_Nip = HRD_T_Salary_Convert.Sal_Nip LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_Id LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_Code LEFT OUTER JOIN HRD_M_Jabatan ON HRD_M_Karyawan.Kry_JabCode = HRD_M_Jabatan.Jab_Code WHERE HRD_M_Karyawan.Kry_AgenID = '"& id &"' and HRD_M_Karyawan.Kry_AktifYN = 'Y' AND HRD_T_Salary_Convert.Sal_AktifYN = 'Y' and month(HRD_T_Salary_Convert.Sal_StartDate) = '"& bulan &"' and year(HRD_T_Salary_Convert.Sal_StartDate)= '"& tahun &"' "& orderby &""
 
-            do until karyawan.eof
-            '  'cek peria dan wanita
-                pl = ""
-                if karyawan("Kry_Sex") = "W" then
-                    pl = "Wanita"
+                    set karyawan = karyawan_cmd.execute
+                elseIf pegawai <> "" and status = "" then
+                    karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, HRD_M_JenjangDidik.JDdk_Nama, HRD_M_Divisi.Div_Nama, HRD_M_Jabatan.Jab_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_Salary_Convert ON HRD_M_Karyawan.Kry_Nip = HRD_T_Salary_Convert.Sal_Nip LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_Id LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_Code LEFT OUTER JOIN HRD_M_Jabatan ON HRD_M_Karyawan.Kry_JabCode = HRD_M_Jabatan.Jab_Code WHERE HRD_M_Karyawan.Kry_AgenID = '"& id &"' and HRD_M_Karyawan.Kry_Pegawai = '"& pegawai &"' and HRD_M_Karyawan.Kry_AktifYN = 'Y' AND HRD_T_Salary_Convert.Sal_AktifYN = 'Y' and month(HRD_T_Salary_Convert.Sal_StartDate) = '"& bulan &"' and year(HRD_T_Salary_Convert.Sal_StartDate) = '"& tahun &"' "& orderby &""
+
+                    set karyawan = karyawan_cmd.execute
                 else 
-                    pl = "Laki-Laki"
+                    karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, HRD_M_JenjangDidik.JDdk_Nama, HRD_M_Divisi.Div_Nama, HRD_M_Jabatan.Jab_NAma FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_Salary_Convert ON HRD_M_Karyawan.Kry_Nip = HRD_T_Salary_Convert.Sal_Nip LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_Id LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_Code LEFT OUTER JOIN HRD_M_Jabatan ON HRD_M_Karyawan.Kry_JabCode = HRD_M_Jabatan.Jab_Code WHERE HRD_M_Karyawan.Kry_AgenID = '"& id &"' and HRD_M_Karyawan.Kry_SttKerja = '"& status &"' and HRD_M_Karyawan.Kry_Pegawai = '"& pegawai &"' and month(HRD_T_Salary_Convert.Sal_StartDate) = '"& bulan &"' and year(HRD_T_Salary_Convert.Sal_StartDate) = '"& tahun &"' and HRD_M_Karyawan.Kry_AktifYN = 'Y' AND HRD_T_Salary_Convert.Sal_AktifYN = 'Y' "& orderby &""
+
+                    set karyawan = karyawan_cmd.execute
                 end if
 
-            'cek status sosial
-                ssos = ""
-                if karyawan("Kry_SttSosial") = 0 then
-                    ssos = "Belum Menikah"
-                elseIf karyawan("Kry_SttSosial") = 1 then
-                    ssos = "Menikah"
-                elseIf karyawan("Kry_SttSosial") = 2 then
-                    ssos = "Janda/Duda"
-                else
-                    ssos = ""
-                end if
+                    do until karyawan.eof
+                    'cek peria dan wanita
+                        pl = ""
+                        if karyawan("Kry_Sex") = "W" then
+                            pl = "Wanita"
+                        else 
+                            pl = "Laki-Laki"
+                        end if
 
-            'untuk umur
-                fromdate = karyawan("Kry_TglLahir")
-                todate = date
-                umur = DateDiff("YYYY",fromdate,todate) 
+                    'cek status sosial
+                        ssos = ""
+                        if karyawan("Kry_SttSosial") = 0 then
+                            ssos = "Belum Menikah"
+                        elseIf karyawan("Kry_SttSosial") = 1 then
+                            ssos = "Menikah"
+                        elseIf karyawan("Kry_SttSosial") = 2 then
+                            ssos = "Janda/Duda"
+                        else
+                            ssos = ""
+                        end if
 
-            'cek pendidikan data yang kosong
-                vpend_nama=""
-                vdiv_nama=""
-                if not karyawan.eof then
-                    vpend_nama=karyawan("JDdk_Nama")
-                    vdiv_nama=karyawan("Div_Nama")
-                else 
-                    vpend_nama = ""
-                end if 
+                    'untuk umur
+                        fromdate = karyawan("Kry_TglLahir")
+                        todate = date
+                        umur = DateDiff("YYYY",fromdate,todate) 
 
-            'untuk masa kerja
-               
-                mulai = ""
-                'cek karyawan masa kerja
-                if karyawan("Kry_TglKeluar") = "" OR karyawan("Kry_TglKeluar") = "1/1/1900" then
-                    mulai = DateDiff("YYYY",karyawan("Kry_TglMasuk"),todate)
-                else
-                    mulai = DateDiff("YYYY",karyawan("Kry_TglMasuk"),karyawan("Kry_TglKeluar"))
-                end if
-            ' Response.Write karyawan("Kry_TglMasuk")
+                    'cek pendidikan data yang kosong
+                        vpend_nama=""
+                        vdiv_nama=""
+                        if not karyawan.eof then
+                            vpend_nama=karyawan("JDdk_Nama")
+                            vdiv_nama=karyawan("Div_Nama")
+                        else 
+                            vpend_nama = ""
+                        end if 
 
-            'jenis sim
-                jsim = ""
-                if karyawan("Kry_JnsSIM") = 4 then
-                    jsim = "B2 Umum"
-                elseIf karyawan("Kry_JnsSIM") = 0 then
-                    jsim = "A"
-                elseIf karyawan("Kry_JnsSIM") = 1 then
-                    jsim = "B1"
-                elseIf karyawan("Kry_JnsSIM") = 2 then
-                    jsim = "B1Umum"
-                elseIf karyawan("Kry_JnsSIM") = 3 then
-                    jsim = "B2"
-                elseIf karyawan("Kry_JnsSIM") = 5 then
-                    jsim = "C"
-                else
-                    jsim = ""
-                end if
+                    'untuk masa kerja
+                        mulai = ""
+                        'cek karyawan masa kerja
+                        if karyawan("Kry_TglKeluar") = "" OR karyawan("Kry_TglKeluar") = "1/1/1900" then
+                            mulai = DateDiff("YYYY",karyawan("Kry_TglMasuk"),todate)
+                        else
+                            mulai = DateDiff("YYYY",karyawan("Kry_TglMasuk"),karyawan("Kry_TglKeluar"))
+                        end if
 
-            'status kerja
-                sttkerja = ""
-                if karyawan("Kry_SttKerja") = 0 then
-                    sttkerja = "Borongan"
-                elseIf karyawan("Kry_SttKerja") = 1 then
-                    sttkerja = "Harian"
-                elseIf karyawan("Kry_SttKerja") = 2 then 
-                    sttkerja = "Kontrak"
-                elseIf karyawan("Kry_SttKerja") = 3 then
-                    sttkerja = "Magang"
-                elseIf karyawan("Kry_SttKerja") = 4 then
-                    sttkerja = "Tetap"
-                else 
-                    sttkerja = ""
-                end if
+                    'jenis sim
+                        jsim = ""
+                        if karyawan("Kry_JnsSIM") = 4 then
+                            jsim = "B2 Umum"
+                        elseIf karyawan("Kry_JnsSIM") = 0 then
+                            jsim = "A"
+                        elseIf karyawan("Kry_JnsSIM") = 1 then
+                            jsim = "B1"
+                        elseIf karyawan("Kry_JnsSIM") = 2 then
+                            jsim = "B1Umum"
+                        elseIf karyawan("Kry_JnsSIM") = 3 then
+                            jsim = "B2"
+                        elseIf karyawan("Kry_JnsSIM") = 5 then
+                            jsim = "C"
+                        else
+                            jsim = ""
+                        end if
 
-            'hilangkan tanggal keluar 
-            tglkeluar = ""
-            if karyawan("Kry_TglKeluar") = "1/1/1900" then  
-                tglkeluar = ""
-            else
-                tglkeluar = karyawan("Kry_TglKeluar")
-            end if
-            validsim = ""
-            if karyawan("Kry_SIMValidDate") = "1/1/1900" then  
-                validsim = ""
-            else
-                validsim = karyawan("Kry_SIMValidDate")
-            end if
+                    'status kerja
+                        sttkerja = ""
+                        if karyawan("Kry_SttKerja") = 0 then
+                            sttkerja = "Borongan"
+                        elseIf karyawan("Kry_SttKerja") = 1 then
+                            sttkerja = "Harian"
+                        elseIf karyawan("Kry_SttKerja") = 2 then 
+                            sttkerja = "Kontrak"
+                        elseIf karyawan("Kry_SttKerja") = 3 then
+                            sttkerja = "Magang"
+                        elseIf karyawan("Kry_SttKerja") = 4 then
+                            sttkerja = "Tetap"
+                        else 
+                            sttkerja = ""
+                        end if
+
+                    'hilangkan tanggal keluar 
+                        tglkeluar = ""
+                        if karyawan("Kry_TglKeluar") = "1/1/1900" then  
+                            tglkeluar = ""
+                        else
+                            tglkeluar = karyawan("Kry_TglKeluar")
+                        end if
+                        validsim = ""
+                        if karyawan("Kry_SIMValidDate") = "1/1/1900" then  
+                            validsim = ""
+                        else
+                            validsim = karyawan("Kry_SIMValidDate")
+                        end if
+                    ' cek divisi 
+                        if karyawan("Div_Nama") = "-1" OR karyawan("Div_nama") = "" then  
+                            vdiv_nama = ""
+                        else
+                            vdiv_nama=karyawan("Div_Nama")
+                        end if
+                    
+                    ' cek jabatan 
+                    if karyawan("Jab_Nama") = -1 OR karyawan("Jab_Nama") = "" then
+                        jabnama = ""
+                    else
+                        jabnama = karyawan("Jab_Nama")
+                    end if
 
             %>
                 <tr>
@@ -446,7 +468,7 @@ karyawan_cmd.ActiveConnection = MM_Cargo_string
                     <td><%=tglkeluar%></td>
                     <td><%=mulai%></td>
                     <td style="mso-number-format:\@;"><%=karyawan("Kry_NoID")%></td>
-                    <td><%=karyawan("Kry_JabCode")%></td>
+                    <td><%=jabnama%></td>
                     <td><%=vdiv_nama%></td>              
                     <td><%=jsim%></td>
                     <td><%=validsim%></td>
