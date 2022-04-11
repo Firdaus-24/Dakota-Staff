@@ -1,7 +1,7 @@
 <!-- #include file='connection.asp' -->
 <% 
     if session("HA2") = false then
-        Response.Redirect(url&"/dasboard.asp")
+        Response.Redirect("dasboard.asp")
     end if
 %>
 <!DOCTYPE html>

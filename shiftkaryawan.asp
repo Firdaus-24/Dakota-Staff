@@ -28,7 +28,7 @@
     set agen_cmd = server.createObject("ADODB.Command")
     agen_cmd.activeConnection = MM_Cargo_string
 
-    agen_cmd.commandText = "SELECT Agen_ID, Agen_Nama FROM GLB_M_Agen WHERE Agen_Nama NOT LIKE '%XXX%' AND Agen_AktifYN = 'Y'"
+    agen_cmd.commandText = "SELECT Agen_ID, Agen_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_agenID = GLB_M_Agen.Agen_ID WHERE Agen_Nama NOT LIKE '%XXX%' AND Agen_AktifYN = 'Y' AND HRD_M_Karyawan.Kry_AktifYN = 'Y' AND HRD_M_Karyawan.Kry_tglKeluar = '' GROUP BY Agen_ID, Agen_Nama ORDER BY Agen_Nama ASC"
     set agen = agen_cmd.execute
 
     if bulana <> "" and bulane <> "" then

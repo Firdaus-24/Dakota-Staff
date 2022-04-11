@@ -1,15 +1,11 @@
 <!-- #include file="connection.asp"-->
 <% 
     if Session("HA2A") = false then
-        Response.Redirect(url&"/shift_view.asp")
+        Response.Redirect("shift_view.asp")
     end if
+
     'set master shift
     dim shift, berhasil
-
-    ' berhasil = request.queryString("berhasil")
-    ' if berhasil <> "" then
-    '     Response.Write "<script>alert('DATA BERHASIL DI TAMBAHKAN')</script>"
-    ' End if
 
     set shift = server.createobject("ADODB.Command")
     shift.activeConnection = MM_Cargo_string
@@ -67,10 +63,10 @@
                 date_input.datepicker(options);
         });
     </script>   
-     <!--CSS-->
+    <!--CSS-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Viga&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="<%= url %>/css/style.css" >
+    <link rel="stylesheet" type="text/css" href="css/style.css" >
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <!--#include file="layout/header.asp"-->
 </head>
@@ -113,7 +109,7 @@
                         </div>
                         <div class="form-group">
 							<label for="pildivisi" class="form-label">Pilih Divisi</label>
-							<select class="form-select" id="select-divisi" required>
+							<select class="form-select" id="select-divisi">
 							<option value="">Pilih</option>
 							<% do while not divisi.eof%>      
 							    <option value="<%= divisi("Div_Code") %> "><%= divisi("Div_Nama") %> </option>

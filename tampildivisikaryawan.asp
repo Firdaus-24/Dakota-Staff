@@ -1,9 +1,5 @@
 <!-- #include file="connection.asp"-->
 <% 
-  if session("username") = "" then
-      Response.Redirect("login.asp")
-  end if
-
   dim id, karyawanDiv
 
   id = request.queryString("id")
@@ -12,10 +8,14 @@
   set karyawanDiv = server.createobject("ADODB.Command")
   karyawanDiv.activeConnection = MM_Cargo_string
 
-  karyawanDiv.commandText ="SELECT Kry_Nip, Kry_Nama FROM HRD_M_Karyawan WHERE HRD_M_Karyawan.Kry_DDBID = '"& id &"' and Kry_AktifYN = 'Y' AND Kry_Nip NOT LIKE '%H%' AND Kry_Nip NOT LIKE '%A%' AND Kry_AgenID = '"& agen &"' ORDER BY Kry_Nama ASC"
+  if id <> "" then
+    karyawanDiv.commandText ="SELECT Kry_Nip, Kry_Nama FROM HRD_M_Karyawan WHERE HRD_M_Karyawan.Kry_DDBID = '"& id &"' and Kry_AktifYN = 'Y' AND Kry_Nip NOT LIKE '%H%' AND Kry_Nip NOT LIKE '%A%' AND Kry_AgenID = '"& agen &"' ORDER BY Kry_Nama ASC"
+    set karyawan = karyawanDiv.execute
+  else
+    karyawanDiv.commandText ="SELECT Kry_Nip, Kry_Nama FROM HRD_M_Karyawan WHERE Kry_AktifYN = 'Y' AND Kry_Nip NOT LIKE '%H%' AND Kry_Nip NOT LIKE '%A%' AND Kry_AgenID = '"& agen &"' ORDER BY Kry_Nama ASC"
 
-  set karyawan = karyawanDiv.execute
-
+    set karyawan = karyawanDiv.execute
+  end if
  %> 
 <script>
 // button ceklis nama karyawan di tampil divisi
@@ -33,8 +33,8 @@
 </script>
 <!--#include file="layout/header.asp"-->
 <div class="container" name="tampil_karyawan" id="tampil_karyawan">
-      <table class="table table-striped table-hover">
-        <thead>
+      <table class="table table-hover">
+        <thead class="bg-secondary text-light">
         <tr>
           <td class="text-center">
             <input class="form-check-input" id="selectAll" type="checkbox"> <label for='selectAll'>Select All</label>

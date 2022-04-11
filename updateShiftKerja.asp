@@ -1,8 +1,8 @@
 <!-- #include file="connection.asp"-->
 <!--#include file="landing.asp"-->  
 <% 
-if session("username") = "" then
-    Response.Redirect("login.asp")
+if session("HA2AB") = false then
+    Response.Redirect("tambahShiftkerja.asp")
 end if
 'set master shift
 dim shift, done, update
@@ -11,13 +11,6 @@ update = request.queryString("update")
 
 if update <> "" then
     Response.Write "<script>alert('DATA SUDAH TERDAFTAR KAMI ALIHKAN KE HALAMAN UPDATE')</script>"
-end if
-
-'tampil alert
-done = request.queryString("done")
-
-if done <> "" then
-    Response.Write "<script>alert('DATA BERHASIL DIUBAH')</script>"
 end if
 
 set shift = server.createobject("ADODB.Command")
