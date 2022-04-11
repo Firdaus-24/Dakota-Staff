@@ -225,7 +225,6 @@
                     else
                         surat = "Tidak"
                     end if
-           
                     %>
                     <tr>
                         <td><%= cuti("ICS_ID")%></td> 
@@ -437,12 +436,6 @@
                     </div>
                 </div>
             </div>        
-            <div class="mb-3 row">
-                <label for="bpengobatan" class="col-sm-4 col-form-label">Biaya Pengobatan</label>
-                <div class="col-sm-8">
-                    <input type="number" class="form-control" name="bpengobatan" id="bpengobatan" required>
-                </div>
-            </div>               
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -555,8 +548,6 @@
         $('.modal-body form').attr('action', '<%=url%>/detail-karyawan/cuti-sakit/cutiSakitIzin_update_add.asp');
     }
     function validasicuti() {
-         // cek data tgl hari ini
-        let today = new Date();
         // setting variable untuk cuti
         const ajuancuti = Number($("#ajuancuti").val());
         const saldocuti = Number($("#sisacuti").val());
@@ -569,6 +560,9 @@
         const diffTime = Math.abs(date2 - date1);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
         let totalajuan
+        
+        // checkbox cuti
+        let cuti = $('#pcuti').is(":checked");
 
         // cek tanggal lama jika di update 
         if (this.tgllama == 0 || this.tglbaru == 0 ){
@@ -581,9 +575,7 @@
             let mindiffDays = diffDays - 1;
             totalajuan = (ajuancuti - diffDaysLast) + mindiffDays;
         }  
-       
         if ( $("#cutimaster").val() != 0 ){
-
             if ( date1.getTime() > date2.getTime() ){
                 Swal.fire({
                     icon: 'error',
@@ -591,21 +583,21 @@
                     text: 'BULAN KEDUA ANDA SALAH PILIH',
                 });
                 return false;
-            }else if (saldocuti == 0 ){
+            }else if (saldocuti == 0 && cuti == true){
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'SALDO CUTI ANDA HABIS!!',
                 });
                 return false;
-            }else if ( totalajuan > saldocuti ){
+            }else if ( totalajuan > saldocuti && cuti == true){
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Pengajuan Cuti Melebihi Batas!',
                 });
                 return false;
-            }else if ( diffDays > saldocuti ){
+            }else if ( diffDays > saldocuti && cuti == true ){
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -661,6 +653,13 @@
                     icon: 'error',
                     title: 'Oops...',
                     text: 'BULAN KEDUA ANDA SALAH PILIH',
+                });
+                return false;
+            }else if ( cuti == true ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'ANDA SALAH MEMILIH POTONGAN',
                 });
                 return false;
             }else if ( ket > 50 ){
@@ -752,8 +751,6 @@
             $("#loader").hide();
             Swal.fire('Pastikan Tidak Merubah Approve Atasan');
         }
-        
-     
     }
     function cariAtasan2(e){
         $("#loader1").show();
@@ -796,4 +793,3 @@
     }
 </script>
 <!--#include file="../layout/footer.asp"-->
-   
