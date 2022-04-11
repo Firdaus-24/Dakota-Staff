@@ -2,7 +2,7 @@
 <!-- #include file='../../layout/header.asp' -->
 <% 
 dim updateData
-dim nomor,tgla,tgle,status,potgaji,potcuti,keterangan,atasan,bobat
+dim nomor,tgla,tgle,status,potgaji,potcuti,keterangan,atasan
 
 nomor = trim(request.form("nomorID"))
 nip = trim(request.form("nip"))
@@ -25,7 +25,6 @@ potcuti = request.form("pcuti")
     end if
 keterangan = request.form("ket")
 atasan = request.form("atasan")
-bobat = request.form("bpengobatan")
 sform = request.form("sform")
     if sform <> "" then
         sform = "Y"
@@ -44,7 +43,7 @@ updateData.commandText = "SELECT * FROM HRD_T_izinCutiSakit WHERE ICS_StartDate 
 set cuti = updateData.execute
 
 if cuti.eof then
-    updateData.commandText = "UPDATE HRD_T_IzinCutiSakit SET ICS_StartDate='"& tgla &"', ICS_EndDate='"& tgle &"', ICS_Status='"& status &"', ICS_Keterangan='"& keterangan &"', ICS_Atasan='"& atasan &"', ICS_Obat='"& bobat &"', ICS_PotongCuti='"& potcuti &"', ICS_PotongGaji='"& potgaji &"', ICS_FormYN = '"& sform &"', ICS_AtasanApproveYN = '"& AtasanApproveYN &"', ICS_AtasanUpper = '"& AtasanUpper  &"', ICS_AtasanUpperApproveYN = '"& AtasanUpperApproveYN &"' WHERE ICS_ID ='"& nomor &"'"
+    updateData.commandText = "UPDATE HRD_T_IzinCutiSakit SET ICS_StartDate='"& tgla &"', ICS_EndDate='"& tgle &"', ICS_Status='"& status &"', ICS_Keterangan='"& keterangan &"', ICS_Atasan='"& atasan &"', ICS_PotongCuti='"& potcuti &"', ICS_PotongGaji='"& potgaji &"', ICS_FormYN = '"& sform &"', ICS_AtasanApproveYN = '"& AtasanApproveYN &"', ICS_AtasanUpper = '"& AtasanUpper  &"', ICS_AtasanUpperApproveYN = '"& AtasanUpperApproveYN &"' WHERE ICS_ID ='"& nomor &"'"
     ' Response.Write updateData.commandText
     updateData.execute
 

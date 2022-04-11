@@ -88,7 +88,7 @@ interval = cint(DateDiff("d",tgla,tgle) + 1)
         if not cuti.eof then
             Response.Write "<div class='gagalSaldo'>GAGAL</div>"
         else
-            cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& tgla &"','"& tgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"',"& bpengobatan &", '"& pcuti &"','"& pgaji &"', '"& sform &"',''"
+            cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& tgla &"','"& tgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"','0', '"& pcuti &"','"& pgaji &"', '"& sform &"',''"
             ' Response.Write cuti_add.commandText
             cuti_add.execute
             
@@ -103,12 +103,12 @@ interval = cint(DateDiff("d",tgla,tgle) + 1)
 
 
             ' store potongan cuti
-            cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& dpotcuti &"','"& tgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"',"& bpengobatan &", '"& pcuti &"','N', '"& sform &"',''"
+            cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& dpotcuti &"','"& tgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"','0', '"& pcuti &"','N', '"& sform &"',''"
             ' Response.Write cuti_add.commandText & "<br>"
             cuti_add.execute
             
             ' store potongan gaji
-            cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& tgla &"','"& dpotgaji &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"',"& bpengobatan &", 'N','"& pgaji &"', '"& sform &"',''"
+            cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& tgla &"','"& dpotgaji &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"','0', 'N','"& pgaji &"', '"& sform &"',''"
             ' Response.Write cuti_add.commandText & "<br>"
             cuti_add.execute
                 
@@ -121,7 +121,7 @@ interval = cint(DateDiff("d",tgla,tgle) + 1)
             if not cuti.eof then
                 Response.Write "<div class='notiv-gagal' data-aos='fade-up'><span>Data Sudah Terdaftar</span><img src='../../logo/gagal_dakota.PNG'><a href='"& url &"/detail-karyawan/cutiSakitIzin.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"
             else
-                cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& tgla &"','"& tgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"',"& bpengobatan &", '"& pcuti &"','"& pgaji &"', '"& sform &"',''"
+                cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& tgla &"','"& tgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"','0', '"& pcuti &"','"& pgaji &"', '"& sform &"',''"
                 ' Response.Write cuti_add.commandText
                 cuti_add.execute
                 
@@ -129,10 +129,5 @@ interval = cint(DateDiff("d",tgla,tgle) + 1)
             end if
         end if
     end if
-
-
-
-
-
- %>
+%>
 <!--#include file="../../layout/footer.asp"-->
