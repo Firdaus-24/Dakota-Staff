@@ -67,6 +67,26 @@ $(document).ready(function () {
       });
     }
   });
+
+  // tampil by agen
+  $("#select-agen").on("change", function () {
+    let agen = $("#select-agen option:selected").attr("value");
+    let shift = $("#shiftName option:selected").attr("value");
+
+    if (shift === "") {
+      Swal.fire(
+        'Oppss..',
+        'Mohon Untuk Pilih Shift Dahulu',
+        'error'
+      );
+      $('#select-agen').val("");
+    } else {
+      let pakumar = `tampildivisikaryawan.asp?agen=${agen.trim()}`;
+      $('#tampil_karyawan').load(pakumar);
+    }
+
+  });
+
   // tampil divisi karyawan berdasarkan shiftkerja
   $('#select-divisi').on('change', function () {
     let agen = $("#select-agen option:selected").attr("value");
@@ -84,6 +104,7 @@ $(document).ready(function () {
       $('#tampil_karyawan').load(pakumar);
     }
   });
+
   // filter tahun penghasilan
   $('#thn-penghasilan').unbind('keyup');
   $('#thn-penghasilan').bind('keyup', function () {
@@ -104,7 +125,6 @@ $(document).ready(function () {
 
 
   // cari user hakakses
-
   $('#cariuser').on('keyup', function () {
     $('#loaderHakAkses').show();
     setTimeout(() => {
