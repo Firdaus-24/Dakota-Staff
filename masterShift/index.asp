@@ -1,10 +1,9 @@
 <!--#include file="../connection.asp"-->
-<!--#include file="../landing.asp"-->
 <% 
-'koneksi tampilan master shift
-    if session("username") = "" then
-        Response.Redirect("../login.asp")
+    if session("HA3")=false then
+        Response.Redirect("../dashboard.asp")
     end if
+
     dim shift
     set shift = server.createobject("ADODB.Command")
     shift.activeConnection = MM_Cargo_String
@@ -22,7 +21,6 @@
    <!--#include file="../layout/header.asp"-->
    <style>
         .table {
-            width: 1%;
             white-space: nowrap;
         }
         a{
@@ -31,8 +29,8 @@
    </style>
 </head>
 <body> 
-<br>
-<div class="container">
+<!--#include file="../landing.asp"-->
+<div class="container mt-3">
     <div class="row">
         <div class="col-lg">
             <h3 class="text-center">MASTER SHIFT</h3>
@@ -46,42 +44,39 @@
         <% end if %>
     </div>
     <div class='row mt-3' style="overflow:auto;">
-        <div class='col-lg'>
+        <div class='col-sm-12'>
             <table class="table table-striped table-hover" style="font-size:14px;">
-                <thead>
+                <thead class="bg-secondary text-light">
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Nama</th>
-                        <th scope="col">AktifYN</th>
+                        <th scope="col">Aktif</th>
                         <th scope="col">Update ID</th>
                         <th scope="col">Update Time</th>
                         <th scope="col">Jam masuk</th>
-                        <th scope="col">Menit masuk</th>
                         <th scope="col">Jam Keluar</th>
-                        <th scope="col">Menit Keluar</th>
                         <th scope="col">Beda Hari</th>
                         <th scope="col">Ubah Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% 
-                        dim id
-                        dim tampil
-                    
-                        
-                        do until shift.eof
+                        do while not shift.eof
+                        if shift("SH_AktifYN") = "Y" then
+                            aktif = "Aktif"
+                        else
+                            aktif = "No"
+                        end if
                     %> 
                     <tr>
                         <td><%= shift("SH_ID") %> </td>
                         <td><%= shift("Sh_Name") %> </td>
-                        <td><%= shift("Sh_AktifYN") %> </td>
+                        <td><%= aktif %> </td>
                         <td><%= shift("Sh_UpdateID") %> </td>
                         <td><%= shift("Sh_UpdateTime") %> </td>
-                        <td><%= shift("SH_JamIn") %> </td>
-                        <td><%= shift("SH_MenitIn") %> </td>
-                        <td><%= shift("SH_JamOut") %> </td>
-                        <td><%= shift("SH_MenitOut") %> </td>
-                        <td><%= shift("SH_iHari") %> </td>
+                        <td><%= right("00" & shift("SH_JamIn"),2) &":"& right("00" & shift("SH_MenitIn"),2) %> </td>
+                        <td><%= right("00" & shift("SH_JamOut"),2) &":"& right("00" & shift("SH_MenitOut"),2) %> </td>
+                        <td><% if shift("SH_iHari") = "N" then Response.Write "No" else Response.Write "Yes" end if %> </td>
                     <%
                         id = shift("SH_ID")
                         
@@ -95,19 +90,20 @@
                         
                         if tampil.eof then                    
                     %> 
-                        <td>
+                        <td class="text-center">
                             <% 
                             if session("HA3B") = true then
                                 if shift("Sh_AktifYN") = "N" then %> 
                                     <a href="ubahShift.asp?id=<%= shift("SH_ID") %>&status=<%= shift("Sh_AktifYN") %>" class="badge bg-danger masterShiftY" id="masterShiftY">Yes</a>
-                            <% else %> 
-                                <a href="ubahShift.asp?id=<%= shift("SH_ID") %>&status=<%= shift("Sh_AktifYN") %>" class="badge bg-success masterShiftN">No</a>
+                                <% else %> 
+                                    <a href="ubahShift.asp?id=<%= shift("SH_ID") %>&status=<%= shift("Sh_AktifYN") %>" class="badge bg-success masterShiftN">No</a>
                             <%
                                 end if
                             end if%>
+                                <a href="updateShift.asp?id=<%= shift("SH_ID") %>" class="badge bg-primary masterShiftN">Update</a>
                         </td>
                         <% else %>
-                            <td></td>
+                            <td  class="text-center">-</td>
                         <%end if%> 
                     </tr>
                     <% 

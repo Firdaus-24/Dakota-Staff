@@ -1,7 +1,7 @@
 <!--#include file="../connection.asp"-->
 <% 
-if session("username") = "" then
-    Response.Redirect("../login.asp")
+if session("HA3B") = false then
+    Response.Redirect("index.asp")
 end if
 dim id, status
 
@@ -19,6 +19,6 @@ else
     ubahShift.execute
 end if
 
-Response.redirect("index.asp?id=" & trim(id))
+Response.redirect("index.asp")
 
  %> 

@@ -1,26 +1,9 @@
 <!--#include file="../connection.asp"-->
-<!--#include file="../landing.asp"-->
 <% 
-if session("username") = "" then
-    Response.Redirect("../login.asp")
+if session("HA3A") = false then
+    Response.Redirect("../dashboard.asp")
 end if
 dim shift, notif, ada
-
-ada = request.queryString("ada")
-notif = request.queryString("notif")
-'cek data berhasil di insert
-if notif <> "" then %> 
-    <script>alert("Data Berhasil ditambahkan")</script>
-<% end if %> 
-<% 
-'cek data tidak berhasil 
-if ada <> "" then
- %> 
-    <script>alert("Data sudah terdaftar")</script>
-<% 
-end if 
-'end kondisi
-
 
 set shift = server.createobject("ADODB.Command")
 shift.activeConnection = MM_Cargo_String
@@ -32,56 +15,12 @@ shift.activeConnection = MM_Cargo_String
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Shift</title>
+    <title>TAMBAH SHIFT</title>
     <!--#include file="../layout/header.asp"-->
-    <script>
-    function validasiShift() {
-        var min = 5;
-        var min2 = 50;
-        var j = 23;
-        var m = 59;
-        var h = 1;
-        // cari data
-        var id = document.forms["formShift"]["idshift"].value;
-        var nama = document.forms["formShift"]["nama"].value;
-        var jamIn = document.forms["formShift"]["jamIn"].value;
-        var minIn = document.forms["formShift"]["minIn"].value;
-        var jamOut = document.forms["formShift"]["jamOut"].value;
-        var minOut = document.forms["formShift"]["minOut"].value;
-        var bhari = document.forms["formShift"]["bhari"].value;
-        // kodisikan
-        if (id.length > min) {
-            alert("ID Maximal 5 karakter");
-            return false;
-        }else if (nama.length > min2){
-            alert("Maximal Nama 50 karakter");
-            return false;
-        }else if (jamIn > j ){
-            alert("Jam Maximal sampai 23 WIB");
-            return false;
-        }else if (minIn > m ){
-            alert("Menit Maximal sampai 59");
-            return false;
-        }else if (jamOut > j ){
-            alert("Jam Maximal sampai 23 WIB");
-            return false;
-        }else if (minOut > m ){
-            alert("Menit Maximal sampai 59");
-            return false;
-        }else if (bhari.length > h){
-            alert("Jangan di ganti2 deh");
-            return false;
-        }
-        else{
-            return confirm("Anda Sudah Yakin Benar???");
-        }
-        return true;
-    }
-    </script> 
 </head>
 <body>
- <br/>
-<div class="container">
+<!--#include file="../landing.asp"-->
+<div class="container mt-3">
     <div class="row">
         <div class="col-md">
             <h3 class="text-center">FORM MASTER SHIFT</h3>
@@ -141,7 +80,7 @@ shift.activeConnection = MM_Cargo_String
                     </div>
                     <div class="col-md-3">
                         <select class="form-select" aria-label="Default select example" name="bhari" id="bhari" required>
-                            <option selected>Open this select menu</option>
+                            <option value="">Pilih</option>
                             <option value="Y">Yes</option>
                             <option value="N">No</option>
                         </select>
@@ -153,10 +92,77 @@ shift.activeConnection = MM_Cargo_String
         <div class='col-md-1'></div>
         <div class='col-md-2'>
                 <button type="button" onclick="window.location.href='index.asp'" name="button" id="button" class="btn btn-warning">Kembali</button>
-                <button type="submit" value="Submit" class="btn btn-primary">Save</button>
+                <button type="submit" value="Submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </div>
 </div>
-
+<script>
+    function validasiShift() {
+        var min = 5;
+        var min2 = 50;
+        var j = 23;
+        var m = 59;
+        var h = 1;
+        // cari data
+        var id = document.forms["formShift"]["idshift"].value;
+        var nama = document.forms["formShift"]["nama"].value;
+        var jamIn = document.forms["formShift"]["jamIn"].value;
+        var minIn = document.forms["formShift"]["minIn"].value;
+        var jamOut = document.forms["formShift"]["jamOut"].value;
+        var minOut = document.forms["formShift"]["minOut"].value;
+        var bhari = document.forms["formShift"]["bhari"].value;
+        // kodisikan
+        if (id.length > min) {
+            Swal.fire(
+                'MAXIMAL ID 5 CHARAKTER',
+                'coba periksa kembali',
+                'error'
+            )
+            return false;
+        }else if (nama.length > min2){
+            Swal.fire(
+                'MAXIMAL NAMA 50 CHARAKTER',
+                'coba periksa kembali',
+                'error'
+            )
+            return false;
+        }else if (jamIn > j ){
+            Swal.fire(
+                'Jam Maximal sampai 23 WIB',
+                'coba periksa kembali',
+                'error'
+            )
+            return false;
+        }else if (minIn > m ){
+            Swal.fire(
+                'Menit Maximal sampai 59',
+                'coba periksa kembali',
+                'error'
+            )
+            return false;
+        }else if (jamOut > j ){
+            Swal.fire(
+                'am Maximal sampai 23 WIB',
+                'coba periksa kembali',
+                'error'
+            )
+            return false;
+        }else if (minOut > m ){
+            Swal.fire(
+                'Menit Maximal sampai 59',
+                'coba periksa kembali',
+                'error'
+            )
+            return false;
+        }else if (bhari.length > h){
+            alert("Jangan di ganti2 deh");
+            return false;
+        }
+        else{
+            return confirm("Anda Sudah Yakin Benar???");
+        }
+        return true;
+    }
+    </script> 
 <!--#include file="../layout/footer.asp"-->
