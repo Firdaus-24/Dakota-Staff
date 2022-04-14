@@ -51,8 +51,8 @@ set cabang = cabang_cmd.execute
         </div>
         <form action="absensidivisi.asp" method="post">
         <div class='row'>
-            <div class='col'>
-                <div class="mb-3 ">
+            <div class='col-lg'>
+                <div class="mb-3">
                     <label class="col-sm-5 col-form-label">Set Cabang/Agen</label>
                     <div class="col-sm-12">
                         <select class="form-select" aria-label="Default select example" id="agen" name="agen" required>
@@ -69,11 +69,11 @@ set cabang = cabang_cmd.execute
             </div>
         </div>
         <div class='row'>
-            <div class='col'>
+            <div class='col-lg'>
                 <div class="mb-3 ">
                     <label for="setdivisi" class="col-sm-5 col-form-label">Set Divisi</label>
                     <div class="col-sm-12">
-                        <select class="form-select" aria-label="Default select example" id="divisi" name="divisi" required>
+                        <select class="form-select" aria-label="Default select example" id="divisi" name="divisi">
                             <option value="">Pilih</option>
                             <% do while not divisi.eof %>
                             <option value="<%= divisi("Div_Code") %>"><%= divisi("Div_Nama") %></option>
@@ -87,7 +87,7 @@ set cabang = cabang_cmd.execute
             </div>
         </div>
         <div class='row'>
-            <div class='col'>
+            <div class='col-lg'>
                 <div class="row">
                     <label for="tgla" class="col-sm-5 col-form-label">Priode Tanggal</label>
                 </div>

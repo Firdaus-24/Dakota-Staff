@@ -3,6 +3,8 @@
 <!-- #include file='../func_JarakKoordinat.asp' -->
 
 <% 
+	response.Buffer=true
+	server.ScriptTimeout=1000000000
 	response.contentType = "application/vnd.ms-excel"
 	response.Addheader "content-disposition","filename=LaporanAbsensi.xls"
 
@@ -19,29 +21,25 @@
 	set rangeKeluar_cmd = Server.CreateObject("ADODB.COmmand")
 	rangeKeluar_cmd.activeConnection = MM_Cargo_string
 
+	set liburan_cmd = Server.CreateObject("ADODB.COmmand")
+	liburan_cmd.activeConnection = MM_Cargo_string
+	
 	set divisi_cmd = Server.CreateObject("ADODB.COmmand")
 	divisi_cmd.activeConnection = MM_Cargo_string
 
-	divisi_cmd.commandText = "SELECT dbo.HRD_M_Divisi.Div_Nama, dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_M_Karyawan.Kry_Nama, GLB_M_Agen.Agen_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_M_Divisi ON dbo.HRD_M_Karyawan.Kry_DDBID = dbo.HRD_M_Divisi.Div_Code LEFT OUTER JOIN GLB_M_AGEN ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE (dbo.HRD_M_Divisi.Div_Code = '"& divcode &"') AND GLB_M_Agen.Agen_ID = '"& agen &"' AND (dbo.HRD_M_Karyawan.Kry_AktifYN = 'Y') AND (dbo.HRD_M_karyawan.Kry_Nip NOT LIKE '%H%') AND (dbo.HRD_M_karyawan.Kry_Nip NOT LIKE '%A%') ORDER BY HRD_M_Karyawan.Kry_Nama" 
-
-	set divisi = divisi_cmd.execute
-	'response.write divisi_cmd.commandText & "<BR>"
+	if divcode <> "" then
+		divisi_cmd.commandText = "SELECT dbo.HRD_M_Divisi.Div_Nama, dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_M_Karyawan.Kry_Nama, GLB_M_Agen.Agen_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_M_Divisi ON dbo.HRD_M_Karyawan.Kry_DDBID = dbo.HRD_M_Divisi.Div_Code LEFT OUTER JOIN GLB_M_AGEN ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE (dbo.HRD_M_Divisi.Div_Code = '"& divcode &"') AND GLB_M_Agen.Agen_ID = '"& agen &"' AND (dbo.HRD_M_Karyawan.Kry_AktifYN = 'Y') AND (dbo.HRD_M_karyawan.Kry_Nip NOT LIKE '%H%') AND (dbo.HRD_M_karyawan.Kry_Nip NOT LIKE '%A%') ORDER BY HRD_M_Karyawan.Kry_Nama" 
+		'response.write divisi_cmd.commandText & "<BR>"
+		set divisi = divisi_cmd.execute
+	else
+		divisi_cmd.commandText = "SELECT dbo.HRD_M_Divisi.Div_Nama, dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_M_Karyawan.Kry_Nama, GLB_M_Agen.Agen_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_M_Divisi ON dbo.HRD_M_Karyawan.Kry_DDBID = dbo.HRD_M_Divisi.Div_Code LEFT OUTER JOIN GLB_M_AGEN ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE GLB_M_Agen.Agen_ID = '"& agen &"' AND (dbo.HRD_M_Karyawan.Kry_AktifYN = 'Y') AND (dbo.HRD_M_karyawan.Kry_Nip NOT LIKE '%H%') AND (dbo.HRD_M_karyawan.Kry_Nip NOT LIKE '%A%') GROUP BY dbo.HRD_M_Divisi.Div_Nama, dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_M_Karyawan.Kry_Nama, GLB_M_Agen.Agen_Nama ORDER BY HRD_M_Karyawan.Kry_Nama" 
+		'response.write divisi_cmd.commandText & "<BR>"
+		set divisi = divisi_cmd.execute
+	end if
 
 	dim karyawanshift, wfh
 
-	' function last day in the month
-	function GetLastDay(aDate)
-		dim intMonth
-		dim dteFirstDayNextMonth
-
-		dtefirstdaynextmonth = dateserial(year(adate),month(adate) + 1, 1)
-		GetLastDay = Day(DateAdd ("d", -1, dteFirstDayNextMonth))
-	end function
-
-
-
-
- %>
+%>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -66,7 +64,11 @@
 <body>
 <%  
 	if not divisi.eof then
-		response.write "<center><b>DIVISI : " & divisi("Div_nama") & "<BR>" & "CABANG : " & divisi("Agen_NAma") & "<br>" &"PERIODE : " & tgla & " Sampai " & tgle & "</center></b><BR>"		
+		if divcode <> "" then
+			response.write "<center><b>DIVISI : " & divisi("Div_nama") & "<BR>" & "CABANG : " & divisi("Agen_NAma") & "<br>" &"PERIODE : " & tgla & " Sampai " & tgle & "</center></b><BR>"		
+		else
+			response.write "<center><b>CABANG : " & divisi("Agen_NAma") & "<br>" &"PERIODE : " & tgla & " Sampai " & tgle & "</center></b><BR>"
+		end if 
 	end if
 
 	do while not divisi.eof
@@ -79,70 +81,65 @@
 		wfh = Cdate("3/7/2021")
 
 
-		if tgla <> "" AND tgle <> "" then
-			root = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP =  '"& divisi("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"'"
-			
-			shift_cmd.commandText = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP =  '"& divisi("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"'"
-			' Response.Write shift_cmd.commandText & "<br>"
-			set karyawanshift = shift_cmd.execute
+		shift_cmd.commandText = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP =  '"& divisi("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"'"
+		' Response.Write shift_cmd.commandText & "<br>"
+		set karyawanshift = shift_cmd.execute
 
-			set connection = server.CreateObject("ADODB.Connection")
-			connection.open MM_cargo_STRING
+		set connection = server.CreateObject("ADODB.Connection")
+		connection.open MM_cargo_STRING
 
-			dim recordsonpage, requestrecords, allrecords, hiddenrecords, showrecords, lastrecord, recordconter, pagelist, pagelistcounter
-			dim nip, cabang, tgl, tgla, tgle, ketm, ketk, shiftm, shiftk, bedai, offset
+		dim recordsonpage, requestrecords, allrecords, hiddenrecords, showrecords, lastrecord, recordconter, pagelist, pagelistcounter
+		dim nip, cabang, tgl, tgla, tgle, ketm, ketk, shiftm, shiftk, bedai, offset
 
-			orderBy =  " ORDER BY HRD_T_Shift.Shf_Tanggal ASC"
+		orderBy =  " ORDER BY HRD_T_Shift.Shf_Tanggal ASC"
 
-			set rs = Server.CreateObject("ADODB.Recordset")
+		set rs = Server.CreateObject("ADODB.Recordset")
 
-			sqlAwal = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP =  '"& divisi("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"' "
+		sqlAwal = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP =  '"& divisi("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"' "
 
-			sql=sqlawal + orderBy
+		sql=sqlawal + orderBy
 
-			rs.open sql, Connection
+		rs.open sql, Connection
 
-			' records per halaman
-			recordsonpage = 200
+		' records per halaman
+		recordsonpage = 200
 
-			' count all records
-			allrecords = 0
-			do until rs.EOF
-				allrecords = allrecords + 1
-				rs.movenext
-			loop
+		' count all records
+		allrecords = 0
+		do until rs.EOF
+			allrecords = allrecords + 1
+			rs.movenext
+		loop
 
-
-			' if offset is zero then the first page will be loaded
-			offset = Request.QueryString("offset")
-			if offset = 0 OR offset = "" then
-				requestrecords = 0
-			else
-				requestrecords = requestrecords + offset
-			end if
-
-			rs.close
-
-			set rs = server.CreateObject("adodb.recordset")
-
-			sqlawal = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP ='"& divisi("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"'"	
-
-			sql=sqlawal + orderBy
-
-			rs.open sql, Connection
-
-				' reads first records (offset) without showing them (can't find another solution!)
-			hiddenrecords = requestrecords
-			do until hiddenrecords = 0 OR rs.EOF
-				hiddenrecords = hiddenrecords - 1
-				rs.movenext
-				if rs.EOF then
-				lastrecord = 1
-				end if	
-			loop
+		' if offset is zero then the first page will be loaded
+		offset = Request.QueryString("offset")
+		if offset = 0 OR offset = "" then
+			requestrecords = 0
+		else
+			requestrecords = requestrecords + offset
 		end if
-		if tgla <> "" AND tgle <> "" then
-			if not karyawanshift.eof then
+
+		rs.close
+
+		set rs = server.CreateObject("adodb.recordset")
+
+		sqlawal = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP ='"& divisi("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"'"	
+
+		sql=sqlawal + orderBy
+
+		rs.open sql, Connection
+
+			' reads first records (offset) without showing them (can't find another solution!)
+		hiddenrecords = requestrecords
+		do until hiddenrecords = 0 OR rs.EOF
+			hiddenrecords = hiddenrecords - 1
+			rs.movenext
+			if rs.EOF then
+			lastrecord = 1
+			end if	
+		loop
+
+		if not karyawanshift.eof then
 			%>
 						<table class="table table-hover" >
 							<thead class="bg-secondary text-light text-center">
@@ -151,6 +148,7 @@
 									<th scope="col">HARI</th>
 									<th scope="col">MASUK SHIFT</th>
 									<th scope="col">KELUAR SHIFT</th>
+									<th scope="col">TANGGAL SHIFT</th>
 									<th scope="col">JAM KERJA</th>
 									<th scope="col">BEDA HARI</th>
 									<th scope="col">ABSEN MASUK</th>
@@ -264,29 +262,35 @@
 
 								'cek status karyawan absen sesuai dengan izincutisakit
 								if masuk = "TIDAK ABSEN" And keluar = "TIDAK ABSEN" And longitude = "-" And latitude = "-" then
-									shift_cmd.commandText = "SELECT HRD_T_IzinCutiSakit.Ics_Status FROM HRD_T_IzinCutiSakit WHERE  HRD_T_IzinCutiSakit.ICS_Nip = '"& rs("Kry_NIP") &"' AND (HRD_T_IzinCutiSakit.ICS_StartDate BETWEEN '"& rs("Shf_Tanggal") &"' AND '"& month(rs("Shf_Tanggal")) &"/"& GetLastDay(rs("Shf_Tanggal")) &"/"& year(rs("Shf_Tanggal")) &"' OR HRD_T_IzinCutiSakit.ICS_EndDate BETWEEN '"& rs("Shf_Tanggal") &"' AND '"& month(rs("Shf_Tanggal")) &"/"& GetLastDay(rs("Shf_Tanggal")) &"/"& year(rs("Shf_Tanggal")) &"') AND HRD_T_IzinCutiSakit.ICS_AktifYN = 'Y' ORDER BY HRD_T_IzinCutiSakit.ICS_StartDate ASC" 
-									' Response.Write shift_cmd.commandText & "<br>"
-									set status = shift_cmd.execute
+									liburan_cmd.commandTExt = "SELECT * FROM HRD_M_CalLiburPeriodik WHERE LP_Tgl = '"& rs("SHF_Tanggal") &"' AND LP_LiburYN = 'Y'"
+									set libur = liburan_cmd.execute
 
-									if not status.eof then
-									' Response.Write status() & 
-										if status("ics_status") = "A" then
-											icskaryawan = "ALFA"
-										elseIf status("ics_status") = "B" then
-											icskaryawan = "CUTI BERSAMA"
-										elseIf status("ics_status") = "C" then
-											icskaryawan = "CUTI"
-										elseIf status("ics_status") = "G" then
-											icskaryawan = "DISPENSASI"
-										elseIf status("ics_status") = "I" then
-											icskaryawan = "IZIN"
-										elseIf status("ics_status") = "K" then
-											icskaryawan = "KLAIM OBAT"
-										else
-											icskaryawan = "SAKIT"
-										end if
+									if not libur.eof then
+										icskaryawan = "PRIODE LIBUR"
 									else
-										icskaryawan = "ALFA"
+										shift_cmd.commandText = "SELECT HRD_T_IzinCutiSakit.Ics_Status FROM HRD_T_IzinCutiSakit WHERE  HRD_T_IzinCutiSakit.ICS_Nip = '"& rs("Kry_NIP") &"' AND NOT(HRD_T_IzinCutiSakit.ICS_StartDate > '"& rs("Shf_Tanggal") &"' OR HRD_T_IzinCutiSakit.ICS_EndDate < '"& rs("Shf_Tanggal") &"') AND HRD_T_IzinCutiSakit.ICS_AktifYN = 'Y' ORDER BY HRD_T_IzinCutiSakit.ICS_StartDate ASC" 
+										' Response.Write shift_cmd.commandText & "<br>"
+										set status = shift_cmd.execute
+
+										if not status.eof then
+											if status("ics_status") = "A" then
+												icskaryawan = "ALFA"
+											elseIf status("ics_status") = "B" then
+												icskaryawan = "CUTI BERSAMA"
+											elseIf status("ics_status") = "C" then
+												icskaryawan = "CUTI"
+											elseIf status("ics_status") = "G" then
+												icskaryawan = "DISPENSASI"
+											elseIf status("ics_status") = "I" then
+												icskaryawan = "IZIN"
+											elseIf status("ics_status") = "K" then
+												icskaryawan = "KLAIM OBAT"
+											else
+												icskaryawan = "SAKIT"
+											end if
+										else
+											icskaryawan = "ALFA"
+										end if
 									end if
 								else    
 									icskaryawan = "-"
@@ -306,6 +310,9 @@
 									</td>
 									<td>
 										<%= ShiftJamKeluar %>
+									</td>
+									<td>
+										<%= rs("Shf_Tanggal") %>
 									</td>
 									<!--jam kerja -->
 										<td style="text-align:center">
@@ -482,7 +489,6 @@
 				</tr>
 			<% 
 				end if
-			end if              
 			%>
 				</tbody>
 			</table>
