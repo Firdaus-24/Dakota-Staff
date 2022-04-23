@@ -41,7 +41,7 @@ app_cmd.activeConnection = MM_Cargo_String
     <div class='row'>
         <div class='col'>
             <div class="judul text-center mt-3">
-                <h3>Daftar Akses</h3>
+                <h3>DAFTAR HAKAKSES</h3>
             </div> 
             <form action="checkakses_add.asp" method="post">
                 <input type='hidden' name='uname' id='uname' value="<%=pusername%>">
@@ -136,6 +136,32 @@ app_cmd.activeConnection = MM_Cargo_String
                                     </li>
                                     <li>
                                         <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HL8'"
+                                        set app = app_cmd.execute
+                                        %>
+                                        <input class="form-check-input" type="checkbox" name="HL8" id="HL8" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HL8');" >
+                                        <label for="HL8">Libur Priodik</label>
+                                    </li>
+                                        <ul>
+                                            <li>
+                                                <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HL8A'"
+                                                set app = app_cmd.execute
+                                                %>
+                                                <input class="form-check-input" type="checkbox" name="HL8A" id="HL8A" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HL8A');" >
+                                                <label for="HL8A">Tambah</label>
+                                            </li>
+                                            <li>
+                                                <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HL8B'"
+                                                set app = app_cmd.execute
+                                                %>
+                                                <input class="form-check-input" type="checkbox" name="HL8B" id="HL8B" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HL8B');" >
+                                                <label for="HL8B">AktifYN</label>
+                                            </li>
+                                        </ul>
+                                    <li>
+                                        <%
                                         app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HL3'"
                                         set app = app_cmd.execute
                                         %>
@@ -164,7 +190,7 @@ app_cmd.activeConnection = MM_Cargo_String
                                             set app = app_cmd.execute
                                         %>
                                         <input class="form-check-input" type="checkbox" name="HL6" id="HL6" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HL6');" >
-                                        <label for="HL6">Udate Data Login</label>
+                                        <label for="HL6">Update Data Login</label>
                                     </li>
                                     <li>
                                         <%
@@ -173,6 +199,14 @@ app_cmd.activeConnection = MM_Cargo_String
                                         %>
                                         <input class="form-check-input" type="checkbox" name="HL7" id="HL7" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HL7');" >
                                         <label for="HL7">Gaji ALL</label>
+                                    </li>
+                                    <li>
+                                        <%
+                                            app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HL9'"
+                                            set app = app_cmd.execute
+                                        %>
+                                        <input class="form-check-input" type="checkbox" name="HL9" id="HL9" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HL9');" >
+                                        <label for="HL9">Import File</label>
                                     </li>
                                 </ul>
                         </div>

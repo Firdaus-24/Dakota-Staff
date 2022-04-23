@@ -84,7 +84,7 @@ else
     adduser.commandText = "INSERT INTO WebLogin (username,password,user_AktifYN,ServerID,realName,LastLogin,LastIPLogin,PT_ID) VALUES ('"& username &"','"& password &"','Y','"& serverid &"', '"& surename &"','"& date &"','192.168.22.3','A' )"
     'Response.Write adduser.commandText
     adduser.execute
-    Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data Berhasil Disimpan</span><img src='../logo/berhasil_dakota.PNG'><a href='checkakses.asp?username="& username &"&serverid="& serverid &"' class='btn btn-primary'>Masuk</a></div>"
+    Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data Tersimpan</span><img src='../logo/berhasil_dakota.PNG'><a href='checkakses.asp?username="& username &"&serverid="& serverid &"' class='btn btn-primary'>Masuk</a></div>"
 end if
  %>
  <!-- #include file='../layout/footer.asp' -->

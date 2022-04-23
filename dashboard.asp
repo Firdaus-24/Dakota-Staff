@@ -79,7 +79,7 @@ loop
               <h5 class="card-title">Rekapitulasi</h5>
               <p class="card-text">Laporan Kerja Karyawan</p>
               <% if session("HL") = true then %>
-                <button type="button" class="btn btn-primary btn-sm buttonLaporan" onclick="window.location.href='<%=url%>/laporan'"><i class="fa fa-eye" aria-hidden="true"></i> Lihat</button>
+                <button type="button" class="btn btn-primary btn-sm buttonLaporan" onclick="window.location.href='<%=url%>/laporan'"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Lihat</button>
               <% else %>
                 <span style="padding:20px;margin-top:50px;margin-bottom:50px"></span>
               <% end if %>
@@ -92,9 +92,8 @@ loop
           <div class="card-header">Gaji</div>
             <div class="card-body">
               <i class="fa fa-money" aria-hidden="true" id="reportlogo"></i>
-              <h5 class="card-title">Warning !!</h5>
-              <p class="card-text">Gaji Karyawan All</p>
-
+              <h5 class="card-title">Gaji Karyawan</h5>
+              <p class="card-text">Gaji Karyawan Seluruhan Cabang</p>
               <% if session("HL7")=true then %>
                 <button type="button" class="btn btn-primary btn-sm setGaji" onclick="return setGaji()" ><i class="fa fa-usd" aria-hidden="true"></i> Set Gaji</button>
               <% else %>
@@ -109,10 +108,15 @@ loop
           <div class="card-header">Laporan Absensi</div>
             <div class="card-body">
               <i class="fa fa-plane" aria-hidden="true" id="reportlogo"></i>
-              <h5 class="card-title">All Absensi</h5>
+              <h5 class="card-title">Absensi Dan Libur Priodik</h5>
               <p class="card-text">Cek Absen Perdivisi</p>
               <% if session("HL2")=true then %>
-              <button type="button" class="btn btn-primary btn-sm setCuti" onclick="window.location.href='laporanabsensi/'"><i class="fa fa-retweet" aria-hidden="true"></i> Lihat</button>
+                <button type="button" class="btn btn-primary btn-sm setCuti" onclick="window.location.href='laporanabsensi/'"><i class="fa fa-retweet" aria-hidden="true"></i> Absensi</button>
+              <% else %>
+                <span style="padding:20px;margin-top:50px;margin-bottom:50px"></span>
+              <% end if %>
+              <% if session("HL8")=true then %>
+                <button type="button" class="btn btn-primary btn-sm setCuti" onclick="window.location.href='liburpirodik/'"><i class="fa fa-calendar" aria-hidden="true"></i> Libur</button>
               <% else %>
                 <span style="padding:20px;margin-top:50px;margin-bottom:50px"></span>
               <% end if %>
@@ -123,7 +127,7 @@ loop
     <!--setting bpjs -->
     <div class='row'>
       <!--mutasi karyawan -->
-      <div class='col-lg card-list' data-aos="fade-down" data-aos-easing="linear"data-aos-duration="1000" data-aos-delay="200">
+      <div class='col-lg card-list' data-aos="fade-down" data-aos-easing="linear"data-aos-duration="1100" data-aos-delay="300">
         <div class="card text-light mx-3 my-2 card-mutasi" style="max-width: 25rem;">
           <div class="card-header">Perubahan Status</div>
             <div class="card-body">
@@ -141,7 +145,7 @@ loop
         </div>
       </div>
       <!--perubahan bpjs -->
-      <div class='col-lg card-list' data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1100" data-aos-delay="200">
+      <div class='col-lg card-list' data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1200" data-aos-delay="400">
         <div class="card text-light mx-3 my-2 card-bpjs" style="max-width: 25rem;">
           <div class="card-header" >BPJS</div>
             <div class="card-body">
@@ -160,7 +164,7 @@ loop
       </div>
 
       <!--perubahan Approve CIS -->
-      <div class='col-lg card-list' data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1100" data-aos-delay="200">
+      <div class='col-lg card-list' data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1300" data-aos-delay="500">
         <div class="card text-light mx-3 my-2 card-atasan" style="max-width: 25rem;">
           <div class="card-header">Setting atasan</div>
             <div class="card-body">
@@ -169,7 +173,7 @@ loop
               <p class="card-text">Approve Cuti</p>
                 <% if session("HL3")=true then %>
                   <button class="btn btn-warning btn-sm setatasan" type="button" aria-expanded="false" onclick="window.location.href='approve'">
-                    <i class="fa fa-hourglass-half" aria-hidden="true"></i> Detail
+                    <i class="fa fa-upload" aria-hidden="true"></i> Detail
                   </button>
                 <% else %>
                   <span style="padding:20px;margin-top:50px;margin-bottom:50px"></span>
@@ -177,8 +181,9 @@ loop
             </div>
         </div>
       </div>
-
     </div>
+
+    
     <% if session("HL6") = true then %>
     <div class='row'>
       <div class='col'>
@@ -187,7 +192,7 @@ loop
         </section> 
       </div>
     </div>
-     <% end if %>
+    <% end if %>
 </div>
 </section>
 
