@@ -37,9 +37,9 @@
     nip = Request.QueryString("nip")
   end if
 
-  nama = Request.Form("nama")
+  nama = trim(Request.Form("nama"))
   if nama = "" then
-    nama = Request.QueryString("nama")
+    nama = trim(Request.QueryString("nama"))
   end if
 
   area = Request.Form("area")
@@ -48,7 +48,6 @@
   end if
 
   ' setting default query 
-  ' query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_T_BK.TPK_ID, HRD_T_BK.TPK_Tanggal, HRD_T_BK.TPK_Nip, HRD_T_BK.TPK_Ket, HRD_T_BK.TPK_PP, HRD_T_BK.TPK_AktifYN, HRD_T_BK.TPK_UpdateID, HRD_T_BK.TPK_UpdateTime FROM HRD_M_Karyawan RIGHT OUTER JOIN HRD_T_BK ON HRD_M_karyawan.Kry_Nip = HRD_T_BK.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID LEFT OUTER JOIN HRD_T_PK ON SUBSTRING(HRD_T_BK.TPK_Ket,1,18) = HRD_T_PK.TPK_ID WHERE HRD_M_Karyawan.kry_AktifYN = 'Y' AND SUBSTRING(HRD_T_BK.TPK_Ket,1,18) <> HRD_T_PK.TPK_ID"
   query = "SELECT TOP (100) PERCENT dbo.HRD_M_Karyawan.Kry_Nama, dbo.HRD_T_BK.TPK_ID, dbo.HRD_T_BK.TPK_Tanggal, dbo.HRD_T_BK.TPK_NIP, dbo.HRD_T_BK.TPK_Ket, dbo.HRD_T_BK.TPK_PP, dbo.HRD_T_BK.TPK_AktifYN, dbo.HRD_T_BK.TPK_UpdateID, dbo.HRD_T_BK.TPK_UpdateTime FROM dbo.HRD_T_BK RIGHT OUTER JOIN dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.GLB_M_Agen ON dbo.HRD_M_Karyawan.Kry_AgenID = dbo.GLB_M_Agen.Agen_ID ON dbo.HRD_T_BK.TPK_NIP = dbo.HRD_M_Karyawan.Kry_NIP WHERE (dbo.HRD_M_Karyawan.Kry_AktifYN = 'Y') AND not EXISTS (SELECT TPK_ID FROM dbo.HRD_T_PK WHERE (TPK_ID = SUBSTRING(dbo.HRD_T_BK.TPK_Ket, 1, 18))) and TPK_Ket not like '%PK-%'"
 
   if tgla <> "" And tgle <> "" then
