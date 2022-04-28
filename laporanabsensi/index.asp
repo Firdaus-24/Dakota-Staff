@@ -1,5 +1,9 @@
 <!-- #include file='../connection.asp' -->
 <% 
+if session("HL2") = false then
+    Response.Redirect("../dashboard.asp")
+end if
+
 set divisi = Server.CreateObject("ADODB.Command")
 divisi.activeConnection = mm_cargo_string
 

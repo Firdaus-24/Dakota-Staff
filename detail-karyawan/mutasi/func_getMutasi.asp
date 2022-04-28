@@ -43,11 +43,12 @@
         ' Response.Write getData_cmd.commandText & "<br>"
         set divisi = getData_cmd.execute
 
-        nama = ""
-        id = ""
         if not divisi.eof then
             nama = divisi("Div_nama")
             id = divisi("Div_Code")
+        else
+            nama = ""
+            id = ""
         end if
 
         if s = "nama" then

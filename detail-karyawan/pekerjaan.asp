@@ -1,25 +1,23 @@
 <!-- #include file='../connection.asp' -->
 <%
-' keharusan user login sebelum masuk ke menu utama aplikasi
-if session("username") = "" then
-response.Redirect("../login.asp")
-end if
+  if session("HM5") = false then
+    response.Redirect("../dashboard.asp")
+  end if
+
+  dim nip
+  dim pekerjaan_cmd, pekerjaan
+
+  nip = Request.QueryString("nip")
+
+  set pekerjaan_cmd = Server.CreateObject("ADODB.Command")
+  pekerjaan_cmd.activeConnection = MM_Cargo_String
+
+  pekerjaan_cmd.commandText = "SELECT HRD_T_HistKerja.*, HRD_M_JnsUsaha.Ush_Nama, HRD_M_JabatanOuter.Jbt_Nama FROM HRD_T_HistKerja LEFT OUTER JOIN HRD_M_JnsUsaha ON HRD_T_HistKerja.HK_UshID = HRD_M_JnsUsaha.Ush_ID LEFT OUTER JOIN HRD_M_JabatanOuter ON HRD_T_HistKerja.HK_JbtID = HRD_M_JabatanOuter.Jbt_ID WHERE HK_Nip = '"& nip &"'"
+  set pekerjaan = pekerjaan_cmd.execute
+
+  pekerjaan_cmd.commandText = "SELECT Kry_Nama FROM HRD_M_Karyawan WHERE Kry_Nip = '"& nip &"'"
+  set karyawan = pekerjaan_cmd.execute
 %>
-<% 
-dim nip
-dim pekerjaan_cmd, pekerjaan
-
-nip = Request.QueryString("nip")
-
- set pekerjaan_cmd = Server.CreateObject("ADODB.Command")
- pekerjaan_cmd.activeConnection = MM_Cargo_String
-
- pekerjaan_cmd.commandText = "SELECT HRD_T_HistKerja.*, HRD_M_JnsUsaha.Ush_Nama, HRD_M_JabatanOuter.Jbt_Nama FROM HRD_T_HistKerja LEFT OUTER JOIN HRD_M_JnsUsaha ON HRD_T_HistKerja.HK_UshID = HRD_M_JnsUsaha.Ush_ID LEFT OUTER JOIN HRD_M_JabatanOuter ON HRD_T_HistKerja.HK_JbtID = HRD_M_JabatanOuter.Jbt_ID WHERE HK_Nip = '"& nip &"'"
- set pekerjaan = pekerjaan_cmd.execute
-
- pekerjaan_cmd.commandText = "SELECT Kry_Nama FROM HRD_M_Karyawan WHERE Kry_Nip = '"& nip &"'"
- set karyawan = pekerjaan_cmd.execute
- %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,95 +25,95 @@ nip = Request.QueryString("nip")
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pekerjaan</title>
+    <title>PEKERJAAN</title>
     <!-- #include file='../layout/header.asp' -->
+    <link rel="stylesheet" href="../css/detail-all.css">
     <script>
-    const validasiPekerjaan = () => {
-      let namaPt = document.forms["form-pekerjaan"]["namaPT1"].value;
-      let thna1 = document.forms["form-pekerjaan"]["thna1"].value;
-      let thna2 = document.forms["form-pekerjaan"]["thna2"].value;
-      let akeluar1 = document.forms["form-pekerjaan"]["akeluar1"].value;
-      let referensi1 = document.forms["form-pekerjaan"]["referensi1"].value;
+      const validasiPekerjaan = () => {
+        let namaPt = document.forms["form-pekerjaan"]["namaPT1"].value;
+        let thna1 = document.forms["form-pekerjaan"]["thna1"].value;
+        let thna2 = document.forms["form-pekerjaan"]["thna2"].value;
+        let akeluar1 = document.forms["form-pekerjaan"]["akeluar1"].value;
+        let referensi1 = document.forms["form-pekerjaan"]["referensi1"].value;
 
-      if ( namaPt.length > 20 ){
-        alert("Maximal Nama PT 20 karakter!!!");
-        return false;
-      }else if ( thna1.length > 4 ){
-        alert("Maximal Tahun 4 karakter!!!!!");
-        return false;
-      }else if ( thna2.length > 4 ){
-        alert("Maximal Tahun 4 karakter!!!!!");
-        return false;
-      }else if ( referensi1.length > 20 ){
-        alert("Maximal referensi 20 karakter!!!!!");
-        return false;
-      }else if ( akeluar1.length > 30 ){
-        alert("Maximal Alasan Keluar 50 karakter!!!");
-        return false;
+        if ( namaPt.length > 20 ){
+          alert("Maximal Nama PT 20 karakter!!!");
+          return false;
+        }else if ( thna1.length > 4 ){
+          alert("Maximal Tahun 4 karakter!!!!!");
+          return false;
+        }else if ( thna2.length > 4 ){
+          alert("Maximal Tahun 4 karakter!!!!!");
+          return false;
+        }else if ( referensi1.length > 20 ){
+          alert("Maximal referensi 20 karakter!!!!!");
+          return false;
+        }else if ( akeluar1.length > 30 ){
+          alert("Maximal Alasan Keluar 50 karakter!!!");
+          return false;
+        }
+        return true;
       }
-      return true;
-    }
-    const tambahPekerjaan = () => {
-       
-        $('#modalLabelPekerjaan').html('TAMBAH PEKERJAAN');
-        $('#submit_Pekerjaan').html('Save');
-        $('.modal-body form').attr('action', 'pekerjaan/tambah.asp');
+      const tambahPekerjaan = () => {
+          $('#modalLabelPekerjaan').html('TAMBAH PEKERJAAN');
+          $('#submit_Pekerjaan').html('Save');
+          $('.modal-body form').attr('action', 'pekerjaan/tambah.asp');
 
-        $('#namaPT1').val("");
-        $('#jusaha1').val("");
-        $('#jabatan1').val("");
-        $('#blna1').val("");
-        $('#thna1').val("");
-        $('#blna2').val("");
-        $('#thna2').val("");
-        $('#referensi1').val("");
-        $('#akeluar1').val("");
+          $('#namaPT1').val("");
+          $('#jusaha1').val("");
+          $('#jabatan1').val("");
+          $('#blna1').val("");
+          $('#thna1').val("");
+          $('#blna2').val("");
+          $('#thna2').val("");
+          $('#referensi1').val("");
+          $('#akeluar1').val("");
 
-    }
+      }
 
-    const updatePekerjaan = (id, nama) => {
-        $.ajax({
-        url: 'pekerjaan/update.asp',
-        data: { id : id, nama:nama },
-        method: 'post',
-        success: function (data) {
-            function splitString(strToSplit, separator) {
-                var arry = strToSplit.split(separator);
-                $('#nip').val(arry[0]);
-                $('#namaPT').val(arry[1]);
-                $('#namaPT1').val(arry[1]);
-                $('#jusaha').val(arry[2]);
-                $('#jusaha1 option[value=' + arry[2] + ']').prop("selected", true);
-                $('#jabatan').val(arry[3]);
-                $('#jabatan1 option[value=' + arry[3] + ']').prop("selected", true);
-                $('#bln1').val(arry[4]);
-                $('#blna1 option[value=' + arry[4] + ']').prop("selected", true);
-                $('#thn1').val(arry[5]);
-                $('#thna1').val(arry[5]);
-                $('#bln2').val(arry[6]);
-                $('#blna2 option[value=' + arry[6] + ']').prop("selected", true);
-                $('#thn2').val(arry[7]);
-                $('#thna2').val(arry[7]);
-                $('#referensi').val(arry[8]);
-                $('#referensi1').val(arry[8]);
-                $('#akeluar').val(arry[9]);
-                $('#akeluar1').val(arry[9]);
-            
+      const updatePekerjaan = (id, nama) => {
+          $.ajax({
+          url: 'pekerjaan/update.asp',
+          data: { id : id, nama:nama },
+          method: 'post',
+          success: function (data) {
+              function splitString(strToSplit, separator) {
+                  var arry = strToSplit.split(separator);
+                  $('#nip').val(arry[0]);
+                  $('#namaPT').val(arry[1]);
+                  $('#namaPT1').val(arry[1]);
+                  $('#jusaha').val(arry[2]);
+                  $('#jusaha1 option[value=' + arry[2] + ']').prop("selected", true);
+                  $('#jabatan').val(arry[3]);
+                  $('#jabatan1 option[value=' + arry[3] + ']').prop("selected", true);
+                  $('#bln1').val(arry[4]);
+                  $('#blna1 option[value=' + arry[4] + ']').prop("selected", true);
+                  $('#thn1').val(arry[5]);
+                  $('#thna1').val(arry[5]);
+                  $('#bln2').val(arry[6]);
+                  $('#blna2 option[value=' + arry[6] + ']').prop("selected", true);
+                  $('#thn2').val(arry[7]);
+                  $('#thna2').val(arry[7]);
+                  $('#referensi').val(arry[8]);
+                  $('#referensi1').val(arry[8]);
+                  $('#akeluar').val(arry[9]);
+                  $('#akeluar1').val(arry[9]);
+              
 
-            }
-            const koma = ",";
-            splitString(data, koma);
-        }
-        });
-        $('#modalLabelPekerjaan').html('UPDATE PEKERJAAN');
-        $('#submit_Pekerjaan').html('Update');
-        $('.modal-body form').attr('action', 'pekerjaan/update_add.asp');
-    }
-    const hapusPekerjaan = (id,nama) => {
-        if (confirm("Yakin Untuk Di Ubah??") == true ){
-            window.location.href = 'pekerjaan/delete.asp?id='+ id + '&nama=' + nama
-        }
-    }
+              }
+              const koma = ",";
+              splitString(data, koma);
+          }
+          });
+          $('#modalLabelPekerjaan').html('UPDATE PEKERJAAN');
+          $('#submit_Pekerjaan').html('Update');
+          $('.modal-body form').attr('action', 'pekerjaan/update_add.asp');
+      }
+      const hapusPekerjaan = (id,nama) => {
+          if (confirm("Yakin Untuk Di Ubah??") == true ){
+              window.location.href = 'pekerjaan/delete.asp?id='+ id + '&nama=' + nama
+          }
+      }
     </script>
 </head>
 <!-- #include file='../landing.asp' -->
@@ -132,77 +130,86 @@ nip = Request.QueryString("nip")
         </div>
       <div class='row mt-3'>
         <div class='col'>
+        <%if session("HM6A") = true then%>
           <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#modalPekerjaan" onclick="return tambahPekerjaan()">
             Tambah
           </button>
+        <%end if%>
         </div>
       </div>
     </div>
     <div class='row contentDetail'>
         <div class='col content-table'>
-             <table class="table table-striped tableDetail">
-                <thead>
-                    <tr>
-                        <th scope="col">Nama PT</th>
-                        <th scope="col">Usaha</th>
-                        <th scope="col">Jabatan</th>
-                        <th scope="col">Bulan 1</th>
-                        <th scope="col">Tahun 1</th>
-                        <th scope="col">Bulan 2</th>
-                        <th scope="col">Tahun 2</th>
-                        <th scope="col">Referensi</th>
-                        <th scope="col">Alasan Keluar</th>
-                        <th scope="col text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <% do until pekerjaan.eof %>
-                  <tr>
-                    <td>
-                            <%= pekerjaan("HK_NamaPT") %>
-                        </td>
-                        <td>
-                            <%= pekerjaan("Ush_Nama") %>
-                        </td>
-                        <td>
-                            <%= pekerjaan("Jbt_Nama") %>
-                        </td>
-                        <td>
-                            <%= pekerjaan("HK_Bulan1") %>
-                        </td>
-                        <td>
-                            <%= pekerjaan("HK_tahun1") %>
-                        </td>
-                        <td>
-                            <%= pekerjaan("HK_Bulan2") %>
-                        </td>
-                        <td>
-                            <%= pekerjaan("HK_tahun2") %>
-                        </td>
-                        <td>
-                            <%= pekerjaan("HK_referensi") %>
-                        </td>
-                        <td>
-                            <%= pekerjaan("HK_alasanKeluar") %>
-                        </td>
-                        
-                    <td>
-                      <div class='btn btn-group'>
+          <table class="table table-striped tableDetail">
+            <thead>
+                <tr>
+                  <th scope="col">Nama PT</th>
+                  <th scope="col">Usaha</th>
+                  <th scope="col">Jabatan</th>
+                  <th scope="col">Bulan 1</th>
+                  <th scope="col">Tahun 1</th>
+                  <th scope="col">Bulan 2</th>
+                  <th scope="col">Tahun 2</th>
+                  <th scope="col">Referensi</th>
+                  <th scope="col">Alasan Keluar</th>
+                  <%if session("HM6B") = true OR session("HM6C") = true then%>
+                    <th scope="col" class="text-center">Aksi</th>
+                  <%end if%>
+                </tr>
+            </thead>
+            <tbody>
+            <% do until pekerjaan.eof %>
+              <tr>
+                <td>
+                  <%= pekerjaan("HK_NamaPT") %>
+                </td>
+                <td>
+                    <%= pekerjaan("Ush_Nama") %>
+                </td>
+                <td>
+                    <%= pekerjaan("Jbt_Nama") %>
+                </td>
+                <td>
+                    <%= pekerjaan("HK_Bulan1") %>
+                </td>
+                <td>
+                    <%= pekerjaan("HK_tahun1") %>
+                </td>
+                <td>
+                    <%= pekerjaan("HK_Bulan2") %>
+                </td>
+                <td>
+                    <%= pekerjaan("HK_tahun2") %>
+                </td>
+                <td>
+                    <%= pekerjaan("HK_referensi") %>
+                </td>
+                <td>
+                    <%= pekerjaan("HK_alasanKeluar") %>
+                </td>
+                <%if session("HM6B") = true OR session("HM6C") = true then%>
+                  <td>
+                    <div class='btn btn-group'>
+                      <%if session("HM6B") = true then%>
                         <button type="button" class="btn btn-primary btn-sm btn-sm py-0 px-2 " data-bs-toggle="modal" data-bs-target="#modalPekerjaan" onclick="return updatePekerjaan('<%= pekerjaan("HK_Nip") %>', '<%= pekerjaan("HK_NamaPT") %>')">
                           Update
                         </button>
+                      <%end if%>
+                      <%if session("HM6C") = true then%>
                         <button type="button" class="btn btn-danger btn-sm btn-sm py-0 px-2 " onclick="return hapusPekerjaan('<%= pekerjaan("HK_Nip") %>', '<%= pekerjaan("HK_NamaPT") %>')">
                           Hapus
                         </button>
-                      </div>
-                    </td>
-                  </tr>
-                <% 
-                pekerjaan.movenext
-                loop
-                 %>
-                <tbody>
-            </table>
+                      <%end if%>
+                    </div>
+                  </td>
+                <%end if%>
+              </tr>
+            <% 
+            pekerjaan.movenext
+            loop
+            %>
+            <tbody>
+          </table>
         </div>
     </div>
 </div>

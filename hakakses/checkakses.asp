@@ -1,24 +1,24 @@
 <!-- #include file='../connection.asp' -->
 <% 
-dim usernameu, serveridu
-dim pusername, pserverid, app_cmd, app
+    dim usernameu, serveridu
+    dim pusername, pserverid, app_cmd, app
 
-'yang di usernamenew_add
-pusername = Request.QueryString("username")
-pserverid = Request.QueryString("serverid")
+    'yang di usernamenew_add
+    pusername = Request.QueryString("username")
+    pserverid = Request.QueryString("serverid")
 
-set app_cmd = Server.CreateObject("ADODB.Command")
-app_cmd.activeConnection = MM_Cargo_String
+    set app_cmd = Server.CreateObject("ADODB.Command")
+    app_cmd.activeConnection = MM_Cargo_String
 
     'app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"')"
     'set app = app_cmd.execute
     'do while not app.eof
 
-     '   session(app("appIDRights"))=true
+    ' session(app("appIDRights"))=true
 
     'app.movenext
     'loop
- %>
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,14 +47,14 @@ app_cmd.activeConnection = MM_Cargo_String
                 <input type='hidden' name='uname' id='uname' value="<%=pusername%>">
                 <input type='hidden' name='serverID' id='serverID' value="<%=pserverid%>">
             <div class="accordion" id="accordionExample">
-                <!--master karyawan -->
+                <!--karyawan -->
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        KARYAWAN
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-controls="collapseOne">
+                        DAFTAR KARYAWAN
                     </button>
                     </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                                 <%
                                     app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HA1'"
@@ -69,23 +69,7 @@ app_cmd.activeConnection = MM_Cargo_String
                                     set app = app_cmd.execute
                                     %>
                                     <input class="form-check-input" type="checkbox" name="HA1A" id="HA1A" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HA1A');" >
-                                    <label for="HA1A">Tambah</label>
-                                </li>
-                                <li>
-                                    <%
-                                    app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HA1B'"
-                                    set app = app_cmd.execute
-                                    %>
-                                    <input class="form-check-input" type="checkbox" name="HA1B" id="HA1B" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HA1B');" >
-                                    <label for="HA1B">Edit</label>
-                                </li>
-                                <li>
-                                    <%
-                                    app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HA1C'"
-                                    set app = app_cmd.execute
-                                    %>
-                                    <input class="form-check-input" type="checkbox" name="HA1C" id="HA1C" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HA1C');" >
-                                    <label for="HA1C">Cetak</label>
+                                    <label for="HA1A">Tambah Karyawan</label>
                                 </li>
                                 <li>
                                     <%
@@ -107,12 +91,409 @@ app_cmd.activeConnection = MM_Cargo_String
                         </div>
                     </div>
                 </div>
-                <!--end master karyawan -->
+                <!--end karyawan -->
+                <!--menu master karyawan -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="hendling10">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse10" aria-expanded="false" aria-controls="collapse10">
+                        MENU MASTER KARYAWAN
+                    </button>
+                    </h2>
+                    <div id="collapse10" class="accordion-collapse collapse" aria-labelledby="hendling10" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <ul>
+                                <li>
+                                    <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM1'"
+                                        set app = app_cmd.execute
+                                    %>
+                                    <input class="form-check-input" type="checkbox" name="HM1" id="HM1" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM1');" >
+                                    <label for="HM1">Biografi</label>
+                                </li>
+                                    <ul>
+                                        <li>
+                                            <%
+                                            app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HA1B'"
+                                            set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HA1B" id="HA1B" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HA1B');" >
+                                            <label for="HA1B">Update Karyawan</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                            app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HA1C'"
+                                            set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HA1C" id="HA1C" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HA1C');" >
+                                            <label for="HA1C">Cetak</label>
+                                        </li>
+                                    </ul>
+                                <li>
+                                    <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM2'"
+                                        set app = app_cmd.execute
+                                    %>
+                                    <input class="form-check-input" type="checkbox" name="HM2" id="HM2" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM2');" >
+                                    <label for="HM2">Keluarga 1</label>
+                                </li>   
+                                    <ul>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM2A'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM2A" id="HM2A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM2A');" >
+                                            <label for="HM2A">Tambah</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM2B'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM2B" id="HM2B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM2B');" >
+                                            <label for="HM2B">Edit</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM2C'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM2C" id="HM2C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM2C');" >
+                                            <label for="HM2C">Hapus</label>
+                                        </li>
+                                    </ul>
+                                <li>
+                                    <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM3'"
+                                        set app = app_cmd.execute
+                                    %>
+                                    <input class="form-check-input" type="checkbox" name="HM3" id="HM3" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM3');" >
+                                    <label for="HM3">Keluarga 2</label>
+                                </li>   
+                                    <ul>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM3A'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM3A" id="HM3A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM3A');" >
+                                            <label for="HM3A">Tambah</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM3B'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM3B" id="HM3B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM3B');" >
+                                            <label for="HM3B">Edit</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM3C'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM3C" id="HM3C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM3C');" >
+                                            <label for="HM3C">Hapus</label>
+                                        </li>
+                                    </ul>
+                                <li>
+                                    <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM4'"
+                                        set app = app_cmd.execute
+                                    %>
+                                    <input class="form-check-input" type="checkbox" name="HM4" id="HM4" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM4');" >
+                                    <label for="HM4">Kesehatan</label>
+                                </li>
+                                    <ul>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM4A'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM4A" id="HM4A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM4A');" >
+                                            <label for="HM4A">Tambah</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM4B'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM4B" id="HM4B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM4B');" >
+                                            <label for="HM4B">Edit</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM4C'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM4C" id="HM4C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM4C');" >
+                                            <label for="HM4C">Hapus</label>
+                                        </li>
+                                    </ul>   
+                                <li>
+                                    <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM5'"
+                                        set app = app_cmd.execute
+                                    %>
+                                    <input class="form-check-input" type="checkbox" name="HM5" id="HM5" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM5');" >
+                                    <label for="HM5">Pendidikan</label>
+                                </li>  
+                                    <ul>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM5A'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM5A" id="HM5A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM5A');" >
+                                            <label for="HM5A">Tambah</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM5B'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM5B" id="HM5B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM5B');" >
+                                            <label for="HM5B">Edit</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM5C'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM5C" id="HM5C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM5C');" >
+                                            <label for="HM5C">Hapus</label>
+                                        </li>
+                                    </ul>  
+                                <li>
+                                    <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM6'"
+                                        set app = app_cmd.execute
+                                    %>
+                                    <input class="form-check-input" type="checkbox" name="HM6" id="HM6" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM6');" >
+                                    <label for="HM6">Pekerjaan</label>
+                                </li>   
+                                    <ul>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM6A'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM6A" id="HM6A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM6A');" >
+                                            <label for="HM6A">Tambah</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM6B'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM6B" id="HM6B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM6B');" >
+                                            <label for="HM6B">Edit</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM6C'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM6C" id="HM6C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM6C');" >
+                                            <label for="HM6C">Hapus</label>
+                                        </li>
+                                    </ul>
+                                <li>
+                                    <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM7'"
+                                        set app = app_cmd.execute
+                                    %>
+                                    <input class="form-check-input" type="checkbox" name="HM7" id="HM7" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM7');" >
+                                    <label for="HM7">Catatan</label>
+                                </li>
+                                    <ul>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM7A'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM7A" id="HM7A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM7A');" >
+                                            <label for="HM7A">Tambah</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM7B'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM7B" id="HM7B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM7B');" >
+                                            <label for="HM7B">Edit</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM7C'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM7C" id="HM7C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM7C');" >
+                                            <label for="HM7C">Aktif Y/N</label>
+                                        </li>
+                                    </ul>   
+                                <li>
+                                    <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM8'"
+                                        set app = app_cmd.execute
+                                    %>
+                                    <input class="form-check-input" type="checkbox" name="HM8" id="HM8" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM8');" >
+                                    <label for="HM8">Status</label>
+                                </li>   
+                                    <ul>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM8A'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM8A" id="HM8A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM8A');" >
+                                            <label for="HM8A">Tambah</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM8B'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM8B" id="HM8B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM8B');" >
+                                            <label for="HM8B">Edit</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM8C'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM8C" id="HM8C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM8C');" >
+                                            <label for="HM8C">Hapus</label>
+                                        </li>
+                                    </ul>
+                                <li>
+                                    <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM9'"
+                                        set app = app_cmd.execute
+                                    %>
+                                    <input class="form-check-input" type="checkbox" name="HM9" id="HM9" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM9');" >
+                                    <label for="HM9">Mutasi</label>
+                                </li>
+                                    <ul>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM9A'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM9A" id="HM9A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM9A');" >
+                                            <label for="HM9A">Tambah</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM9B'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM9B" id="HM9B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM9B');" >
+                                            <label for="HM9B">Edit</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM9C'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM9C" id="HM9C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM9C');" >
+                                            <label for="HM9C">Aktif Y/N</label>
+                                        </li>
+                                    </ul>   
+                                <li>
+                                    <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM10'"
+                                        set app = app_cmd.execute
+                                    %>
+                                    <input class="form-check-input" type="checkbox" name="HM10" id="HM10" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM10');" >
+                                    <label for="HM10">CutiIzinSakit</label>
+                                </li>  
+                                    <ul>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM10A'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM10A" id="HM10A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM10A');" >
+                                            <label for="HM10A">Tambah</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM10B'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM10B" id="HM10B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM10B');" >
+                                            <label for="HM10B">Edit</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM10C'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM10C" id="HM10C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM10C');" >
+                                            <label for="HM10C">Aktif Y/N</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM10D'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM10D" id="HM10D" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM10D');" >
+                                            <label for="HM10D">Upload surat dokter</label>
+                                        </li>
+                                    </ul> 
+                                <li>
+                                    <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM11'"
+                                        set app = app_cmd.execute
+                                    %>
+                                    <input class="form-check-input" type="checkbox" name="HM11" id="HM11" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM11');" >
+                                    <label for="HM11">Absensi</label>
+                                </li>
+                                <li>
+                                    <%
+                                        app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM12'"
+                                        set app = app_cmd.execute
+                                    %>
+                                    <input class="form-check-input" type="checkbox" name="HM12" id="HM12" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM12');" >
+                                    <label for="HM12">Perjanjian</label>
+                                </li>
+                                    <ul>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM12A'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM12A" id="HM12A" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM12A');" >
+                                            <label for="HM12A">Tambah</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM12B'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM12B" id="HM12B" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM12B');" >
+                                            <label for="HM12B">Edit</label>
+                                        </li>
+                                        <li>
+                                            <%
+                                                app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HM12C'"
+                                                set app = app_cmd.execute
+                                            %>
+                                            <input class="form-check-input" type="checkbox" name="HM12C" id="HM12C" <%if app.eof = false then%> checked <%end if%> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HM12C');" >
+                                            <label for="HM12C">Aktif Y/N</label>
+                                        </li>
+                                    </ul>   
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--end menu master karyawan -->
                 <!--dashboard -->
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingTwo">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                       DASHBOARD
+                    DASHBOARD
                     </button>
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
@@ -134,6 +515,16 @@ app_cmd.activeConnection = MM_Cargo_String
                                         <input class="form-check-input" type="checkbox" name="HL2" id="HL2" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HL2');" >
                                         <label for="HL2">Laporan Absensi</label>
                                     </li>
+                                        <ul>
+                                            <li>
+                                                <%
+                                                    app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HL2A'"
+                                                    set app = app_cmd.execute
+                                                    %>
+                                                    <input class="form-check-input" type="checkbox" name="HL2A" id="HL2A" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HL2A');" >
+                                                    <label for="HL2A">exportXls</label>
+                                            </li>
+                                        </ul>
                                     <li>
                                         <%
                                         app_cmd.commandText = "SELECT appIDRights FROM WebRights WHERE (Username = '"& pusername &"') AND (ServerID = '"& pserverid &"') and appIDRights = 'HL8'"
@@ -344,7 +735,7 @@ app_cmd.activeConnection = MM_Cargo_String
                                 set app = app_cmd.execute
                                 %>
                                 <input class="form-check-input" type="checkbox" name="HA4C" id="HA4C" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HA4C');" >
-                                <label for="HA4C">Aktif YN</label>
+                                <label for="HA4C">Aktif Y/N</label>
                             </li>
                         </ul>
                     </div>
@@ -391,7 +782,7 @@ app_cmd.activeConnection = MM_Cargo_String
                                 set app = app_cmd.execute
                                 %>
                                 <input class="form-check-input" type="checkbox" name="HA5B" id="HA5B" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HA5B');" >
-                                <label for="HA5B">Aktif YN</label>
+                                <label for="HA5B">Aktif Y/N</label>
                             </li>
                         </ul>
                         </div>
@@ -436,7 +827,7 @@ app_cmd.activeConnection = MM_Cargo_String
                                 set app = app_cmd.execute
                                 %>
                                 <input class="form-check-input" type="checkbox" name="HA6B" id="HA6B" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HA6B');">
-                                <label for="HA6B">Aktif YN</label>
+                                <label for="HA6B">Aktif Y/N</label>
                             </li>
                         </ul>
                         </div>
@@ -447,7 +838,7 @@ app_cmd.activeConnection = MM_Cargo_String
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingTwo">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
-                       LAPORAN
+                    LAPORAN
                     </button>
                     </h2>
                     <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
@@ -658,7 +1049,7 @@ app_cmd.activeConnection = MM_Cargo_String
                                     set app = app_cmd.execute
                                     %>
                                     <input class="form-check-input" type="checkbox" name="HA7B" id="HA7B" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HA7B');">
-                                    <label for="HA7B">AktifYN</label>
+                                    <label for="HA7B">Aktif Y/N</label>
                                 </li>
                                 <li>
                                     <%
@@ -720,7 +1111,7 @@ app_cmd.activeConnection = MM_Cargo_String
                                             set app = app_cmd.execute
                                             %>
                                             <input class="form-check-input" type="checkbox" name="HA8AC" id="HA8AC" <% if app.eof = false then %>checked <% end if %> onClick="updateRights(document.getElementById('uname').value,document.getElementById('serverID').value,'HA8AC');">
-                                            <label for="HA8AC">AktifYN</label>
+                                            <label for="HA8AC">Aktif Y/N</label>
                                         </li>
                                         <li>
                                             <%
@@ -906,27 +1297,26 @@ app_cmd.activeConnection = MM_Cargo_String
 <script>
 	function updateRights(uname,serverID,appRightsID)
 	{
-	
 	var xmlhttp;    
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-	xmlhttp.onreadystatechange=function()
-	  {
-	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			document.getElementById("txtHint").style.padding = "35px";
-		document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
-		}
-	  }
-	xmlhttp.open("GET","getajax.asp?uname="+uname+"&serverID="+serverID+"&appRightsID="+appRightsID,true);
-	// alert("getajax.asp?uname="+uname+"&serverID="+serverID+"&appRightsID="+appRightsID);
-	xmlhttp.send();
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange=function()
+        {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("txtHint").style.padding = "35px";
+            document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+            }
+        }
+        xmlhttp.open("GET","getajax.asp?uname="+uname+"&serverID="+serverID+"&appRightsID="+appRightsID,true);
+        // alert("getajax.asp?uname="+uname+"&serverID="+serverID+"&appRightsID="+appRightsID);
+        xmlhttp.send();
 	}
 </script>
 <!-- #include file='../layout/footer.asp' -->

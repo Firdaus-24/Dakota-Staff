@@ -1,5 +1,9 @@
 <!--#include file="../connection.asp"-->
 <% 
+    if session("HM10") = false then
+        Response.Redirect("../dashboard.asp")
+    end if
+
     dim nip, i, strnip, strkey
     dim tglnow, thnnow
 
@@ -69,51 +73,36 @@
     <title>CUTI SAKIT</title>
     <!--#include file="../layout/header.asp"-->  
     <script>
-    // function myfunction(sel){
-    //     if (sel.options[sel.selectedIndex].text === "Cuti Bersama") {
-    //         document.getElementById("pgaji").disabled = true;
-    //         document.getElementById("pcuti").disabled = true;
-    //     }else if (sel.options[sel.selectedIndex].text === "Dispensasi") {
-    //         document.getElementById("pgaji").disabled = true;
-    //         document.getElementById("pcuti").disabled = true;
-    //     }else if (sel.options[sel.selectedIndex].text === "Sakit") {
-    //         document.getElementById("pgaji").disabled = true;
-    //         document.getElementById("pcuti").disabled = true;
-    //     }else{
-    //         document.getElementById("pgaji").disabled = false;
-    //         document.getElementById("pcuti").disabled = false;
-    //     }
-    // }
-    function changeinput(e){
-        if (e == 1){
-            $('#tgla').attr('type','date');
+        function changeinput(e){
+            if (e == 1){
+                $('#tgla').attr('type','date');
+            }
+            if (e == 2){
+                $('#tgle').attr('type','date');
+            }
         }
-        if (e == 2){
-            $('#tgle').attr('type','date');
+        
+        function ubahStatusCuti(aktif,nip,nomor){
+            Swal.fire({
+                title: 'Apakah Anda Yakin?',
+                text: "Data akan berubah / di nonaktifkan",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                        window.location.href = "<%=url%>/detail-karyawan/cuti-sakit/cutiSakitIzin_updateAktif.asp?id="+aktif+"&nip="+nip+"&nomor="+nomor;
+                    }
+                })
         }
-    }
-    
-    function ubahStatusCuti(aktif,nip,nomor){
-        Swal.fire({
-            title: 'Apakah Anda Yakin?',
-            text: "Data akan berubah / di nonaktifkan",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                    window.location.href = "<%=url%>/detail-karyawan/cuti-sakit/cutiSakitIzin_updateAktif.asp?id="+aktif+"&nip="+nip+"&nomor="+nomor;
-                }
-            })
-    }
     </script>      
     <style>
-    tr:first-child{
-        width: 1%;
-        white-space: nowrap;
-    }
+        tr:first-child{
+            width: 1%;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -150,9 +139,11 @@
         <!--button triger -->
         <div class='row'>
             <div class='col'>
-                <button type="button" class="btn btn-primary mt-3 mb-2 modalTambah" data-bs-toggle="modal" data-bs-target="#formModal" id="tambahCuti" onclick="return tambahCuti()">
-                    Tambah
-                </button>
+                <%if session("HM10A") = true then%>
+                    <button type="button" class="btn btn-primary mt-3 mb-2 modalTambah" data-bs-toggle="modal" data-bs-target="#formModal" id="tambahCuti" onclick="return tambahCuti()">
+                        Tambah
+                    </button>
+                <%end if%>
             </div>
         </div>
     </div>
@@ -175,7 +166,9 @@
                         <th scope="col">Atasan 1</th>
                         <th scope="col">Atasan 2</th>
                         <th scope="col">Surat Dokter</th>
+                        <%if session("HM10B") = true OR session("HM10C") = true then%>
                         <th scope="col" class="text-center">Aksi</th>
+                        <%end if%>
                     </tr>
                 </thead>
                 <tbody>
@@ -267,31 +260,38 @@
                             <a href="../suratdokter/<%=cuti("ICS_SuratDokterYN")%>.jpg">Ya (Klik Detail)</a> 
                         <%	end if%>
 			            </td>
-                        <td>
-                            <div class="btn-group btnNavCuti">
-                                <button type="button" class="btn btn-primary btn-sm py-0 px-2 modalUbah" data-bs-toggle="modal" data-bs-target="#formModal" onclick="return modalubahcuti('<%=cuti("ICS_ID")%>','<%= cuti("ICS_Nip") %>')">
-                                    Edit
-                                </button>
-                                <% 
-                                dim aktif
-                                aktif = cuti("ICS_AktifYN")
-                                nomor = cuti("ICS_ID")
-                                if aktif = "Y" then
-                                %>
-                                    <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return ubahStatusCuti('<%=aktif%>','<%=nip%>','<%=nomor%>')">
-                                        aktif
-                                    </button>
-                                <% 
-                                else 
-                                %>
-                                    <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return ubahStatusCuti('<%=aktif%>','<%=nip%>','<%=nomor%>')">
-                                        NoAktif
-                                    </button>
-                                <% end if %>
-                                <button type="button" class="btn btn-info btn-sm" onclick="window.location.href='cuti-sakit/suratdokter.asp?nip=<%= nip %>&id=<%= cuti("ICS_ID")%>'"><i class="fa fa-picture-o" aria-hidden="true"></i></button>
-                            </div>
-                        
-                        </td>
+                        <%if session("HM10B") = true OR session("HM10C") = true then%>
+                            <td>
+                                <div class="btn-group btnNavCuti">
+                                    <%if session("HM10B") = true then%>
+                                        <button type="button" class="btn btn-primary btn-sm py-0 px-2 modalUbah" data-bs-toggle="modal" data-bs-target="#formModal" onclick="return modalubahcuti('<%=cuti("ICS_ID")%>','<%= cuti("ICS_Nip") %>')">
+                                            Edit
+                                        </button>
+                                    <%end if%>
+                                    <%if session("HM10C") = true then%>
+                                        <% 
+                                        dim aktif
+                                        aktif = cuti("ICS_AktifYN")
+                                        nomor = cuti("ICS_ID")
+                                        if aktif = "Y" then
+                                        %>
+                                            <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return ubahStatusCuti('<%=aktif%>','<%=nip%>','<%=nomor%>')">
+                                                aktif
+                                            </button>
+                                        <% 
+                                        else 
+                                        %>
+                                            <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return ubahStatusCuti('<%=aktif%>','<%=nip%>','<%=nomor%>')">
+                                                NoAktif
+                                            </button>
+                                        <% end if %>
+                                    <%end if%>
+                                    <%if session("HM10D") = true then%>
+                                        <button type="button" class="btn btn-info btn-sm" onclick="window.location.href='cuti-sakit/suratdokter.asp?nip=<%= nip %>&id=<%= cuti("ICS_ID")%>'"><i class="fa fa-picture-o" aria-hidden="true"></i></button>
+                                    <%end if%>
+                                </div>
+                            </td>
+                        <%end if%>
                     </tr> 
                     <% 
                 

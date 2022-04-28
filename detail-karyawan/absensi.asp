@@ -2,6 +2,10 @@
 <!-- #include file='../laporanabsensi/getNameDay.asp' -->
 <!-- #include file='../../func_JarakKoordinat.asp' -->
 <% 
+	if session("HM11") = false then
+		Response.Redirect("../dashboard.asp")
+	end if
+
     dim karyawanshift, wfh
 
     nip = Request.QueryString("nip")
@@ -27,6 +31,12 @@
         GetLastDay = Day(DateAdd ("d", -1, dteFirstDayNextMonth))
     end function
 
+    set status_cmd = Server.CreateObject("ADODB.COmmand")
+    status_cmd.ActiveConnection = MM_Cargo_string
+
+    set liburan_cmd = Server.CreateObject("ADODB.COmmand")
+    liburan_cmd.ActiveConnection = MM_Cargo_string
+
     set rangeKeluar_cmd = Server.CreateObject("ADODB.COmmand")
     rangeKeluar_cmd.ActiveConnection = MM_Cargo_string
 
@@ -50,7 +60,6 @@
 	wfh = Cdate("3/7/2021")
 
     if tgla <> "" AND tgle <> "" then
-		root = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP =  '"& karyawan("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"'"
 			
 		shift_cmd.commandText = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP =  '"& karyawan("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"'"
 			' Response.Write shift_cmd.commandText & "<br>"
@@ -63,14 +72,14 @@
 
 		set rs = Server.CreateObject("ADODB.Recordset")
 
-		sqlAwal = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP =  '"& karyawan("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"' "
+		sqlAwal = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP =  '"& karyawan("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"'"
 
 		sql=sqlawal + orderBy
 
 		rs.open sql, Connection
 
 			' records per halaman
-		recordsonpage = 10
+		recordsonpage = 100
 
 			' count all records
 			allrecords = 0
@@ -92,7 +101,7 @@
 
 		set rs = server.CreateObject("adodb.recordset")
 
-		sqlawal = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP ='"& karyawan("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"'"	
+		sqlawal = "SELECT dbo.HRD_M_Karyawan.Kry_NIP, dbo.HRD_T_Shift.Shf_Tanggal, dbo.HRD_M_Shift.SH_JamIn, dbo.HRD_M_Shift.SH_MenitIn, dbo.HRD_M_Shift.SH_JamOut, dbo.HRD_M_Shift.SH_MenitOut, dbo.HRD_M_Shift.SH_iHari, dbo.HRD_T_Shift.Sh_ID, dbo.HRD_T_Shift.Shf_NIP, dbo.HRD_M_Shift.Sh_Name FROM dbo.HRD_M_Karyawan LEFT OUTER JOIN dbo.HRD_T_Shift ON dbo.HRD_M_Karyawan.Kry_NIP = dbo.HRD_T_Shift.Shf_NIP LEFT OUTER JOIN dbo.HRD_M_Shift ON dbo.HRD_T_Shift.Sh_ID = dbo.HRD_M_Shift.Sh_ID WHERE dbo.HRD_M_Karyawan.Kry_NIP =  '"& karyawan("kry_nip") &"' and Shf_tanggal between '"& tgla &"' AND '"& tgle &"'"	
 
 		sql=sqlawal + orderBy
 
@@ -192,6 +201,7 @@
 									<th scope="col">HARI</th>
 									<th scope="col">MASUK SHIFT</th>
 									<th scope="col">KELUAR SHIFT</th>
+									<th scope="col">TANGGAL SHIFT</th>
 									<th scope="col">JAM KERJA</th>
 									<th scope="col">BEDA HARI</th>
 									<th scope="col">ABSEN MASUK</th>
@@ -216,26 +226,26 @@
 								do until showrecords = 0 OR  rs.EOF
 								recordcounter = recordcounter + 1
 
-								'jam masuk dan keluar di absensi
+								'jam masuk 
 								shift_cmd.commandText = "SELECT top 1  vw_poolAbsen.abs_datetime, GLB_M_Agen.Agen_Nama, GLB_M_Agen.Agen_ID,vw_poolAbsen.ABS_Lat, vw_poolAbsen.ABS_Lon, vw_poolAbsen.ABS_SyncToAdempiere, vw_poolAbsen.ABS_Nip FROM vw_poolAbsen LEFT OUTER JOIN GLB_M_Agen ON vw_poolAbsen.Abs_AgenId = GLB_M_Agen.Agen_ID where ABS_Nip = '"& rs("Kry_NIP") &"' and day(abs_datetime) = '"& day(rs("Shf_Tanggal")) &"' and month(abs_datetime) = '"& month(rs("Shf_Tanggal")) &"' and year(abs_datetime) = '"& year(rs("Shf_Tanggal")) &"'  order by abs_datetime ASC"
 								' Response.Write shift_cmd.commandText & "<br>"
 								set jamMasuk = shift_cmd.execute
 
-								ShiftJamMasuk = right("00" & rs("Sh_JamIn"),2) & ":" & right("00" & rs("Sh_MenitIn") ,2)
-								
 								'jam keluar
 								shift_cmd.commandText = "SELECT TOP 1 ABS_Datetime, GLB_M_Agen.Agen_Nama, GLB_M_Agen.Agen_ID,vw_poolAbsen.ABS_Lat, vw_poolAbsen.ABS_Lon, vw_poolAbsen.ABS_SyncToAdempiere FROM vw_poolAbsen LEFT OUTER JOIN GLB_M_Agen ON vw_poolAbsen.Abs_AgenID = GLB_M_Agen.Agen_ID where ABS_Nip = '"& rs("Kry_NIP") &"' and day(abs_datetime) = '"& day(rs("Shf_Tanggal")) &"' and month(abs_datetime) = '"& month(rs("Shf_Tanggal")) &"' and year(abs_datetime) = '"& year(rs("Shf_Tanggal")) &"'  order by abs_datetime DESC"
 
 								set jamKeluar = shift_cmd.execute
 
-								ShiftJamKeluar = right("00" & rs("Sh_JamOut"),2) & ":" & right("00" & rs("Sh_MenitOut") ,2)
-
 								'definisi jam masuk dan keluar jika sama kosongkan
 								if not jamMasuk.eof then
 									longitude = jamMasuk("Abs_Lon")
 									latitude = jamMasuk("Abs_Lat")
+
+									ShiftJamMasuk = right("00" & rs("Sh_JamIn"),2) & ":" & right("00" & rs("Sh_MenitIn") ,2)
+
 									tglmasuk =  Cdate(month(jamMasuk("abs_datetime")) &"/"& day(jamMasuk("Abs_datetime")) &"/"& year(jamMasuk("abs_datetime")) &" "& dateadd("n",60,ShiftJamMasuk))
 									masuk = jamMasuk("Abs_datetime") 
+
 									' interval max jam masuk
 									if masuk >= tglmasuk then
 										masuk = "TIDAK ABSEN"
@@ -257,10 +267,13 @@
 								
 								' definisi jam keluar
 								if not jamKeluar.eof then 
+									
+									ShiftJamKeluar = right("00" & rs("Sh_JamOut"),2) & ":" & right("00" & rs("Sh_MenitOut") ,2)
+
 										minKeluar = Cdate(month(jamMasuk("abs_datetime")) &"/"& day(jamMasuk("Abs_datetime")) &"/"& year(jamMasuk("abs_datetime")) &" "& dateAdd("n",-30, ShiftJamKeluar))
 
 										maxKeluar = Cdate(month(jamMasuk("abs_datetime")) &"/"& day(jamMasuk("Abs_datetime")) &"/"& year(jamMasuk("abs_datetime")) &" "& dateAdd("h",3, ShiftJamKeluar))
-
+										
 										keluar = jamKeluar("Abs_Datetime")
 										longitude1 = jamKeluar("Abs_Lon")
 										latitude1 = jamKeluar("Abs_Lat")
@@ -308,29 +321,37 @@
 
 								'cek status karyawan absen sesuai dengan izincutisakit
 								if masuk = "TIDAK ABSEN" And keluar = "TIDAK ABSEN" And longitude = "-" And latitude = "-" then
-									shift_cmd.commandText = "SELECT HRD_T_IzinCutiSakit.Ics_Status FROM HRD_T_IzinCutiSakit WHERE  HRD_T_IzinCutiSakit.ICS_Nip = '"& rs("Kry_NIP") &"' AND (HRD_T_IzinCutiSakit.ICS_StartDate BETWEEN '"& rs("Shf_Tanggal") &"' AND '"& month(rs("Shf_Tanggal")) &"/"& GetLastDay(rs("Shf_Tanggal")) &"/"& year(rs("Shf_Tanggal")) &"' OR HRD_T_IzinCutiSakit.ICS_EndDate BETWEEN '"& rs("Shf_Tanggal") &"' AND '"& month(rs("Shf_Tanggal")) &"/"& GetLastDay(rs("Shf_Tanggal")) &"/"& year(rs("Shf_Tanggal")) &"') AND HRD_T_IzinCutiSakit.ICS_AktifYN = 'Y' ORDER BY HRD_T_IzinCutiSakit.ICS_StartDate ASC" 
-									' Response.Write shift_cmd.commandText & "<br>"
-									set status = shift_cmd.execute
+									' cek priode libur
+									liburan_cmd.commandTExt = "SELECT * FROM HRD_M_CalLiburPeriodik WHERE LP_Tgl = '"& rs("SHF_Tanggal") &"' AND LP_LiburYN = 'Y'"
+									set libur = liburan_cmd.execute
 
-									if not status.eof then
-									' Response.Write status() & 
-										if status("ics_status") = "A" then
-											icskaryawan = "ALFA"
-										elseIf status("ics_status") = "B" then
-											icskaryawan = "CUTI BERSAMA"
-										elseIf status("ics_status") = "C" then
-											icskaryawan = "CUTI"
-										elseIf status("ics_status") = "G" then
-											icskaryawan = "DISPENSASI"
-										elseIf status("ics_status") = "I" then
-											icskaryawan = "IZIN"
-										elseIf status("ics_status") = "K" then
-											icskaryawan = "KLAIM OBAT"
-										else
-											icskaryawan = "SAKIT"
-										end if
+									if not libur.eof then
+										icskaryawan = "PRIODE LIBUR"
 									else
-										icskaryawan = "ALFA"
+										status_cmd.commandText = "SELECT HRD_T_IzinCutiSakit.Ics_Status FROM HRD_T_IzinCutiSakit WHERE  HRD_T_IzinCutiSakit.ICS_Nip = '"& rs("Kry_NIP") &"' AND NOT(HRD_T_IzinCutiSakit.ICS_StartDate > '"& rs("Shf_Tanggal") &"' OR HRD_T_IzinCutiSakit.ICS_EndDate < '"& rs("Shf_Tanggal") &"') AND HRD_T_IzinCutiSakit.ICS_AktifYN = 'Y' ORDER BY HRD_T_IzinCutiSakit.ICS_StartDate ASC" 
+										' Response.Write status_cmd.commandText & "<br>"
+										set gamasuk = status_cmd.execute
+
+										' cek cuti karyawan 
+										if not gamasuk.eof then
+												if gamasuk("ics_status") = "A" then
+													icskaryawan = "ALFA"
+												elseIf gamasuk("ics_status") = "B" then
+													icskaryawan = "CUTI BERSAMA"
+												elseIf gamasuk("ics_status") = "C" then
+													icskaryawan = "CUTI"
+												elseIf gamasuk("ics_status") = "G" then
+													icskaryawan = "DISPENSASI"
+												elseIf gamasuk("ics_status") = "I" then
+													icskaryawan = "IZIN"
+												elseIf gamasuk("ics_status") = "K" then
+													icskaryawan = "KLAIM OBAT"
+												else
+													icskaryawan = "SAKIT"
+												end if
+										else
+											icskaryawan = "ALFA"
+										end if
 									end if
 								else    
 									icskaryawan = "-"
@@ -343,13 +364,16 @@
 										<%= rs("Kry_Nip") %>
 									</td>
 									<td>
-										<% getLastDay(Weekday(rs("Shf_Tanggal"))) %>
+										<% getNameDay(Weekday(rs("Shf_Tanggal"))) %>
 									</td>
 									<td>
 										<%= shiftJamMasuk %>
 									</td>
 									<td>
 										<%= ShiftJamKeluar %>
+									</td>
+									<td>
+										<%= rs("SHf_Tanggal") %>
 									</td>
 									<!--jam kerja -->
 										<td class="text-center">

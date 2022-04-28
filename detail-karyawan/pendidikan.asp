@@ -1,24 +1,22 @@
 <!-- #include file='../connection.asp' -->
 <%
-' keharusan user login sebelum masuk ke menu utama aplikasi
-if session("username") = "" then
-response.Redirect("../login.asp")
-end if
+    if session("HM5") = false then
+        response.Redirect("../dashboard.asp")
+    end if
+
+    dim pendidikan, nip
+
+    nip = Request.QueryString("nip")
+    ' Response.Write nip
+    set jurusan = Server.CreateObject("ADODB.COmmand")
+    jurusan.activeConnection = MM_Cargo_String
+
+    set pendidikan = Server.CreateObject("ADODB.COmmand")
+    pendidikan.activeConnection = MM_Cargo_String
+
+    pendidikan.commandText = "SELECT * FROM HRD_T_Didik1 WHERE Ddk1_NIP = '"& nip &"'"
+    set pendidikan = pendidikan.execute                                                                                         
 %>
-<% 
-dim pendidikan, nip
-
-nip = Request.QueryString("nip")
-' Response.Write nip
-set jurusan = Server.CreateObject("ADODB.COmmand")
-jurusan.activeConnection = MM_Cargo_String
-
-set pendidikan = Server.CreateObject("ADODB.COmmand")
-pendidikan.activeConnection = MM_Cargo_String
-
-pendidikan.commandText = "SELECT * FROM HRD_T_Didik1 WHERE Ddk1_NIP = '"& nip &"'"
-set pendidikan = pendidikan.execute
- %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,107 +26,108 @@ set pendidikan = pendidikan.execute
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PENDIDIKAN</title>
     <!-- #include file='../layout/header.asp' -->
+    <link rel="stylesheet" href="../css/detail-all.css">
     <script>
-    const validPendidikan = () => {
-        let bln1 = $('#blnS').val();
-        let bln2 = $('#blnE').val();
-        let thn1 = $('#thnS').val();
-        let thn2 = $('#thnE').val();
-        let maxBulan = 12;
-        let d = new Date();
-        let maxTahun = d.getFullYear();
-        
-        if ( bln1 > maxBulan ) {
-            $('#blnS').val(maxBulan);
-        }else{
-            $('#blnS').val(bln1) ;
-        }
-
-        if ( thn1 > maxTahun ) {
-            $('#thnS').val(maxTahun);
-        }else{
-            $('#thnS').val(thn1);
-        }
-
-        if ( bln2 > maxBulan ){
-            $('#blnE').val(maxBulan);
-        }else{
-            $('#blnE').val(bln2)
-        }
-        
-        if ( thn2 > maxTahun ){
-            $('#thnE').val(maxTahun);
-        }else{
-            $('#thnE').val(thn2);
-        }
-    }
-
-    const tambahPendidikan = () => {
-        $('#jenjang select').val("");
-        $('#nama').val("");
-        $('#jurusan select').val("");
-        $('#kota').val("");
-        $('#blnS').val("");
-        $('#blnE').val("");
-        $('#thnS').val("");
-        $('#thnE').val("");
-        $('#tamat select').val("");
-
-        // old data
-        $('#namae').val("");
-        $('#jurusane').val("");
-        $('#kotae').val("");
-        $('#blnSe').val("");
-        $('#thnSe').val("");
-        $('#blnEe').val("");
-        $('#thnEe').val("");
-        $('#tamate').val("");
-
-        $('#labelModalPendidikan').html('TAMBAH PENDIDIKAN');
-        $('#submit').html('Save');
-        $('.modal-body form').attr('action', 'pendidikan/tambah.asp');
-    }
-
-    const editPendidikan = (nip, nama, tahun) => {
-        $.ajax({
-        url: 'pendidikan/update.asp',
-        data: { nip: nip, nama : nama, tahun : tahun },
-        method: 'post',
-        success: function (data) {
-            // console.log(data);
-            function splitString(strToSplit, separator) {
-                var arry = strToSplit.split(separator);
-                $('#nip').val(arry[0]);
-
-                $('#jenjange').val(arry[1]);
-                $('#namae').val(arry[2]);
-                $('#jurusane').val(arry[3]);
-                $('#kotae').val(arry[4]);
-                $('#blnSe').val(arry[5]);
-                $('#thnSe').val(arry[6]);
-                $('#blnEe').val(arry[7]);
-                $('#thnEe').val(arry[8]);
-                $('#tamate').val(arry[9]);
-
-                $('#jenjang option[value='+ arry[1] +']').attr('selected','selected');
-                $('#nama').val(arry[2]);
-                $('#jurusan option[value='+ arry[3] +']').attr('selected','selected');
-                $('#kota').val(arry[4]);
-                $('#blnS').val(arry[5]);
-                $('#thnS').val(arry[6]);
-                $('#blnE').val(arry[7]);
-                $('#thnE').val(arry[8]);
-                $('#tamat option[value='+ arry[9] +']').attr('selected','selected');
+        const validPendidikan = () => {
+            let bln1 = $('#blnS').val();
+            let bln2 = $('#blnE').val();
+            let thn1 = $('#thnS').val();
+            let thn2 = $('#thnE').val();
+            let maxBulan = 12;
+            let d = new Date();
+            let maxTahun = d.getFullYear();
+            
+            if ( bln1 > maxBulan ) {
+                $('#blnS').val(maxBulan);
+            }else{
+                $('#blnS').val(bln1) ;
             }
-            const koma = ",";
-            splitString(data, koma);
-        }
-        });
-        $('#labelModalPendidikan').html('UPDATE PENDIDIKAN');
-        $('#submit').html('Update');
-        $('.modal-body form').attr('action', 'pendidikan/update_add.asp');
 
-    }
+            if ( thn1 > maxTahun ) {
+                $('#thnS').val(maxTahun);
+            }else{
+                $('#thnS').val(thn1);
+            }
+
+            if ( bln2 > maxBulan ){
+                $('#blnE').val(maxBulan);
+            }else{
+                $('#blnE').val(bln2)
+            }
+            
+            if ( thn2 > maxTahun ){
+                $('#thnE').val(maxTahun);
+            }else{
+                $('#thnE').val(thn2);
+            }
+        }
+
+        const tambahPendidikan = () => {
+            $('#jenjang select').val("");
+            $('#nama').val("");
+            $('#jurusan select').val("");
+            $('#kota').val("");
+            $('#blnS').val("");
+            $('#blnE').val("");
+            $('#thnS').val("");
+            $('#thnE').val("");
+            $('#tamat select').val("");
+
+            // old data
+            $('#namae').val("");
+            $('#jurusane').val("");
+            $('#kotae').val("");
+            $('#blnSe').val("");
+            $('#thnSe').val("");
+            $('#blnEe').val("");
+            $('#thnEe').val("");
+            $('#tamate').val("");
+
+            $('#labelModalPendidikan').html('TAMBAH PENDIDIKAN');
+            $('#submit').html('Save');
+            $('.modal-body form').attr('action', 'pendidikan/tambah.asp');
+        }
+
+        const editPendidikan = (nip, nama, tahun) => {
+            $.ajax({
+            url: 'pendidikan/update.asp',
+            data: { nip: nip, nama : nama, tahun : tahun },
+            method: 'post',
+            success: function (data) {
+                // console.log(data);
+                function splitString(strToSplit, separator) {
+                    var arry = strToSplit.split(separator);
+                    $('#nip').val(arry[0]);
+
+                    $('#jenjange').val(arry[1]);
+                    $('#namae').val(arry[2]);
+                    $('#jurusane').val(arry[3]);
+                    $('#kotae').val(arry[4]);
+                    $('#blnSe').val(arry[5]);
+                    $('#thnSe').val(arry[6]);
+                    $('#blnEe').val(arry[7]);
+                    $('#thnEe').val(arry[8]);
+                    $('#tamate').val(arry[9]);
+
+                    $('#jenjang option[value='+ arry[1] +']').attr('selected','selected');
+                    $('#nama').val(arry[2]);
+                    $('#jurusan option[value='+ arry[3] +']').attr('selected','selected');
+                    $('#kota').val(arry[4]);
+                    $('#blnS').val(arry[5]);
+                    $('#thnS').val(arry[6]);
+                    $('#blnE').val(arry[7]);
+                    $('#thnE').val(arry[8]);
+                    $('#tamat option[value='+ arry[9] +']').attr('selected','selected');
+                }
+                const koma = ",";
+                splitString(data, koma);
+            }
+            });
+            $('#labelModalPendidikan').html('UPDATE PENDIDIKAN');
+            $('#submit').html('Update');
+            $('.modal-body form').attr('action', 'pendidikan/update_add.asp');
+
+        }
     </script>
 </head>
 <!-- #include file='../landing.asp' -->
@@ -147,7 +146,9 @@ set pendidikan = pendidikan.execute
                     <th>Bulan Akhir</th>
                     <th>Tahun Akhir</th>
                     <th>Tamat</th>
-                    <th class="text-center">Aksi</th>
+                    <%if session("HM5B") = true OR session("HM5C") then%>
+                        <th class="text-center">Aksi</th>
+                    <%end if%>
                 </thead>
                 <tbody>
                 <% 
@@ -213,27 +214,31 @@ set pendidikan = pendidikan.execute
                         <td>
                             <%=tamat%>
                         </td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-primary btn-sm py-0 px-2"  data-bs-toggle="modal" data-bs-target="#modalPendidikan" onclick="return editPendidikan('<%=nip%>','<%=pendidikan("Ddk1_Nama")%>', '<%=pendidikan("Ddk1_Tahun1")%>')">
-                                    Edit
-                                </button>
-                                <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return hapusPendidikan('<%=nip%>','<%=pendidikan("Ddk1_Nama")%>', '<%=pendidikan("Ddk1_Tahun1")%>')">
-                                    Hapus
-                                </button>
-                            </div>
-                        </td>
+                        <%if session("HM5B") = true OR session("HM5C") then%>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-primary btn-sm py-0 px-2"  data-bs-toggle="modal" data-bs-target="#modalPendidikan" onclick="return editPendidikan('<%=nip%>','<%=pendidikan("Ddk1_Nama")%>', '<%=pendidikan("Ddk1_Tahun1")%>')">
+                                        Edit
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return hapusPendidikan('<%=nip%>','<%=pendidikan("Ddk1_Nama")%>', '<%=pendidikan("Ddk1_Tahun1")%>')">
+                                        Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        <%end if%>
                     </tr>
                 <% 
                 pendidikan.movenext
                 loop
-                 %>
+                %>
                 </tbody>
             </table>
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPendidikan" onclick="return tambahPendidikan()">
-                Tambah
-            </button>
+            <%if session("HM5A") = true then%>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPendidikan" onclick="return tambahPendidikan()">
+                    Tambah
+                </button>
+            <%end if%>
         </div>
     </div>
 </div>

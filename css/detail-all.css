@@ -1,0 +1,24 @@
+.table {
+    font-size: 12px;
+}
+
+.table>:not(:last-child)>:last-child>* {
+    /* text-align: center; */
+    white-space: nowrap;
+}
+
+#btn-mutasi-aktif .btn-sm {
+    font-size: 12px;
+    padding: 10px;
+    width: 70px;
+}
+
+@media (min-width: 992px) {
+    .table {
+        font-size: 14px;
+    }
+
+    #btn-mutasi-aktif .btn-sm {
+        font-size: 14px;
+    } 
+}

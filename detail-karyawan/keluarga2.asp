@@ -1,11 +1,8 @@
 <!-- #include file="../connection.asp"-->
 <%
-' keharusan user login sebelum masuk ke menu utama aplikasi
-if session("username") = "" then
-response.Redirect("../login.asp")
+if session("HM3") = false then
+    response.Redirect("../dashboard.asp")
 end if
-%>
-<% 
 
 dim nip, x
 dim usaha, usahaid
@@ -44,21 +41,21 @@ x = 0
     <title>Keluarga 2 </title>
     <!--#include file="../layout/header.asp"-->
     <script>
-    const validasi = () =>{
-        var mincar = 30;
-        var nama = document.forms["form-keluarga1"]["nama"].value;
-        var tmptl = document.forms["form-keluarga1"]["tmptl"].value;
-        if (nama.length > mincar){
-            alert("Maximal Nama 30 Karakter!!!");
-            return false;
+        const validasi = () =>{
+            var mincar = 30;
+            var nama = document.forms["form-keluarga1"]["nama"].value;
+            var tmptl = document.forms["form-keluarga1"]["tmptl"].value;
+            if (nama.length > mincar){
+                alert("Maximal Nama 30 Karakter!!!");
+                return false;
+            }
+            var tmptl = document.forms["form-keluarga1"]["tmptl"].value;
+            if (tmptl.length > mincar){
+                alert("Maximal Tempat lahir 30 Karakter!!!");
+                return false;
+            }
+            return true;
         }
-        var tmptl = document.forms["form-keluarga1"]["tmptl"].value;
-        if (tmptl.length > mincar){
-            alert("Maximal Tempat lahir 30 Karakter!!!");
-            return false;
-        }
-        return true;
-    }
         const tambahkeluarga2 = () => {
             $('#labeltambah').html('TAMBAH KELUARGA2');
             $('#submit').html('Tambah');
@@ -90,7 +87,7 @@ x = 0
                 input.attr('type', 'date');
             }
         }
-    const keluarga2 = (id, nama) =>{
+        const keluarga2 = (id, nama) =>{
         $.ajax({
         url: 'keluarga2/update.asp',
         data: { id: id, nama : nama },
@@ -136,7 +133,18 @@ x = 0
         }
     </script>
     <style>
-    
+        .table{
+            font-size:12px;
+        }
+        .table>:not(:last-child)>:last-child>*{
+            text-align:center;
+            white-space: nowrap;
+        }
+        @media (min-width: 992px) {
+            .table{
+                font-size:14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -151,17 +159,18 @@ x = 0
                 <% 
                 karyawan.commandText = "SELECT Kry_nama FROM HRD_M_Karyawan WHERE Kry_Nip='"& nip &"'"
                 set krywn = karyawan.execute
-                 %>
+                %>
         <label for="nip" class="col-sm-2 col-form-label col-form-label-sm">Nama Karyawan</label>
             <div class="col-sm-7">
                 <input type="text" class="form-control form-control-sm" name="nama" id="nama" value="<%= krywn("Kry_Nama") %> " disabled>
             </div>
     <div class='row mt-3'>
         <div class='col-sm-12'>
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambah-keluarga2" onclick="return tambahkeluarga2()">
-                Tambah
-            </button>
+            <%if session("HM3A") = true then%>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambah-keluarga2" onclick="return tambahkeluarga2()">
+                    Tambah
+                </button>
+            <%end if%>
         </div>
     </div>  
     </div>
@@ -180,7 +189,9 @@ x = 0
                         <th scope="col">Bidang Usaha</th>
                         <th scope="col">Jabatan</th>
                         <th scope="col">Status Keluarga</th>
-                        <th scope="col">Aksi</th>
+                        <%if session("HM3B") = true OR session("HM3C") = true then%>
+                            <th scope="col" class="text-center">Aksi</th>
+                        <%end if%>
                     </tr>
                 </thead>
                 <tbody>
@@ -240,16 +251,22 @@ x = 0
                         <td><%=lusaha %> </td>
                         <td><%= ljabatan%> </td>
                         <td><%= sk %> </td>
+                        <%if session("HM3B") = true OR session("HM3C") = true then%>
                         <td>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-primary btn-sm py-0 px-2" data-bs-toggle="modal" data-bs-target="#tambah-keluarga2" onclick="return keluarga2('<%=nip%>', '<%=keluarga2("Kel2_nama")%>')" >
-                                    Edit
-                                </button>
-                                <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return hapuskeluarga2('<%=keluarga2("Kel2_nama")%>')" >
-                                    Hapus
-                                </button>
+                                <%if session("HM3B") = true then%>
+                                    <button type="button" class="btn btn-primary btn-sm py-0 px-2" data-bs-toggle="modal" data-bs-target="#tambah-keluarga2" onclick="return keluarga2('<%=nip%>', '<%=keluarga2("Kel2_nama")%>')" >
+                                        Edit
+                                    </button>
+                                <%end if%>
+                                <%if session("HM3C") = true then%>
+                                    <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return hapuskeluarga2('<%=keluarga2("Kel2_nama")%>')" >
+                                        Hapus
+                                    </button>
+                                <%end if%>
                             </div>
                         </td>
+                        <%end if%>
                     </tr>
                 <% 
                 Keluarga2.movenext

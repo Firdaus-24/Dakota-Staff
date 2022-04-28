@@ -1,25 +1,23 @@
 <!-- #include file='../connection.asp' -->
 <%
-' keharusan user login sebelum masuk ke menu utama aplikasi
-if session("username") = "" then
-response.Redirect("../login.asp")
-end if
-%>
-<% 
-dim perjanjian, nip, nama
+    if session("HM12") = false then
+        response.Redirect("../dashboard.asp")
+    end if
 
-nip = Request.QueryString("nip")
+    dim perjanjian, nip, nama
 
-set perjanjian = Server.CreateObject("ADODB.Command")
-perjanjian.activeConnection = MM_Cargo_String
+    nip = Request.QueryString("nip")
 
-perjanjian.CommandText = "SELECT * FROM HRD_T_SPK WHERE SPK_Nip = '"& nip &"'"
+    set perjanjian = Server.CreateObject("ADODB.Command")
+    perjanjian.activeConnection = MM_Cargo_String
 
-set result = perjanjian.execute
+    perjanjian.CommandText = "SELECT * FROM HRD_T_SPK WHERE SPK_Nip = '"& nip &"'"
 
-'definisi nama karyawan
-perjanjian.CommandText = "SELECT Kry_Nama FROM HRD_M_Karyawan WHERE Kry_Nip = '"& nip &"'"
-set karyawan = perjanjian.execute
+    set result = perjanjian.execute
+
+    'definisi nama karyawan
+    perjanjian.CommandText = "SELECT Kry_Nama FROM HRD_M_Karyawan WHERE Kry_Nip = '"& nip &"'"
+    set karyawan = perjanjian.execute
  %>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,60 +28,61 @@ set karyawan = perjanjian.execute
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PERJANJIAN</title>
     <!-- #include file='../layout/header.asp' -->
+    <link rel="stylesheet" href="../css/detail-all.css">
     <script>
-    const tambahPerjanjian = () => {
-        input1 = $('#tgl');
-        $('#modalLabelperjanjian').html('TAMBAH PERJANJIAN');
-        $('#submit_mutasi').html('Save');
-        $('.modal-body form').attr('action', 'perjanjian/tambah.asp');
+        const tambahPerjanjian = () => {
+            input1 = $('#tgl');
+            $('#modalLabelperjanjian').html('TAMBAH PERJANJIAN');
+            $('#submit_mutasi').html('Save');
+            $('.modal-body form').attr('action', 'perjanjian/tambah.asp');
 
-        $('#notrans').val("");
-        $('#nosurat').val("");
-        input1.val("");
-        $('#perihal').val("");
+            $('#notrans').val("");
+            $('#nosurat').val("");
+            input1.val("");
+            $('#perihal').val("");
 
-        input1.attr('type', 'date');
-    }
+            input1.attr('type', 'date');
+        }
 
-    const updatePerjanjian = (id) => {
-        var input1 = $('#tgl');
-        $.ajax({
-        url: 'perjanjian/update.asp',
-        data: { id : id },
-        method: 'post',
-        success: function (data) {
-            function splitString(strToSplit, separator) {
-                var arry = strToSplit.split(separator);
-                $('#notrans').val(arry[0]);
-                $('#nosurat').val(arry[2]);
-                input1.val(arry[3]);
-                $('#perihal').val(arry[4]);
-
-        
-                if(input1.attr('type') == 'date') {
-                    input1.attr('type', 'text');
+        const updatePerjanjian = (id) => {
+            var input1 = $('#tgl');
+            $.ajax({
+            url: 'perjanjian/update.asp',
+            data: { id : id },
+            method: 'post',
+            success: function (data) {
+                function splitString(strToSplit, separator) {
+                    var arry = strToSplit.split(separator);
+                    $('#notrans').val(arry[0]);
+                    $('#nosurat').val(arry[2]);
                     input1.val(arry[3]);
-                } else {
-                    input1.on('click',function(){
-                        input1.attr('type', 'date');
-                    });
-                }
-            
+                    $('#perihal').val(arry[4]);
 
+            
+                    if(input1.attr('type') == 'date') {
+                        input1.attr('type', 'text');
+                        input1.val(arry[3]);
+                    } else {
+                        input1.on('click',function(){
+                            input1.attr('type', 'date');
+                        });
+                    }
+                
+
+                }
+                const koma = ",";
+                splitString(data, koma);
             }
-            const koma = ",";
-            splitString(data, koma);
+            });
+            $('#modalLabelperjanjian').html('UPDATE PERJANJIAN');
+            $('#submit_perjanjian').html('Update');
+            $('.modal-body form').attr('action', 'PERJANJIAN/update_add.asp');
         }
-        });
-        $('#modalLabelperjanjian').html('UPDATE PERJANJIAN');
-        $('#submit_perjanjian').html('Update');
-        $('.modal-body form').attr('action', 'PERJANJIAN/update_add.asp');
-    }
-    const aktifPerjanjian = (id,p,nip) => {
-        if (confirm("Yakin Untuk Di Ubah??") == true ){
-            window.location.href = 'perjanjian/aktif.asp?id='+ id + '&p=' + p + '&nip=' + nip
+        const aktifPerjanjian = (id,p,nip) => {
+            if (confirm("Yakin Untuk Di Ubah??") == true ){
+                window.location.href = 'perjanjian/aktif.asp?id='+ id + '&p=' + p + '&nip=' + nip
+            }
         }
-    }
     </script>
 </head>
 <!-- #include file='../landing.asp' -->
@@ -105,14 +104,16 @@ set karyawan = perjanjian.execute
         <div class='row mt-3'>
             <div class='col'>
                 <div class='col'>
-                    <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#modalPerjanjian" onclick="return tambahPerjanjian()">Tambah</button>
+                    <%if session("HM12A")  = true then%>
+                        <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#modalPerjanjian" onclick="return tambahPerjanjian()">Tambah</button>
+                    <%end if%>
                 </div>
             </div>
         </div>
     </div>
     <div class='row contentDetail'>
         <div class='col content-table'>
-             <table class="table table-striped tableDetail">
+            <table class="table table-striped tableDetail">
                 <thead>
                     <tr>
                         <th scope="col">No. Transaksi</th>
@@ -120,7 +121,9 @@ set karyawan = perjanjian.execute
                         <th scope="col">Tanggal</th>
                         <th scope="col">Perihal</th>
                         <th scope="col">Aktif</th>
-                        <th scope="col text-center">Aksi</th>
+                        <%if session("HM12B") = true OR session("HM12C") = true then%>
+                        <th scope="col" class="text-center">Aksi</th>
+                        <%end if%>
                     </tr>
                 </thead>
                 <tbody>
@@ -145,18 +148,24 @@ set karyawan = perjanjian.execute
                             Tidak
                             <% end if %>
                         </td>
-                        <td>
-                            <div class='btn btn-group'>
-                                <button type="button" class="btn btn-primary btn-sm btn-sm py-0 px-2 " data-bs-toggle="modal" data-bs-target="#modalPerjanjian" onclick="return updatePerjanjian('<%= result("SPK_ID") %>')">
-                                    Update
-                                </button>
-                                <% if result("SPK_AktifYN") = "Y" then %>
-                                    <button type="button" class="btn btn-warning py-0 px-2"  onclick="return aktifPerjanjian('<%= result("SPK_ID") %>', '<%= result("SPK_AktifYN") %>', '<%= result("SPK_Nip") %>')">No Aktif</button>
-                                <% else %>
-                                    <button type="button" class="btn btn-danger py-0 px-2"  onclick="return aktifPerjanjian('<%= result("SPK_ID") %>', '<%= result("SPK_AktifYN") %>', '<%= result("SPK_Nip") %>')"> Aktif</button>
-                                <% end if %>
-                            </div>
-                        </td>
+                        <%if session("HM12B") = true OR session("HM12C") = true then%>
+                            <td class="text-center">
+                                <div class='btn btn-group'>
+                                    <%if session("HM12B") = true then%>
+                                        <button type="button" class="btn btn-primary btn-sm btn-sm py-0 px-2 " data-bs-toggle="modal" data-bs-target="#modalPerjanjian" onclick="return updatePerjanjian('<%= result("SPK_ID") %>')">
+                                            Update
+                                        </button>
+                                    <%end if%>
+                                    <%if session("HM12C") = true then%>
+                                        <% if result("SPK_AktifYN") = "Y" then %>
+                                            <button type="button" class="btn btn-danger py-0 px-2"  onclick="return aktifPerjanjian('<%= result("SPK_ID") %>', '<%= result("SPK_AktifYN") %>', '<%= result("SPK_Nip") %>')">NoAktif</button>
+                                        <% else %>
+                                            <button type="button" class="btn btn-warning py-0 px-2"  onclick="return aktifPerjanjian('<%= result("SPK_ID") %>', '<%= result("SPK_AktifYN") %>', '<%= result("SPK_Nip") %>')">Aktif</button>
+                                        <% end if %>
+                                    <% end if %>
+                                </div>
+                            </td>
+                        <%end if%>
                     </tr>
                 <% 
                 result.movenext

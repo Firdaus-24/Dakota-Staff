@@ -1,5 +1,4 @@
 <!-- #include file='connection.asp' -->
-<!-- #include file='constend/constanta.asp' -->
 <% 
 set karyawan_cmd = Server.CreateObject("ADODB.Command")
 karyawan_cmd.activeConnection = mm_cargo_string
@@ -112,8 +111,6 @@ loop
               <p class="card-text">Cek Absen Perdivisi</p>
               <% if session("HL2")=true then %>
                 <button type="button" class="btn btn-primary btn-sm setCuti" onclick="window.location.href='laporanabsensi/'"><i class="fa fa-retweet" aria-hidden="true"></i> Absensi</button>
-              <% else %>
-                <span style="padding:20px;margin-top:50px;margin-bottom:50px"></span>
               <% end if %>
               <% if session("HL8")=true then %>
                 <button type="button" class="btn btn-primary btn-sm setCuti" onclick="window.location.href='liburpirodik/'"><i class="fa fa-calendar" aria-hidden="true"></i> Libur</button>

@@ -1,161 +1,200 @@
 <!--#include file="../connection.asp"-->
 <% 
     if session("HA7")="" then 
-
 	    response.redirect("index.asp?nip=" & trim(request.querystring("nip")))
-
     end if 
-response.Buffer=true
-server.ScriptTimeout=1000000000
 
-set connection = Server.CreateObject("ADODB.Connection")
-connection.open MM_Cargo_String
+    response.Buffer=true
+    server.ScriptTimeout=1000000000
 
-dim JJK, JKM, JHT, BPJS, TBPJS, BJ1, Max_TotalBJ
-dim sqlbaru
+    set connection = Server.CreateObject("ADODB.Connection")
+    connection.open MM_Cargo_String
 
-set rs = Server.CreateObject("ADODB.Recordset")
-sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'JKK'"
+    dim JJK, JKM, JHT, BPJS, TBPJS, BJ1, Max_TotalBJ
+    dim sqlbaru
 
-rs.Open sqlawal, connection
+    set rs = Server.CreateObject("ADODB.Recordset")
+    sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'JKK'"
 
-if rs.eof = false then
-    JKK = rs("Set_VarValue")
-Else
-    JKK = 0
-End If
-    
-rs.Close
+    rs.Open sqlawal, connection
 
-set rs = Server.CreateObject("ADODB.Recordset")
+    if rs.eof = false then
+        JKK = rs("Set_VarValue")
+    Else
+        JKK = 0
+    End If
+        
+    rs.Close
 
-sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'JKM'"
+    set rs = Server.CreateObject("ADODB.Recordset")
 
-rs.Open sqlawal, connection
+    sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'JKM'"
 
-if rs.eof = false then
-    JKM = rs("Set_VarValue")
-else 
-    JKM = 0
-end if
+    rs.Open sqlawal, connection
 
-rs.close
+    if rs.eof = false then
+        JKM = rs("Set_VarValue")
+    else 
+        JKM = 0
+    end if
 
-set rs = Server.CreateObject("ADODB.Recordset")
+    rs.close
 
-sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'JHT'"
+    set rs = Server.CreateObject("ADODB.Recordset")
 
-rs.open sqlawal, connection
+    sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'JHT'"
 
-if rs.eof = false then
-    JHT = rs("Set_VarValue")
-else 
-    JHT = 0
-end if
+    rs.open sqlawal, connection
 
-rs.close
+    if rs.eof = false then
+        JHT = rs("Set_VarValue")
+    else 
+        JHT = 0
+    end if
 
-set rs = Server.CreateObject("ADODB.Recordset")
+    rs.close
 
-sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'BPJS'"
+    set rs = Server.CreateObject("ADODB.Recordset")
 
-
-rs.open sqlawal, connection
-
-if rs.eof = false then  
-    BPJS = rs("Set_VarValue")
-else 
-    BPJS = 0
-end If 
-
-rs.Close
-
-set rs = Server.CreateObject("ADODB.Recordset")
-
-sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'TBPJS'"
+    sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'BPJS'"
 
 
-rs.open sqlawal, connection
+    rs.open sqlawal, connection
 
-if rs.eof = false then  
-    TBPJS = rs("Set_VarValue")
-else 
-    TBPJS = 0
-end If 
+    if rs.eof = false then  
+        BPJS = rs("Set_VarValue")
+    else 
+        BPJS = 0
+    end If 
 
-rs.Close
+    rs.Close
 
-set rs = Server.CreateObject("ADODB.Recordset")
+    set rs = Server.CreateObject("ADODB.Recordset")
 
-sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'BJ1'"
-
-
-rs.open sqlawal, connection
-
-if rs.eof = false then  
-    BJ1 = rs("Set_VarValue")
-else 
-    BJ1 = 0
-end If 
-
-rs.Close
-
-set rs = Server.CreateObject("ADODB.Recordset")
-
-sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'Max_TotalBJ'"
+    sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'TBPJS'"
 
 
-rs.open sqlawal, connection
+    rs.open sqlawal, connection
 
-if rs.eof = false then  
-    Max_TotalBJ = rs("Set_VarValue")
-else 
-    Max_TotalBJ = 0
-end If 
+    if rs.eof = false then  
+        TBPJS = rs("Set_VarValue")
+    else 
+        TBPJS = 0
+    end If 
 
-rs.Close
+    rs.Close
+
+    set rs = Server.CreateObject("ADODB.Recordset")
+
+    sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'BJ1'"
+
+
+    rs.open sqlawal, connection
+
+    if rs.eof = false then  
+        BJ1 = rs("Set_VarValue")
+    else 
+        BJ1 = 0
+    end If 
+
+    rs.Close
+
+    set rs = Server.CreateObject("ADODB.Recordset")
+
+    sqlawal = "Select * from GLB_M_Setting WHERE Set_VarName = 'Max_TotalBJ'"
+
+
+    rs.open sqlawal, connection
+
+    if rs.eof = false then  
+        Max_TotalBJ = rs("Set_VarValue")
+    else 
+        Max_TotalBJ = 0
+    end If 
+
+    rs.Close
 
 
 
-'hitung clickme pph21
-Dim PTKP , sql, NettoSetahun 
-Dim potongangaji, tanggungan
-dim kryn, nip, status
+    'hitung clickme pph21
+    Dim PTKP , sql, NettoSetahun 
+    Dim potongangaji, tanggungan
+    dim kryn, nip, status
 
-nip = Request.QueryString("nip")
+    nip = Request.QueryString("nip")
 
-'ambil nilai tanggungan di database
-set kryn = Server.CreateObject("ADODB.Command")
-kryn.activeConnection = MM_Cargo_String
+    'ambil nilai tanggungan di database
+    set kryn = Server.CreateObject("ADODB.Command")
+    kryn.activeConnection = MM_Cargo_String
 
-kryn.commandText = "SELECT * FROM HRD_M_Karyawan WHERE Kry_NIP ='"& nip &"'"
+    kryn.commandText = "SELECT * FROM HRD_M_Karyawan WHERE Kry_NIP ='"& nip &"'"
 
-set kry = kryn.execute
+    set kry = kryn.execute
 
-jkelamin = kry("Kry_Sex")
-if jkelamin = "W" then
-    tanggungan = 0
-else    
-    tanggungan = kry("Kry_JmlTanggungan") + kry("Kry_JmlAnak")
-end if
-' -------- Proses PTKP --------
-set potongangaji = Server.CreateObject("ADODB.Command")
-potongangaji.activeConnection = MM_Cargo_String
+    jkelamin = kry("Kry_Sex")
+    if jkelamin = "W" then
+        tanggungan = 0
+    else    
+        tanggungan = kry("Kry_JmlTanggungan") + kry("Kry_JmlAnak")
+    end if
+    ' -------- Proses PTKP --------
+    set potongangaji = Server.CreateObject("ADODB.Command")
+    potongangaji.activeConnection = MM_Cargo_String
 
-' cari nilai status karyawan
-if jkelamin = "W" then
-    status = 0
-else
-    status = kry("Kry_SttSosial")
-end if
+    ' cari nilai status karyawan
+    if jkelamin = "W" then
+        status = 0
+    else
+        status = kry("Kry_SttSosial")
+    end if
 
-'cek umur karyawan
-umur = dateDiff("yyyy",kry("Kry_tglLahir"),(date))
+    'cek umur karyawan
+    umur = dateDiff("yyyy",kry("Kry_tglLahir"),(date))
 
-' cek karyawan sudah menikah atau belm
-if status = 0 then
-    if tanggungan = 0 then 
-            potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'TK'"
+    ' cek karyawan sudah menikah atau belm
+    if status = 0 then
+        if tanggungan = 0 then 
+                potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'TK'"
+                set potgaji = potongangaji.execute
+
+                if potgaji.eof = false then
+                    PTKP = potgaji("PTKP_Max")
+                else 
+                    PTKP = 0
+                end if
+            elseif tanggungan = 1 then
+                potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'TK1'"
+                set potgaji = potongangaji.execute
+
+                if potgaji.eof = false then
+                    PTKP = potgaji("PTKP_Max")
+                else 
+                    PTKP = 0
+                end if
+            elseif tanggungan = 2 then
+                potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'TK2'"
+                set potgaji = potongangaji.execute
+
+                if potgaji.eof = false then
+                    PTKP = potgaji("PTKP_Max")
+                else 
+                    PTKP = 0
+                end if
+            else
+                potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'TK3'"
+                set potgaji = potongangaji.execute
+
+                if potgaji.eof = false then
+                    PTKP = potgaji("PTKP_Max")
+                else 
+                    PTKP = 0
+                end if
+            end if
+
+    elseIf status = 1 then
+    'case 1
+        if tanggungan = 0 then 
+            potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'K'"
             set potgaji = potongangaji.execute
 
             if potgaji.eof = false then
@@ -163,17 +202,20 @@ if status = 0 then
             else 
                 PTKP = 0
             end if
+
+
         elseif tanggungan = 1 then
-            potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'TK1'"
+            potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'K1'"
             set potgaji = potongangaji.execute
-
             if potgaji.eof = false then
                 PTKP = potgaji("PTKP_Max")
             else 
                 PTKP = 0
             end if
+
+
         elseif tanggungan = 2 then
-            potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'TK2'"
+            potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'K2'"
             set potgaji = potongangaji.execute
 
             if potgaji.eof = false then
@@ -181,8 +223,57 @@ if status = 0 then
             else 
                 PTKP = 0
             end if
+
+        ' 'Response.Write potgaji("PTKP_Max")
         else
-            potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'TK3'"
+            potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'K3'"
+            set potgaji = potongangaji.execute
+
+            if potgaji.eof = false then
+                PTKP = potgaji("PTKP_Max")
+            else 
+                PTKP = 0
+            end if
+
+        end if
+    else 
+    'case 2
+        if tanggungan = 0 then 
+            potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'HB'"
+            set potgaji = potongangaji.execute
+
+            if potgaji.eof = false then
+                PTKP = potgaji("PTKP_Max")
+            else 
+                PTKP = 0
+            end if
+
+
+        elseif tanggungan = 1 then
+            potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'HB1'"
+            set potgaji = potongangaji.execute
+
+            if potgaji.eof = false then
+                PTKP = potgaji("PTKP_Max")
+            else 
+                PTKP = 0
+            end if
+
+
+        elseif tanggungan = 2 then
+            potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'HB2'"
+            set potgaji = potongangaji.execute
+
+            if potgaji.eof = false then
+                PTKP = potgaji("PTKP_Max")
+                ''Response.Write PTKP
+            else 
+                PTKP = 0
+            end if
+
+
+        else
+            potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'HB3'"
             set potgaji = potongangaji.execute
 
             if potgaji.eof = false then
@@ -191,100 +282,8 @@ if status = 0 then
                 PTKP = 0
             end if
         end if
-
-elseIf status = 1 then
-'case 1
-    if tanggungan = 0 then 
-        potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'K'"
-        set potgaji = potongangaji.execute
-
-        if potgaji.eof = false then
-            PTKP = potgaji("PTKP_Max")
-        else 
-            PTKP = 0
-        end if
-
-
-    elseif tanggungan = 1 then
-        potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'K1'"
-        set potgaji = potongangaji.execute
-        if potgaji.eof = false then
-            PTKP = potgaji("PTKP_Max")
-        else 
-            PTKP = 0
-        end if
-
-
-    elseif tanggungan = 2 then
-        potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'K2'"
-        set potgaji = potongangaji.execute
-
-        if potgaji.eof = false then
-            PTKP = potgaji("PTKP_Max")
-        else 
-            PTKP = 0
-        end if
-
-       ' 'Response.Write potgaji("PTKP_Max")
-    else
-        potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'K3'"
-        set potgaji = potongangaji.execute
-
-        if potgaji.eof = false then
-            PTKP = potgaji("PTKP_Max")
-        else 
-            PTKP = 0
-        end if
-
-    end if
-else 
-'case 2
-    if tanggungan = 0 then 
-        potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'HB'"
-        set potgaji = potongangaji.execute
-
-        if potgaji.eof = false then
-            PTKP = potgaji("PTKP_Max")
-        else 
-            PTKP = 0
-        end if
-
-
-    elseif tanggungan = 1 then
-        potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'HB1'"
-        set potgaji = potongangaji.execute
-
-        if potgaji.eof = false then
-            PTKP = potgaji("PTKP_Max")
-        else 
-            PTKP = 0
-        end if
-
-
-    elseif tanggungan = 2 then
-        potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'HB2'"
-        set potgaji = potongangaji.execute
-
-        if potgaji.eof = false then
-            PTKP = potgaji("PTKP_Max")
-            ''Response.Write PTKP
-        else 
-            PTKP = 0
-        end if
-
-
-    else
-        potongangaji.commandText = "SELECT * FROM HRD_M_PTKP where PTKP_ID = 'HB3'"
-        set potgaji = potongangaji.execute
-
-        if potgaji.eof = false then
-            PTKP = potgaji("PTKP_Max")
-        else 
-            PTKP = 0
-        end if
-    end if
-end if 
-'-------- Proses PKP ---------
+    end if 
+    '-------- Proses PKP ---------
     dim pkp, pph21, bulan, selisih
 
     set pkp = Server.CreateObject("ADODB.Command")
@@ -308,7 +307,7 @@ end if
     ' Response.Write kryn.commandTExt & "<br>"
     set mutbpjs = kryn.execute 
 
- %> 
+%> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -341,7 +340,7 @@ end if
             font-size:14px;
         }
     </style>
-    
+    <link rel="stylesheet" href="../css/detail-all.css">
     <SCRIPT LANGUAGE="JavaScript">
     //auto count rupiah
     var newnilai = '';

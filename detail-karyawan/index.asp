@@ -1,5 +1,10 @@
 <!-- #include file="../connection.asp"-->
 <!--#include file="../landing.asp"-->
+<%
+if session("HA1") = false then
+    Response.Redirect("../dashboard.asp")
+end if
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>

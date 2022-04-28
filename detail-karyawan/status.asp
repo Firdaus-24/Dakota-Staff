@@ -1,24 +1,22 @@
 <!-- #include file='../connection.asp' -->
 <%
-' keharusan user login sebelum masuk ke menu utama aplikasi
-if session("username") = "" then
-response.Redirect("../login.asp")
-end if
-%>
-<% 
-dim status, p, status_cmd
+    if session("HM8") = false then
+        response.Redirect("../dashboard.asp")
+    end if
 
-p = Request.QueryString("nip")
+    dim status, p, status_cmd
 
-set status_cmd = Server.CreateObject("ADODB.Command")
-status_cmd.activeConnection = MM_Cargo_string
+    p = Request.QueryString("nip")
 
-status_cmd.commandText = "SELECT HRD_T_StatusKaryawan.*, HRD_M_Karyawan.Kry_Nama FROM HRD_T_StatusKaryawan LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_StatusKaryawan.SK_KryNIp = HRD_M_Karyawan.Kry_Nip WHERE HRD_T_StatusKaryawan.SK_KryNip = '"& p &"' ORDER BY SK_TglIn DESC"
-set status = status_cmd.execute
+    set status_cmd = Server.CreateObject("ADODB.Command")
+    status_cmd.activeConnection = MM_Cargo_string
 
-status_cmd.commandText = "SELECT Kry_Nama FROM HRD_M_Karyawan WHERE Kry_Nip = '"& p &"'"
-' Response.Write status_cmd.commandText & "<br>"  
-set karyawanNama = status_cmd.execute
+    status_cmd.commandText = "SELECT HRD_T_StatusKaryawan.*, HRD_M_Karyawan.Kry_Nama FROM HRD_T_StatusKaryawan LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_StatusKaryawan.SK_KryNIp = HRD_M_Karyawan.Kry_Nip WHERE HRD_T_StatusKaryawan.SK_KryNip = '"& p &"' ORDER BY SK_TglIn DESC"
+    set status = status_cmd.execute
+
+    status_cmd.commandText = "SELECT Kry_Nama FROM HRD_M_Karyawan WHERE Kry_Nip = '"& p &"'"
+    ' Response.Write status_cmd.commandText & "<br>"  
+    set karyawanNama = status_cmd.execute
  %>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,61 +27,62 @@ set karyawanNama = status_cmd.execute
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STATUS</title>
     <!-- #include file='../layout/header.asp' -->
+    <link rel="stylesheet" href="../css/detail-all.css">
     <script>
-    const tambahStatus = () => {
-        $('#modalLabelStatus').html('TAMBAH STATUS');
-        $('#submit-status').html('Save');
-        $('.modal-body form').attr('action', 'status/tambah.asp');
-        $("#status option[value='']").attr('selected', true);
-        $('#id').val("");
-        $('#tgla').val("");
-        $('#tgle').val("");
-        // $('#status').val("");
+        const tambahStatus = () => {
+            $('#modalLabelStatus').html('TAMBAH STATUS');
+            $('#submit-status').html('Save');
+            $('.modal-body form').attr('action', 'status/tambah.asp');
+            $("#status option[value='']").attr('selected', true);
+            $('#id').val("");
+            $('#tgla').val("");
+            $('#tgle').val("");
+            // $('#status').val("");
 
-        $('#tgle').prop('required',false);
-        $('#tgla').attr('type', 'date');
-        $('#tgle').attr('type', 'date');
-        
-    }
-    const updatestatus = (id, tgl) => {
-        $('#tgle').prop('required',true);
-        $.ajax({
-            url: 'status/update.asp',
-            data: { id : id, tgl : tgl},
-            method: 'post',
-            success: function (data) {
-                function splitString(strToSplit, separator) {
-                    var arry = strToSplit.split(separator);
-                    $('#tgla').attr('type', 'text');
-                    $('#tgle').attr('type', 'text');
-                    $('#id').val(arry[0]);
-                    $('#tgla').val(arry[1]);
-                    $('#tgle').val(arry[2]);
-                    $('#status option[value=' + arry[3] + ']').prop("selected", true);;
-
-                }
-                const koma = ",";
-                splitString(data, koma);
-            }
-        });
-        $('#modalLabelStatus').html('UPDATE STATUS');
-        $('#submit-status').html('Update');
-        $('.modal-body form').attr('action', 'status/update_add.asp');
-        
-    }
-    const hapusStatus = (id, tgl, nip) => {
-        if (confirm("Yakin Untuk Dihapus??") == true ){
-            window.location.href = 'status/hapus.asp?id='+ id + '&tgl=' + tgl + '&nip=' + nip
-        }
-    }
-    function changeInp(e){
-        if ( e == 1 ){
+            $('#tgle').prop('required',false);
             $('#tgla').attr('type', 'date');
-        }
-        if ( e == 2 ){
             $('#tgle').attr('type', 'date');
+            
         }
-    }
+        const updatestatus = (id, tgl) => {
+            $('#tgle').prop('required',true);
+            $.ajax({
+                url: 'status/update.asp',
+                data: { id : id, tgl : tgl},
+                method: 'post',
+                success: function (data) {
+                    function splitString(strToSplit, separator) {
+                        var arry = strToSplit.split(separator);
+                        $('#tgla').attr('type', 'text');
+                        $('#tgle').attr('type', 'text');
+                        $('#id').val(arry[0]);
+                        $('#tgla').val(arry[1]);
+                        $('#tgle').val(arry[2]);
+                        $('#status option[value=' + arry[3] + ']').prop("selected", true);;
+
+                    }
+                    const koma = ",";
+                    splitString(data, koma);
+                }
+            });
+            $('#modalLabelStatus').html('UPDATE STATUS');
+            $('#submit-status').html('Update');
+            $('.modal-body form').attr('action', 'status/update_add.asp');
+            
+        }
+        const hapusStatus = (id, tgl, nip) => {
+            if (confirm("Yakin Untuk Dihapus??") == true ){
+                window.location.href = 'status/hapus.asp?id='+ id + '&tgl=' + tgl + '&nip=' + nip
+            }
+        }
+        function changeInp(e){
+            if ( e == 1 ){
+                $('#tgla').attr('type', 'date');
+            }
+            if ( e == 2 ){
+                $('#tgle').attr('type', 'date');
+            }
+        }
     </script>
 </head>
 
@@ -102,21 +101,25 @@ set karyawanNama = status_cmd.execute
             </div>
         <div class='row mt-3'>
             <div class='col'>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalStatusKaryawan" onclick="return tambahStatus()">
-                    Tambah
-                </button>
+                <%if session("HM8A") = true then%>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalStatusKaryawan" onclick="return tambahStatus()">
+                        Tambah
+                    </button>
+                <%end if%>
             </div>
         </div>
     </div>
     <div class='row contentDetail'>
         <div class='col content-table'>
             <table class="table table-striped tableDetail">
-                 <thead>
+                <thead>
                     <tr>
                         <th scope="col">Tanggal Mulai</th>
                         <th scope="col">Tanggal Akhir</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Aksi</th>
+                        <%if session("HM8B") = true OR session("HM8C") = true then%>
+                            <th scope="col" class="text-center">Aksi</th>
+                        <%end if%>
                     </tr>
                 </thead>
                 <tbody>
@@ -137,20 +140,27 @@ set karyawanNama = status_cmd.execute
                                 Tetap
                             <% end if %>
                         </td>
-                        <td>
-                        <div class='btn-group'>
-                            <button type="button" class="btn btn-primary btn-sm btn-sm py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalStatusKaryawan" onclick="return updatestatus('<%=status("Sk_ID")%>', '<%=status("Sk_tglIn")%>')">
-                                Update
-                            </button>
-                            <button type="button" class="btn btn-danger btn-sm btn-sm py-0 px-2" onclick="hapusStatus('<%=status("Sk_ID")%>', '<%=status("Sk_tglIn")%>', '<%=status("Sk_KryNip")%>')">
-                                Hapus
-                            </button>
-                        </div>
-                        </td>
+                        <%if session("HM8B") = true OR session("HM8C") = true then%>
+                            <td class="text-center">
+                                <div class='btn-group'>
+                                    <%if session("HM8B") = true then%>
+                                        <button type="button" class="btn btn-primary btn-sm btn-sm py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalStatusKaryawan" onclick="return updatestatus('<%=status("Sk_ID")%>', '<%=status("Sk_tglIn")%>')">
+                                            Update
+                                        </button>
+                                    <%end if%>
+                                    <%if session("HM8C") = true then%>
+                                        <button type="button" class="btn btn-danger btn-sm btn-sm py-0 px-2" onclick="hapusStatus('<%=status("Sk_ID")%>', '<%=status("Sk_tglIn")%>', '<%=status("Sk_KryNip")%>')">
+                                            Hapus
+                                        </button>
+                                    <%end if%>
+                                </div>
+                            </td>
+                        <%end if%>
                     </tr>
-                <% status.movenext
+                <% 
+                status.movenext
                 loop
-                 %>
+                %>
                 </tbody>
             </table>
         </div>

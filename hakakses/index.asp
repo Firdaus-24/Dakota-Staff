@@ -1,22 +1,25 @@
 <!-- #include file='../connection.asp' -->
-<!-- #include file='../constend/constanta.asp' -->
 <% 
-dim agen_cmd, agen
-dim user_id, user, serverid
+    if session("username") <> "dausit" AND session("username") <> "administrator" then
+        Response.Redirect("../login.asp")
+    end if
 
-set agen_cmd = Server.CreateObject("ADODB.Command")
-agen_cmd.activeConnection = MM_Cargo_string
+    dim agen_cmd, agen
+    dim user_id, user, serverid
 
-agen_cmd.commandText = "SELECT agen_id, agen_nama FROM GLB_M_Agen WHERE agen_aktifYN = 'Y' order by agen_nama ASC"
-set agen = agen_cmd.execute
+    set agen_cmd = Server.CreateObject("ADODB.Command")
+    agen_cmd.activeConnection = MM_Cargo_string
 
-set user_id = Server.CreateObject("ADODB.Command")
-user_id.activeConnection = MM_Cargo_string
+    agen_cmd.commandText = "SELECT agen_id, agen_nama FROM GLB_M_Agen WHERE agen_aktifYN = 'Y' order by agen_nama ASC"
+    set agen = agen_cmd.execute
 
-user_id.commandText = "SELECT username, ServerID FROM webLogin"
-set user = user_id.execute
+    set user_id = Server.CreateObject("ADODB.Command")
+    user_id.activeConnection = MM_Cargo_string
 
- %>
+    user_id.commandText = "SELECT username, ServerID FROM webLogin"
+    set user = user_id.execute
+
+%>
 <!DOCTYPE html>
 <html lang="en">
 

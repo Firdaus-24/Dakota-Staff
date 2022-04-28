@@ -1,11 +1,10 @@
 <!-- #include file='../connection.asp' -->
 <%
 ' keharusan user login sebelum masuk ke menu utama aplikasi
-if session("username") = "" then
-response.Redirect("../login.asp")
+if session("HM7") = false then
+    response.Redirect("../dashboard.asp")
 end if
-%>
-<% 
+
 dim memo
 dim nip
 
@@ -34,44 +33,39 @@ set karyawan = karyawan.execute
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CATATAN</title>
     <!-- #include file='../layout/header.asp' -->
+    <link rel="stylesheet" href="../css/detail-all.css">
     <script>
-    const ubahMemo = (id) => {
-        let tgl = $('#tgl')
-        tgl.attr('type', 'text');
+        const ubahMemo = (id) => {
+            let tgl = $('#tgl')
+            tgl.attr('type', 'text');
 
-        $.ajax({
-        url: 'memo/update.asp',
-        data: { id:id },
-        method: 'post',
-        success: function (data) {
-            // console.log(data);
-            function splitString(strToSplit, separator) {
-                var arry = strToSplit.split(separator);
-                
-                $('#notrans').val(arry[0]);
-                $("#status option[value='"+arry[1]+"']").attr("selected", true);
-                tgl.val(arry[2]);
-                $('#subject').val(arry[3]);
-                $('#memo').val(arry[4]);
+            $.ajax({
+            url: 'memo/update.asp',
+            data: { id:id },
+            method: 'post',
+            success: function (data) {
+                // console.log(data);
+                function splitString(strToSplit, separator) {
+                    var arry = strToSplit.split(separator);
+                    
+                    $('#notrans').val(arry[0]);
+                    $("#status option[value='"+arry[1]+"']").attr("selected", true);
+                    tgl.val(arry[2]);
+                    $('#subject').val(arry[3]);
+                    $('#memo').val(arry[4]);
+                }
+                const koma = ",";
+                splitString(data, koma);
             }
-            const koma = ",";
-            splitString(data, koma);
-        }
-        });
-        tgl.on('focus', function(){
-            tgl.attr('type', 'date');
-        });
+            });
+            tgl.on('focus', function(){
+                tgl.attr('type', 'date');
+            });
 
-        $('#labelModalMemo').html('UPDATE MEMO');
-        $('#submit_memo').html('Update');
-        $('.modal-body form').attr('action', 'memo/update_add.asp');
-    
-    }
-    const aktifMemo = (id) => {
-        if (confirm("Yakin Untuk Di Ubah?") ==  true){
-            console.log(id);
+            $('#labelModalMemo').html('UPDATE MEMO');
+            $('#submit_memo').html('Update');
+            $('.modal-body form').attr('action', 'memo/update_add.asp');
         }
-    }
     </script>
 </head>
 
@@ -90,7 +84,9 @@ set karyawan = karyawan.execute
             </div>
         <div class='row mt-3'>
             <div class='col'>
-                <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#modalMemo">Tambah</button>
+                <%if session("HM7A") = true then%>
+                    <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#modalMemo">Tambah</button>
+                <%end if%>
             </div>
         </div>
     </div>
@@ -105,7 +101,9 @@ set karyawan = karyawan.execute
                         <th scope="col">Subject</th>
                         <th scope="col">Catatan</th>
                         <th scope="col">Aktif</th>
-                        <th scope="col">Aksi</th>
+                        <%if session("HM7B") = true OR session("HM7C") = true then%>
+                            <th scope="col" class="text-center">Aksi</th>
+                        <%end if%>
                     </tr>
                 </thead>
                 <tbody>
@@ -131,27 +129,33 @@ set karyawan = karyawan.execute
                             Tidak
                             <% end if %>
                         </td>
-                        <td>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalMemo" onclick="return ubahMemo('<%=memo("Memo_ID")%>')">
-                                Edit
-                            </button>
-                        <% if memo("Memo_AktifYN") = "Y" then %>
-                            <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="if(confirm('Yakin Untuk Diubah?')) window.location.href = 'memo/aktif.asp?id=<%=memo("Memo_ID")%>&p=<%=memo("Memo_AktifYN")%>&q=<%= memo("Memo_Nip") %>'">
-                                NoAktif
-                            </button>
-                        <% else %>
-                            <button type="button" class="btn btn-warning btn-sm py-0 px-2"onclick="if(confirm('Yakin Untuk Diubah?')) window.location.href = 'memo/aktif.asp?id=<%=memo("Memo_ID")%>&p=<%=memo("Memo_AktifYN")%>&q=<%= memo("Memo_Nip") %>'">
-                                Aktif
-                            </button>
-                        <% end if %>
-                        </div>
-                        </td>
+                        <%if session("HM7B") = true OR session("HM7C") = true then%>
+                            <td>
+                                <div class="btn-group">
+                                    <%if session("HM7B") = true then%>
+                                        <button type="button" class="btn btn-primary btn-sm py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalMemo" onclick="return ubahMemo('<%=memo("Memo_ID")%>')">
+                                            Edit
+                                        </button>
+                                    <%end if%>
+                                    <%if session("HM7C") = true then%>
+                                        <% if memo("Memo_AktifYN") = "Y" then %>
+                                            <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="if(confirm('Yakin Untuk Diubah?')) window.location.href = 'memo/aktif.asp?id=<%=memo("Memo_ID")%>&p=<%=memo("Memo_AktifYN")%>&q=<%= memo("Memo_Nip") %>'">
+                                                NoAktif
+                                            </button>
+                                        <% else %>
+                                            <button type="button" class="btn btn-warning btn-sm py-0 px-2"onclick="if(confirm('Yakin Untuk Diubah?')) window.location.href = 'memo/aktif.asp?id=<%=memo("Memo_ID")%>&p=<%=memo("Memo_AktifYN")%>&q=<%= memo("Memo_Nip") %>'">
+                                                Aktif
+                                            </button>
+                                        <% end if %>
+                                    <% end if %>
+                                </div>
+                            </td>
+                        <%end if%>
                     </tr>
                 <% 
                 memo.movenext
                 loop
-                 %>
+                %>
                 </tbody>
             </table>
         </div>
@@ -197,7 +201,7 @@ set karyawan = karyawan.execute
             </div>
             <div class="mb-3 mt-2">
                 <label for="subject" class="form-label">Subject</label>
-                <input type="text" class="form-control" id="subject" name="subject" required>
+                <input type="text" class="form-control" id="subject" name="subject" autocomplete='off' required>
             </div>
             <div class="mb-3">
                 <label for="memo" class="form-label">Memo</label>

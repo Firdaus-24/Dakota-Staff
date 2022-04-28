@@ -1,23 +1,21 @@
 <!-- #include file='../connection.asp' -->
 <%
-' keharusan user login sebelum masuk ke menu utama aplikasi
-if session("username") = "" then
-response.Redirect("../login.asp")
-end if
-%>
-<% 
-dim kesehatan, nip
+    if session("HM4") = false then
+        response.Redirect("../dashboard.asp")
+    end if
 
-nip = Request.QueryString("nip")
+    dim kesehatan, nip
 
-set karyawan = Server.CreateObject("ADODB.Command")
-karyawan.ActiveConnection = MM_cargo_STRING
+    nip = Request.QueryString("nip")
 
-set kesehatan = Server.CreateObject("ADODB.Command")
-kesehatan.ActiveConnection = MM_cargo_STRING
+    set karyawan = Server.CreateObject("ADODB.Command")
+    karyawan.ActiveConnection = MM_cargo_STRING
 
-kesehatan.commandText = "SELECT * FROM HRD_T_Kesehatan WHERE Kes_Nip = '"& nip &"'"
-set kesehatan = kesehatan.execute
+    set kesehatan = Server.CreateObject("ADODB.Command")
+    kesehatan.ActiveConnection = MM_cargo_STRING
+
+    kesehatan.commandText = "SELECT * FROM HRD_T_Kesehatan WHERE Kes_Nip = '"& nip &"'"
+    set kesehatan = kesehatan.execute
 
  %>
 <!DOCTYPE html>
@@ -29,69 +27,70 @@ set kesehatan = kesehatan.execute
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KESEHATAN</title>
     <!-- #include file='../layout/header.asp' -->
+    <link rel="stylesheet" href="../css/detail-all.css">
     <script>
-    const valid = (str) =>{
-        let maxbln = 12;
-        let d = new Date();
-        let maxthn = d.getFullYear();
+        const valid = (str) =>{
+            let maxbln = 12;
+            let d = new Date();
+            let maxthn = d.getFullYear();
 
-        let bulan = $('#bulan').val();
-        if ( bulan > maxbln){
-            $('#bulan').val("12");
-        }else{
-            bulan = bulan;
-        }
-
-        let thn = $('#tahun').val();
-        if ( thn > maxthn ){
-            $('#tahun').val(maxthn);
-        }else{
-            thn = thn;
-        }
-    }
-    const tambahKesehatan = () => {
-        $('#nomor').val("");
-        $('#nsakit select').val("Pilih");
-        $('#bulan').val("");
-        $('#tahun').val("");
-        $('#lama').val("");
-
-        $('#LabelKesehatan').html('TAMBAH KESEHATAN');
-        $('#submit').html('Save');
-        $('.modal-body form').attr('action', 'kesehatan/tambah.asp');
-
-    }
-    const ubahKesehatan = (nip, id) => {
-        $.ajax({
-        url: 'kesehatan/update.asp',
-        data: { nip: nip, id : id },
-        method: 'post',
-        success: function (data) {
-            function splitString(strToSplit, separator) {
-                var arry = strToSplit.split(separator);
-                $('#nomor').val(arry[0]);
-                $('#nsakit option[value='+ arry[2] +']').attr('selected','selected');
-                $('#bulan').val(arry[3]);
-                $('#tahun').val(arry[4]);
-                $('#lama').val(arry[5]);
+            let bulan = $('#bulan').val();
+            if ( bulan > maxbln){
+                $('#bulan').val("12");
+            }else{
+                bulan = bulan;
             }
-            const koma = ",";
-            splitString(data, koma);
-        }
-        });
-        $('#LabelKesehatan').html('UPDATE KESEHATAN');
-        $('#submit').html('Update');
-        $('.modal-body form').attr('action', 'kesehatan/update_add.asp');
 
-    }
+            let thn = $('#tahun').val();
+            if ( thn > maxthn ){
+                $('#tahun').val(maxthn);
+            }else{
+                thn = thn;
+            }
+        }
+        const tambahKesehatan = () => {
+            $('#nomor').val("");
+            $('#nsakit select').val("Pilih");
+            $('#bulan').val("");
+            $('#tahun').val("");
+            $('#lama').val("");
+
+            $('#LabelKesehatan').html('TAMBAH KESEHATAN');
+            $('#submit').html('Save');
+            $('.modal-body form').attr('action', 'kesehatan/tambah.asp');
+
+        }
+        const ubahKesehatan = (nip, id) => {
+            $.ajax({
+            url: 'kesehatan/update.asp',
+            data: { nip: nip, id : id },
+            method: 'post',
+            success: function (data) {
+                function splitString(strToSplit, separator) {
+                    var arry = strToSplit.split(separator);
+                    $('#nomor').val(arry[0]);
+                    $('#nsakit option[value='+ arry[2] +']').attr('selected','selected');
+                    $('#bulan').val(arry[3]);
+                    $('#tahun').val(arry[4]);
+                    $('#lama').val(arry[5]);
+                }
+                const koma = ",";
+                splitString(data, koma);
+            }
+            });
+            $('#LabelKesehatan').html('UPDATE KESEHATAN');
+            $('#submit').html('Update');
+            $('.modal-body form').attr('action', 'kesehatan/update_add.asp');
+
+        }
     </script>
 </head>
 
 <body>
 <!-- #include file='../landing.asp' -->
+<!--#include file="template-detail.asp"-->
 <div class="container">
- <!--#include file="template-detail.asp"-->
-       <!-- header start -->
+    <!-- header start -->
     <div class="row mt-2 mb-2 contentDetail">
         <label for="nip" class="col-sm-1 col-form-label col-form-label-sm">NIP</label>
             <div class="col-sm-2">
@@ -100,16 +99,18 @@ set kesehatan = kesehatan.execute
             <% 
             karyawan.commandText = "SELECT Kry_nama FROM HRD_M_Karyawan WHERE Kry_Nip='"& nip &"'"
             set krywn = karyawan.execute
-             %>
-         <label for="nip" class="col-sm-2 col-form-label col-form-label-sm">Nama Karyawan</label>
+            %>
+        <label for="nip" class="col-sm-2 col-form-label col-form-label-sm">Nama Karyawan</label>
             <div class="col-sm-7">
                 <input type="text" class="form-control form-control-sm" name="nama" id="nama" value="<%= krywn("Kry_Nama") %> " disabled>
             </div>
         <div class='row mt-3'>
             <div class='col'>
+            <%if session("HM4A") = true then%>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambah-kesehatan" onclick="return tambahKesehatan()">
                     Tambah
                 </button>
+            <%end if%>
             </div>
         </div>
     </div>
@@ -124,7 +125,9 @@ set kesehatan = kesehatan.execute
                         <th scope="col">Nama Penyakit</th>
                         <th scope="col">Lama</th>
                         <th scope="col">Satuan</th>
-                        <th scope="col" class="text-center">Aksi</th>
+                        <%if session("HM4B") = true OR session("HM4C") = true then%>
+                            <th scope="col" class="text-center">Aksi</th>
+                        <%end if%>
                     </tr>
                 </thead>
                 <tbody>
@@ -148,21 +151,27 @@ set kesehatan = kesehatan.execute
                         <td><%=penyakit("Peny_nama")%></td>
                         <td><%=kesehatan("Kes_Lama")%></td>
                         <td><%=kesehatan("Kes_Satuan")%></td>
-                        <td class="text-center">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary btn-sm py-0 px-2" data-bs-toggle="modal" data-bs-target="#tambah-kesehatan" onclick="return ubahKesehatan('<%=kesehatan("Kes_Nip")%>','<%=nomor%>')">
-                                    Edit
-                                </button>
-                                <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return hapus()">
-                                   Hapus
-                                </button>
-                            </div>
-                        </td>
+                        <%if session("HM4B") = true OR session("HM4C") = true then%>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                <%if session("HM4B") = true then%>
+                                    <button type="button" class="btn btn-primary btn-sm py-0 px-2" data-bs-toggle="modal" data-bs-target="#tambah-kesehatan" onclick="return ubahKesehatan('<%=kesehatan("Kes_Nip")%>','<%=nomor%>')">
+                                        Edit
+                                    </button>
+                                <%end if%>
+                                <%if session("HM4C") = true then%>
+                                    <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return hapus()">
+                                    Hapus
+                                    </button>
+                                <%end if%>
+                                </div>
+                            </td>
+                        <%end if%>
                     </tr>
                     <% 
                     kesehatan.movenext
                     loop
-                     %>
+                    %>
                 </tbody>
             </table>
         </div>

@@ -1,7 +1,10 @@
 <!-- #include file='../connection.asp' -->
 <!-- #include file='mutasi/func_getMutasi.asp' -->
-
 <% 
+    if session("HM9") = false then
+        Response.Redirect("../dashboard.asp")
+    end if
+
     dim mutasi_cmd, mutasi
     dim nip 
 
@@ -46,7 +49,6 @@
     end if
 
 %>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -124,9 +126,9 @@
         }
     </script>
     <style>
-        .tableDetail{
+        /* .tableDetail{
             font-size:14px; 
-        }
+        } */
         .tableDetail thead{
             border: 1px solid rgba(0,0,0,0.2);
         }
@@ -140,6 +142,7 @@
             white-space: nowrap;
         }
     </style>
+    <link rel="stylesheet" href="../css/detail-all.css">
 </head>
 <!-- #include file='../landing.asp' -->
 <!--#include file="template-detail.asp"-->
@@ -155,7 +158,9 @@
             </div>
     <div class='row mt-3'>
         <div class='col'>
-            <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#modalMutasi" onclick="return tambahMutasi()">Tambah</button>
+            <%if session("HM9A") = true then%>
+                <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#modalMutasi" onclick="return tambahMutasi()">Tambah</button>
+            <%end if%>
         </div>
     </div>
     </div>
@@ -172,13 +177,9 @@
                         <th colspan="3" class="text-center">Awal</th>
                         <th colspan="3" class="text-center">Akhir</th>
                         <th rowspan="2" class="text-center">Aktif</th>
-                        <% 
-                        if session("HL5C") = true then
-                            if session("HL5B") = true then %>
+                        <%if session("HM9B") = true OR session("HM9C") = true then %>
                         <th rowspan="2" class="text-center">Aksi</th>
-                        <% 
-                            end if
-                        end if %>
+                        <% end if %>
                     </tr>
                     <tr style="border-style: none;">
                         <th >Jabatan</th>
@@ -253,22 +254,28 @@
                             %>
                             
                         </td>
-                        <td>
-                            <div class='btn btn-group'>
-                                <button type="button" class="btn btn-primary btn-sm btn-sm py-0 px-2 " data-bs-toggle="modal" data-bs-target="#modalMutasi" onclick="return updateMutasi('<%= mutasi("Mut_ID") %>')">
-                                    Update
-                                </button>
-                                <% if mutasi("Mut_AktifYn") = "Y" then %>
-                                    <button type="button" class="btn btn-danger btn-sm btn-sm py-0 px-2 " onclick="return aktifMutasi('<%= mutasi("Mut_ID") %>', '<%= mutasi("Mut_AktifYN") %>', '<%= mutasi("Mut_Nip") %>')">
-                                        NonAktif
-                                    </button>
-                                <% else %>
-                                    <button type="button" class="btn btn-warning btn-sm btn-sm py-0 px-2 " onclick="return aktifMutasi('<%= mutasi("Mut_ID") %>', '<%= mutasi("Mut_AktifYN") %>', '<%= mutasi("Mut_Nip") %>')">
-                                        Aktif
-                                    </button>
-                                <% end if %>
-                            </div>
-                        </td>
+                        <%if session("HM9B") = true OR session("HM9C") = true then %>
+                            <td>
+                                <div class='btn btn-group' id="btn-mutasi-aktif">
+                                    <%if session("HM9B") = true then%>
+                                        <button type="button" class="btn btn-primary btn-sm btn-sm py-0 px-2 " data-bs-toggle="modal" data-bs-target="#modalMutasi" onclick="return updateMutasi('<%= mutasi("Mut_ID") %>')">
+                                            Update
+                                        </button>
+                                    <%end if%>
+                                    <%if session("HM9C") = true then %>
+                                        <% if mutasi("Mut_AktifYn") = "Y" then %>
+                                            <button type="button" class="btn btn-danger btn-sm btn-sm py-0 px-2 " onclick="return aktifMutasi('<%= mutasi("Mut_ID") %>', '<%= mutasi("Mut_AktifYN") %>', '<%= mutasi("Mut_Nip") %>')">
+                                                NonAktif
+                                            </button>
+                                        <% else %>
+                                            <button type="button" class="btn btn-warning btn-sm btn-sm py-0 px-2 " onclick="return aktifMutasi('<%= mutasi("Mut_ID") %>', '<%= mutasi("Mut_AktifYN") %>', '<%= mutasi("Mut_Nip") %>')">
+                                                Aktif
+                                            </button>
+                                        <% end if %>
+                                    <% end if %>
+                                </div>
+                            </td>
+                        <%end if%>
                     </tr>
                     <% 
                         mutasi.movenext

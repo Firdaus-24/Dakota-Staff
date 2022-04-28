@@ -3,6 +3,10 @@
 <!-- #include file='../func_JarakKoordinat.asp' -->
 
 <%
+	if session("HL2") = false then
+		Response.Redirect("index.asp")
+	end if
+
 	response.Buffer=true
 	server.ScriptTimeout=1000000000
 
@@ -65,7 +69,9 @@
 <body>
 <div class="btn-group" role="group" aria-label="Basic outlined example">
 	<button type='button' class='btn btn-outline-danger btn-sm' onClick="window.location.href='index.asp'">Kembali</button>
-	<button type='button' class='btn btn-outline-primary btn-sm' onClick="window.open('exportXls-laporanAbsensi.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&divisi=<%= divcode %>&agen=<%= agen %>')">EXPORT</button>
+	<%if session("HL2A") = true then%>
+		<button type='button' class='btn btn-outline-primary btn-sm' onClick="window.open('exportXls-laporanAbsensi.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&divisi=<%= divcode %>&agen=<%= agen %>')">EXPORT</button>
+	<%end if%>
 </div>
 <%  
 	if not divisi.eof then
