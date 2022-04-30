@@ -8,7 +8,6 @@
     dim tglnow, thnnow
 
     nip = Request.Querystring("nip")
-    'Response.Write nip
     strnip = left(nip,3)
     tglnow = right("00" & month(date()),2)
     thnnow = right(year(date),2)

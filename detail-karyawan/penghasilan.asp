@@ -1,12 +1,16 @@
 <!--#include file="../connection.asp"-->
 <% 
+    ' cek hakakses 
     if session("HA7")="" then 
 	    response.redirect("index.asp?nip=" & trim(request.querystring("nip")))
     end if 
+    ' end hakakses
 
+    ' jika terjadi timeout waktu load data
     response.Buffer=true
     server.ScriptTimeout=1000000000
 
+    ' pengecekan status karyawan untuk potongan
     set connection = Server.CreateObject("ADODB.Connection")
     connection.open MM_Cargo_String
 
@@ -401,6 +405,8 @@
     var formathariIni = (bulanA + '/' + tgla + '/' + thne + " " + jam +':'+ min);
     let umur
     let maxumur
+
+    // function untuk merubah angka string ke currency
     function format(number){
         var rupiah = '';
         var angkarev = number.toString().split('').reverse().join('');
@@ -408,10 +414,12 @@
         for (var i = 0; i < angkarev.length; i++) if (i % 3 === 0) rupiah += angkarev.substr(i, 3) + '.';
             return rupiah.split('', rupiah.length - 1).reverse().join('') + ',-';
     }
+
+    // function untuk menghitungan potongan dan tunjangan 
     function rupiah(angka, nama, type, ptype) {
         umur = parseInt(document.getElementById("umur").value);
         maxumur = parseInt(57);
-       
+
         if (nama === "gapok"){
             gapok = parseInt(angka);
             document.getElementById("gapok").value = format(gapok);    
@@ -589,6 +597,8 @@
         document.getElementById("labelGaji").value = format(Math.ceil(labelgaji)) ;
 
     }   
+
+    // function hitung pph21/pajak
     function hitungNilai(){ 
         // deklarasi variable 
         var hasilpkpawal = 0;
@@ -643,7 +653,7 @@
         var honor = parseInt(insentif) + parseInt(thr) + parseInt(transport);
 
         var premiasuransi = Math.floor(potonganbpjs) +  Math.ceil(tunjanganbpjstkjkk) +  Math.ceil(tunjanganbpjstkjkm) +  Math.ceil(tunjanganbpjsjp);
-              
+
         var penghasilanbruto = pendapatan + tunjanganlain + honor + premiasuransi;
         var gajijabatan = penghasilanbruto;
 
@@ -688,7 +698,6 @@
                     hasilpkpawal3 = ((p - pkpawal3) * 30 ) / 100;
 
                     hasilpkpawal = Math.floor(hasilpkpawal1) + Math.floor(hasilpkpawal2) + Math.floor(hasilpkpawal3);
-                   
                     perhitunganpphsetahun = Math.floor(hasilpkpawal) / bulan;
                 }else if ( p > parseInt(pkpawal4) && p <= parseInt(pkpakhir4) ){
                     hasilpkpawal1 = (pkpawal2 * 6 ) / 100;
@@ -729,7 +738,6 @@
                     hasilpkpawal3 = ((p - pkpawal3 ) * 25) / 100;
 
                     hasilpkpawal = Math.floor(hasilpkpawal1) + Math.floor(hasilpkpawal2) + Math.floor(hasilpkpawal3);
-                   
                     perhitunganpphsetahun = Math.floor(hasilpkpawal) / bulan;
                 }else if ( p > parseInt(pkpawal4) && p <= parseInt(pkpakhir4) ){
                     hasilpkpawal1 = (pkpawal2 * 5 ) / 100;
@@ -752,7 +760,7 @@
                     hasilpkpawal4 = ( tariftiga * 30 ) / 100;
                     hasilpkpawal5 = ((p - pkpawal5) * 35 ) / 100;
                     hasilpkpawal = Math.floor(hasilpkpawal1) + Math.floor(hasilpkpawal2) + Math.floor(hasilpkpawal3) + Math.floor(hasilpkpawal4) + Math.floor(hasilpkpawal5);
-                  
+
                     perhitunganpphsetahun = (Math.floor(hasilpkpawal)) / bulan;
                 }
                 document.getElementById("potpph21").value = format(Math.floor(perhitunganpphsetahun));
@@ -784,7 +792,6 @@
 
                     hasilpkpawal = hasilpkpawal1 + hasilpkpawal2 + hasilpkpawal3 + hasilpkpawal4;
                     perhitunganpphsetahun = Math.floor(hasilpkpawal) / blnmasuk;
-                  
                 }else if ( p > parseInt(pkpawal5) && p <= parseInt(pkpakhir5) ){
                      hasilpkpawal1 = (pkpawal2 * 6 ) / 100;
                     tarifsatu = parseInt(pkpakhir2) - parseInt(pkpawal2);
@@ -851,6 +858,8 @@
         document.getElementById("labelGaji").value = format(Math.ceil(hasilgaji));
     }
     // End -->
+
+    // funtion btn tambah pengahasilan
     function tambahPenghasilan(){
         $("#nomor-penghasilan").val("");
         $("#tgl").val("");
@@ -887,10 +896,10 @@
         $("#tpot").val(format(0));            
         $("#labelGaji").val(format(0));
     }
+    // function btn update penghaislan
     const updatePenghasilan = (id, p, q, r) => {
         umur = parseInt(document.getElementById("umur").value);
         maxumur = parseInt(56);
-      
         $.ajax({
                 url: '<%=url%>/detail-karyawan/penghasilan/penghasilan_update.asp',
                 data: { id: id, p : p, q : q, r:r },
@@ -1019,8 +1028,8 @@
 </head>
 <body>
 <!-- #include file='../landing.asp' -->
-<div class="container">
 <!--#include file="template-detail.asp"-->
+<div class="container">
     <!-- header start -->
     <div class="row mt-2 mb-2 contentDetail">
         <div class="col">
