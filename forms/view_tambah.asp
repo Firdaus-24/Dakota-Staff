@@ -161,7 +161,7 @@
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="radioStatus" id="promorsi" value="3">
-                            <label class="form-check-label" for="promorsi">Promorsi</label>
+                            <label class="form-check-label" for="promorsi">Promosi</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="radioStatus" id="pensiun" value="4">

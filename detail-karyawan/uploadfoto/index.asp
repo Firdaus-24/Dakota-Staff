@@ -313,7 +313,8 @@ Class FreeASPUpload
 			streamFile.close
 			Set streamFile = Nothing
 			fileItem.Path = path & fileItem.FileName
-		 Next
+		 
+		Next
 	End Sub
 	
 	public sub SaveOne(path, num, byref outFileName, byref outLocalFileName)

@@ -1,4 +1,5 @@
 <!-- #include file='connection.asp' -->
+<!-- #include file='updateHrdlog.asp' -->
 <% 
 set karyawan_cmd = Server.CreateObject("ADODB.Command")
 karyawan_cmd.activeConnection = mm_cargo_string
@@ -9,7 +10,7 @@ mutasi_cmd.activeConnection = mm_cargo_string
 set updateMutasi = Server.CreateObject("ADODB.Command")
 updateMutasi.activeConnection = mm_cargo_string
 
-mutasi_cmd.commandText = "SELECT * FROM HRD_T_Mutasi WHERE Mut_ExecutedYN = 'N' AND Mut_Tanggal <= '" & Month(now()) &"/"& day(now()) &"/"& Year(now()) &"' AND Mut_AktifYN = 'Y' ORDER BY Mut_Tanggal DESC"
+mutasi_cmd.commandText = "SELECT * FROM HRD_T_Mutasi WHERE (Mut_ExecutedYN = 'N' OR Mut_ExecutedYN = '') AND Mut_Tanggal <= '" & Month(now()) &"/"& day(now()) &"/"& Year(now()) &"' AND Mut_AktifYN = 'Y' ORDER BY Mut_Tanggal DESC"
 ' Response.Write mutasi_cmd.commandText & "<br>"
 set mutasi = mutasi_cmd.execute
 
@@ -20,6 +21,16 @@ do while not mutasi.eof
     
     updateMutasi.commandText = "UPDATE HRD_T_MUTASI SET Mut_ExecutedYN = 'Y' WHERE Mut_ID = '"& mutasi("Mut_ID") &"'"
     updateMutasi.execute 
+
+    ip = Request.ServerVariables("remote_addr") & " [" & session("lat") & "," & session("lon") & "]"
+    browser = Request.ServerVariables("http_user_agent")
+    dateTime = now()
+    eventt = "AUTO EXECUTE"
+    key = mutasi("Mut_ID")
+    url = ""
+
+    keterangan = "UPDATE MUTASI NOMOR "& mutasi("Mut_ID") & " UNTUK NIP KARYAWAN "& mutasi("Mut_Nip")
+    call updateLog(eventt,url,key,"SYSTEM",session("server-id"),dateTime,ip,browser,keterangan) 
 mutasi.movenext
 loop
 %>
@@ -161,7 +172,7 @@ loop
       </div>
 
       <!--perubahan Approve CIS -->
-      <div class='col-lg card-list' data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1300" data-aos-delay="500">
+      <div class='col-lg card-list' data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1300" data-aos-delay="600">
         <div class="card text-light mx-3 my-2 card-atasan" style="max-width: 25rem;">
           <div class="card-header">Setting atasan</div>
             <div class="card-body">
@@ -175,6 +186,25 @@ loop
                 <% else %>
                   <span style="padding:20px;margin-top:50px;margin-bottom:50px"></span>
                 <% end if %>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!--Log SYSTEM -->
+      <div class='col-lg card-list' data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1400" data-aos-delay="700">
+        <div class="card text-light mx-3 my-2 card-atasan" style="max-width: 25rem;background-color:#800000;">
+          <div class="card-header">File</div>
+            <div class="card-body">
+            <i class="fa fa-file-excel-o" aria-hidden="true" id="reportlogo" style="color:#660000;"></i>
+              <h5 class="card-title">Log SYSTEM</h5>
+              <p class="card-text">Perubahan Log System</p>
+                <% 'if session("HL9")=true then %>
+                  <button class="btn btn-warning btn-sm importFile" type="button" aria-expanded="false" onclick="window.location.href='forms/log.asp'">
+                    <i class="fa fa-cloud-download" aria-hidden="true"></i> Import
+                  </button>
+                <% 'end if %>
             </div>
         </div>
       </div>

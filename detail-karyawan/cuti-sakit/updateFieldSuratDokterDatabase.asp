@@ -11,4 +11,4 @@ updatecutih_cmd.execute
 
 response.redirect "../cutiSakitIzin.asp?nip=" & request.querystring("nip")
 			
-			%>
+%>

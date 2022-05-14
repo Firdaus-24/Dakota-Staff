@@ -1,5 +1,6 @@
 <!-- #include file='../connection.asp' -->
 <!-- #include file='../layout/header.asp' -->
+<!-- #include file="../updateHrdLog.asp" -->
 <% 
 dim pengajuan, tglmasuk, nama, nip,nomor, radioStatus, jablama, jjlama, divlama, agenlama, jabatan, jenjang, agen, divisi, catatan
 
@@ -39,52 +40,90 @@ if mutasilama.eof then
     if radioStatus = "" then
         mutasi.commandText = "exec sp_ADDHRD_T_Mutasi '"& key &"', '"& nip &"', '"& pengajuan &"', '', '"& nomor &"', '"& catatan &"', '"& agenlama &"', '"& jablama &"', '"& jjlama &"', '"& divlama &"', '"& agen &"', '"& jabatan &"', '"& jenjang &"', '"& divisi &"' "
         ' Response.Write mutasi.commandText & "<br>"
-        mutasi.execute
+        set mutasi = mutasi.execute 
 
+        mutasiid = mutasi("ID")
     elseIf radioStatus = "1" then
         'karyawan demosi
         mutasi.commandText = "exec sp_ADDHRD_T_Mutasi '"& key &"', '"& nip &"', '"& pengajuan &"', '1', '"& nomor &"', '"& catatan &"', '"& agenlama &"', '"& jablama &"', '"& jjlama &"', '"& divlama &"', '"& agen &"', '"& jabatan &"', '"& jenjang &"', '"& divisi &"' "
         ' Response.Write mutasi.commandText & "<br>"
-        mutasi.execute
+        set mutasi = mutasi.execute 
 
-        'update demosi
-        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_DemosiYN = 'Y' WHERE Mut_Nip = '"& nip &"'"
+        mutasiid = mutasi("ID")
+
+        ' 'update demosi
+        ' mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_DemosiYN = 'Y' WHERE Mut_Nip = '"& nip &"'"
+        
         ' mutasi.execute
 
     elseIf radioStatus = "2" then
         'karyawan rotasi
         mutasi.commandText = "exec sp_ADDHRD_T_Mutasi '"& key &"', '"& nip &"', '"& pengajuan &"', '2', '"& nomor &"', '"& catatan &"', '"& agenlama &"', '"& jablama &"', '"& jjlama &"', '"& divlama &"', '"& agen &"', '"& jabatan &"', '"& jenjang &"', '"& divisi &"' "
         ' Response.Write mutasi.commandText & "<br>"
-        mutasi.execute
+        set mutasi = mutasi.execute 
+
+        mutasiid = mutasi("ID")
 
     elseIf radioStatus = "3" then
         'karyawan promorsi
         mutasi.commandText = "exec sp_ADDHRD_T_Mutasi '"& key &"', '"& nip &"', '"& pengajuan &"', '3', '"& nomor &"', '"& catatan &"', '"& agenlama &"', '"& jablama &"', '"& jjlama &"', '"& divlama &"', '"& agen &"', '"& jabatan &"', '"& jenjang &"', '"& divisi &"' "
         ' Response.Write mutasi.commandText & "<br>"
-        mutasi.execute
+        set mutasi = mutasi.execute 
 
-        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_DemosiYN = 'N' WHERE Mut_Nip = '"& nip &"'"
+        mutasiid = mutasi("ID")
 
-        ' mutasi.execute
+        ' mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_DemosiYN = 'N' WHERE Mut_Nip = '"& nip &"'"
+
+        ' set mutasi = mutasi.execute 
+
+        mutasiid = mutasi("ID")
 
     elseIf radioStatus = "4" then
         'karyawan pensiun
         mutasi.commandText = "exec sp_ADDHRD_T_Mutasi '"& key &"', '"& nip &"', '"& pengajuan &"', '4', '"& nomor &"', '"& catatan &"', '"& agenlama &"', '"& jablama &"', '"& jjlama &"', '"& divlama &"', '"& agen &"', '"& jabatan &"', '"& jenjang &"', '"& divisi &"' "
         ' Response.Write mutasi.commandText & "<br>"
-        mutasi.execute
+        set mutasi = mutasi.execute 
+
+        mutasiid = mutasi("ID")
     elseIf radioStatus = "5" then
         'karyawan keluartanpa kabar 
         mutasi.commandText = "exec sp_ADDHRD_T_Mutasi '"& key &"', '"& nip &"', '"& pengajuan &"', '5', '"& nomor &"', '"& catatan &"', '"& agenlama &"', '"& jablama &"', '"& jjlama &"', '"& divlama &"', '"& agen &"', '"& jabatan &"', '"& jenjang &"', '"& divisi &"' "
         ' Response.Write mutasi.commandText & "<br>"
-        mutasi.execute
-    else
-        Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Mohon Untuk Pilih Perubahan Status</span><img src='../logo/berhasil_dakota.PNG'><a href='"& url &"/forms' class='btn btn-primary'>kembali</a></div>"
-    end if
-    
-    Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data tersimpan</span><img src='../logo/berhasil_dakota.PNG'><a href='"& url &"/forms' class='btn btn-primary'>kembali</a></div>"
-else
-    Response.Write "<div class='notiv-gagal' data-aos='fade-up'><span>Data Sudah Terdaftar</span><img src='../logo/gagal_dakota.PNG'><a href='"& url &"/forms/view_tambah.asp' class='btn btn-primary'>kembali</a></div>"
-end if
+        set mutasi = mutasi.execute 
 
- %>
+        mutasiid = mutasi("ID")
+    else
+        Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Mohon Untuk Pilih Perubahan Status</span><img src='../logo/berhasil_dakota.PNG'><a href='view_tambah.asp' class='btn btn-primary'>kembali</a></div>"
+    end if
+
+    'updateLog system
+    ip = Request.ServerVariables("remote_addr") & " [" & session("lat") & "," & session("lon") & "]"
+    browser = Request.ServerVariables("http_user_agent")
+    dateTime = now()
+    eventt = "CREATE"
+    key = mutasiid
+    url = ""
+    if radioStatus = "" then
+        nameRadio = "MUTASI"
+    elseIf radioStatus = "1" then
+        nameRadio = "DEMOSI"
+    elseIf radioStatus = "2" then
+        nameRadio = "ROTASI"
+    elseIf radioStatus = "3" then
+        nameRadio = "PROMOSI"
+    elseIf radioStatus = "4" then
+        nameRadio = "PENSIUN"
+    else
+        nameRadio = "KELUAR TANPA SEBAB"
+    end if
+
+    keterangan = "TAMBAH "& nameRadio &" KARYAWAN ("& nip &") / UNTUK DIPROSES TANGGAL " & pengajuan
+    call updateLog(eventt,url,key,session("username"),session("server-id"),dateTime,ip,browser,keterangan) 
+
+    Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data tersimpan</span><img src='../logo/berhasil_dakota.PNG'><a href='view_tambah.asp' class='btn btn-primary'>kembali</a></div>"
+else
+    Response.Write "<div class='notiv-gagal' data-aos='fade-up'><span>Data Sudah Terdaftar</span><img src='../logo/gagal_dakota.PNG'><a href='view_tambah.asp' class='btn btn-primary'>kembali</a></div>"
+end if
+%>
+ 
 <!-- #include file='../layout/footer.asp' -->

@@ -156,13 +156,13 @@
             <div class="col-sm-7">
                 <input type="text" class="form-control form-control-sm" name="nama" id="nama" value="<%=nama %> " disabled>
             </div>
-    <div class='row mt-3'>
-        <div class='col'>
-            <%if session("HM9A") = true then%>
-                <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#modalMutasi" onclick="return tambahMutasi()">Tambah</button>
-            <%end if%>
+        <div class='row mt-3'>
+            <div class='col'>
+                <%if session("HM9A") = true then%>
+                    <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#modalMutasi" onclick="return tambahMutasi()">Tambah</button>
+                <%end if%>
+            </div>
         </div>
-    </div>
     </div>
     <div class='row contentDetail'>
         <div class='col content-table'>
@@ -443,14 +443,14 @@
     function validateMutasi(){
         let surat = $("#nosurat").val();
         let memo = $("#memo").val();
-        if(isLetter(surat) == false){
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Nomor Surat Harus Abjad/Number',
-            });
-            return false;
-        }
+        // if(isLetter(surat) == false){
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Oops...',
+        //         text: 'Nomor Surat Harus Abjad/Number',
+        //     });
+        //     return false;
+        // }
         if (isLetter(memo) == false){
             Swal.fire({
                 icon: 'error',

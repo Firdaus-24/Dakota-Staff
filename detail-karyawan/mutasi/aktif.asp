@@ -1,5 +1,6 @@
 <!-- #include file='../../connection.asp' -->
 <!-- #include file='../../layout/header.asp' -->
+<!-- #include file='../../updateHrdLog.asp' -->
 <% 
 dim id, p 
 dim tambah
@@ -20,6 +21,22 @@ else
     ' Response.Write tambah.commandText
     tambah.execute
 end if
-Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data Tersimpan</span><img src='../../logo/berhasil_dakota.PNG'><a href='"& url &"/detail-karyawan/mutasi.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"
+
+    'updateLog system
+    ip = Request.ServerVariables("remote_addr") & " [" & session("lat") & "," & session("lon") & "]"
+    browser = Request.ServerVariables("http_user_agent")
+    dateTime = now()
+    eventt = "DELETE"
+    key = id
+    url = ""
+    if p = "N" then
+        text = "AKTIF"
+    else
+        text = "NONAKTIF"
+    end if
+    keterangan = text &" MUTASI KARYAWAN ("& nip &") NOMOR MUTASI "& id
+    call updateLog(eventt,url,key,session("username"),session("server-id"),dateTime,ip,browser,keterangan) 
+
+Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data Tersimpan</span><img src='../../logo/berhasil_dakota.PNG'><a href='../mutasi.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"
  %>
 <!-- #include file='../../layout/footer.asp' -->

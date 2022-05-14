@@ -1,5 +1,6 @@
 <!-- #include file='../../connection.asp' -->
 <!-- #include file='../../layout/header.asp' -->
+<!-- #include file='../../updateHrdLog.asp' -->
 <% 
 dim tambah, mutasi
 dim nip, notrans, tgl, nosurat, memo, cabang, cabang1, jabatan, jabatan1, jenjang, jenjang1, divisi, divisi1
@@ -33,13 +34,27 @@ set tambah = Server.CreateObject("ADODB.Command")
 tambah.activeConnection = MM_Cargo_string
 
 tambah.commandText = "SELECT * FROM HRD_T_Mutasi WHERE Mut_Nip = '"& nip &"' and Mut_NoSurat = '"& nosurat &"' and Mut_Tanggal = '"& tgl &"' and Mut_Memo = '"& memo &"' AND Mut_AsalAgenID = '"& agen &"'"
-Response.Write tambah.commandText & "<br>"
+' Response.Write tambah.commandText & "<br>"
 set mutasi = tambah.execute
 
 if mutasi.eof then
     tambah.commandText = "exec sp_ADDHRD_T_Mutasi '"& key &"', '"& nip &"', '"& tgl &"', '', '"& nosurat &"', '"& memo &"', '"& agen &"', '"& jabatan &"', '"& jenjang &"', '"& divisi &"', '"& cabang1 &"', '"& jabatan1 &"', '"& jenjang1 &"', '"& divisi1 &"' "
-    Response.Write tambah.commandText
-    ' tambah.execute
+    ' Response.Write tambah.commandText
+    set data = tambah.execute
+
+    mutasiid = data("ID")
+
+    'updateLog system
+    ip = Request.ServerVariables("remote_addr") & " [" & session("lat") & "," & session("lon") & "]"
+    browser = Request.ServerVariables("http_user_agent")
+    dateTime = now()
+    eventt = "CREATE"
+    key = mutasiid
+    url = ""
+    nameRadio = "MUTASI"
+
+    keterangan = "TAMBAH "& nameRadio &" KARYAWAN ("& nip &") / UNTUK DIPROSES TANGGAL " & tgl
+    call updateLog(eventt,url,key,session("username"),session("server-id"),dateTime,ip,browser,keterangan) 
 
     Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data tersimpan</span><img src='../../logo/berhasil_dakota.PNG'><a href='"& url &"/detail-karyawan/mutasi.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"
 else
