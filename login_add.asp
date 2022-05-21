@@ -60,10 +60,5 @@ else
 		    Response.redirect ("dashboard.asp")
 		end if
 end if
- %>
- 
- 
- <% 
-
 
  %>

@@ -1,7 +1,7 @@
 <!-- #include file='../../connection.asp' -->
 <% 
-  if session("HA8DA") = false then 
-    Response.Redirect(url&"/transaksi/elektro/index.asp")
+  if session("HT2A") = false then 
+    Response.Redirect("index.asp")
   end if
 
   dim pinjaman_cmd,pinjaman, no, tgla, tgle, nama, nip, area, root
@@ -52,10 +52,10 @@
   set pinjaman_cmd = Server.CreateObject("ADODB.Command")
   pinjaman_cmd.activeConnection = mm_cargo_String
 
-  query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_T_PK.TPK_ID, HRD_T_PK.TPK_Tanggal, HRD_T_PK.TPK_Nip, HRD_T_PK.TPK_Ket, HRD_T_PK.TPK_PP, HRD_T_PK.TPK_Bunga, HRD_T_PK.TPK_Lama, HRD_T_PK.TPK_AktifYN FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_PK ON HRD_M_karyawan.Kry_Nip = HRD_T_PK.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE HRD_M_Karyawan.Kry_AktifYN = 'Y' AND HRD_T_PK.TPK_Ket LIKE '%elektronik ke-%' AND TPK_ID IS NOT NULL"
+  query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_T_PK_Elektronik.TPK_ID_Elektronik, HRD_T_PK_Elektronik.TPK_Tanggal, HRD_T_PK_Elektronik.TPK_Nip, HRD_T_PK_Elektronik.TPK_Ket, HRD_T_PK_Elektronik.TPK_PP, HRD_T_PK_Elektronik.TPK_Bunga, HRD_T_PK_Elektronik.TPK_Lama, HRD_T_PK_Elektronik.TPK_AktifYN, HRD_T_PK_Elektronik.TPK_PotongGajiYN, HRD_T_PK_Elektronik.TPK_PotongGajiYN FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_PK_Elektronik ON HRD_M_karyawan.Kry_Nip = HRD_T_PK_Elektronik.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE HRD_M_Karyawan.Kry_AktifYN = 'Y' AND TPK_ID_Elektronik IS NOT NULL"
 
   if tgla <> "" and tgle <> "" then
-    filterTgl = " AND HRD_T_PK.TPK_tanggal BETWEEN '"& Cdate(tgla) &"' AND '"& Cdate(tgle) &"'"
+    filterTgl = " AND HRD_T_PK_Elektronik.TPK_tanggal BETWEEN '"& Cdate(tgla) &"' AND '"& Cdate(tgle) &"'"
   else
     filterTgl = ""
   end if
@@ -71,7 +71,7 @@
   else
     filterArea = ""
   end if
-  orderBy = " ORDER BY HRD_T_PK.TPK_Tanggal DESC"
+  orderBy = " ORDER BY HRD_T_PK_Elektronik.TPK_Tanggal DESC"
 
   If ckTgl <> "" and ckNama <> "" then
     root = query + filterTgl + filterNama + orderBy
@@ -84,17 +84,16 @@
   elseIf ckNama <> "" then
     root = query + filterNama + orderBy
   elseIf ckArea <> "" then
-    root = query + filterAre + orderBy
+    root = query + filterArea + orderBy
   else
     root = query + orderBy
   end if  
 
   pinjaman_cmd.commandText = root
-  ' Response.Write pinjaman_cmd.commandText & "<br>"
   set pinjaman = pinjaman_cmd.execute
 
   ' select area aktif
-  agen_cmd.commandText = "SELECT Agen_id, Agen_Nama FROM GLB_M_Agen WHERE Agen_AktifYN = 'Y' ORDER BY Agen_Nama ASC"
+  agen_cmd.commandText = "SELECT Agen_id, Agen_Nama FROM HRD_M_Karyawan INNER JOIN HRD_T_PK_Elektronik ON HRD_M_Karyawan.Kry_Nip = HRD_T_PK_Elektronik.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON GLB_M_Agen.Agen_ID = HRD_M_Karyawan.Kry_AgenID WHERE GLB_M_Agen.Agen_AktifYN = 'Y' AND HRD_M_Karyawan.Kry_AktifYN = 'Y' GROUP BY Agen_id, Agen_Nama ORDER BY Agen_Nama ASC"
   set agen = agen_cmd.execute
 
   ' paggination
@@ -157,7 +156,7 @@
       lastrecord = 1
     end if	
   loop
- %>
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -175,9 +174,9 @@
         for (var i = 0; i < angkarev.length; i++) if (i % 3 === 0) rupiah += angkarev.substr(i, 3) + '.';
           return rupiah.split('', rupiah.length - 1).reverse().join('') + ',-';
       }
-      function aktifPinjaman(id,p) {
+      function aktifPinjaman(id,p,nip) {
         if (confirm("YAKIN UNTUK DI RUBAH??") === true ){
-          return window.location.href = "pinjaman_aktif.asp?id="+id+"&p="+p
+          return window.location.href = "pinjaman_aktif.asp?id="+id+"&p="+p+"&nip="+nip
         }else{
           return false;
         }
@@ -211,10 +210,10 @@
         $('#lama').val('');
         $('#cicilan').val('');
         $('#tpinjaman').val('');
-        
+        $("input:radio[name=potgaji]").prop('checked',false);
         $('.modal-body form').attr('action', 'pinjaman_add.asp');
       }
-      function updatePinjaman(i,j,k,l,m,n,o,p){
+      function updatePinjaman(i,j,k,l,m,n,o,p,q){
         // hitung cicilan
         let cicilan = 0;
         cicilan = n / p;
@@ -237,6 +236,9 @@
         $('#lama').val(p);
         $('#cicilan').val(format(cicilan));
         $('#tpinjaman').val(format(n));
+        $('#tpinjaman').val(format(n));
+        let potgaji = ((q == "Y") ? $("input:radio[name=potgaji][value='Y']").prop('checked',true) : $("input:radio[name=potgaji][value='N']").prop('checked',true) );
+
         $('.modal-body form').attr('action', 'pinjamanUpdate_add.asp');
       }
       function rupiah(nilai,nama) {
@@ -278,11 +280,21 @@
         
         let thutang =  parseInt(hutang.replace(/[^\w\s]/gi, ''));
 
-        tcicilan = thutang / lama;
-        if (!$('#lama').val()){
-          $('#cicilan').val("0");
+        if (hutang == ""){
+          Swal.fire(
+            'Heyy',
+            'Mohon untuk isi nominal pinjaman dahulu!!',
+            'error'
+          );
+            $('#cicilan').val("");
+            $('#lama').val("");
         }else{
-          $('#cicilan').val(format(Math.round(tcicilan)));
+          if(isNaN(lama)){
+            $('#cicilan').val(hutang);
+          }else{
+            tcicilan = thutang / lama;
+            $('#cicilan').val(format(Math.round(tcicilan)));
+          }
         }
 
         $("#tpinjaman").val(hutang);
@@ -313,13 +325,23 @@
         width:15px;
         margin-top:7px;
       }
-      @media only screen and (max-width: 600px){
-        #cariPenjaman{
-          margin-top:15px;
-        }
-        .modalPinjaman{
-          max-width:410px;
-        }
+      .tablePinjaman{
+        font-size:12px;
+        overflow-x:scroll;
+        display:block;
+      }
+      .tablePinjaman thead{
+        background-color:gray;
+        color:#fff;
+        border-color:#fff;
+        white-space: nowrap;
+      }
+      .btn-group button{
+        font-size:12px;
+      }
+      .tableKaryawanPinjam{
+        margin-top:-23px;
+        
       }
       #notifPinjaman{
         width:70%;
@@ -335,10 +357,13 @@
         left:50%;
         transform:translate(-50%, -50%);
       }
-      @media screen and (min-width: 676px) {
-          .modal-dialog {
-            max-width: 600px;
-          }
+      @media (min-width: 576px) {
+        .tablePinjaman{
+          font-size:14px;
+        }
+        .btn-group button{
+          font-size:14px;
+        }
       }
     </style>
 </head>
@@ -353,13 +378,15 @@
       <div class='col'>
         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
           <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='index.asp'"><i class="fa fa-backward" aria-hidden="true"></i> Kembali</button>
-          <% if session("HA8DA1") = true then %>
+          <% if session("HT2AA") = true then %>
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPimjaman" onclick="return tambahPinjaman()"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
           <%end if%>
-          <%if session("HA8DA4") = true then%>
-            <% if tgla <> "" OR tgle <> "" OR nama <> "" OR area <> "" then %>
-              <button type="button" class="btn btn-success btn-sm" onclick="window.open('Export-AllPinjaman.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&nama=<%=nama%>&area=<%=area%>&ckTgl=<%= ckTgl %>&ckNama=<%= ckNama %>&ckArea=<%= ckArea %>')"><i class="fa fa-print" aria-hidden="true"></i> Cetak</button>
-            <% end if %>
+          <%if not rs.eof then%>
+            <%if session("HT2AD") = true then%>
+              <% if tgla <> "" OR tgle <> "" OR nama <> "" OR area <> "" then %>
+                <button type="button" class="btn btn-success btn-sm" onclick="window.open('Export-AllPinjaman.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&nama=<%=nama%>&area=<%=area%>&ckTgl=<%= ckTgl %>&ckNama=<%= ckNama %>&ckArea=<%= ckArea %>')"><i class="fa fa-print" aria-hidden="true"></i> Cetak</button>
+              <% end if %>
+            <%end if%>
           <%end if%>
         </div>
       </div>
@@ -406,7 +433,7 @@
             </div>
             <label for="ckArea" class="col-sm-2 col-form-label">Area Aktif</label>
             <div class="col-sm-7">
-              <select class="form-select border-0" aria-label="Default select example" id="area" name="area">
+              <select class="form-select border-0" aria-label="Default select example" id="area" name="area"> 
                 <option value="">Pilih</option>
                 <% do until agen.eof %>
                   <option value="<%= agen("Agen_ID") %>"><%= agen("Agen_Nama") %></option>
@@ -417,7 +444,7 @@
               </select>
               <hr>
             </div>
-            <div class='col align-self-end'>
+            <div class='col align-self-end mt-3'>
               <button type="submit" class="btn btn-primary btn-sm" id="cariPenjaman"><i class="fa fa-search" aria-hidden="true"></i> cari</button>
             </div>
       </form>
@@ -435,7 +462,7 @@
     </div>
     <div class='row'>
         <div class='col'>
-            <table class="table">
+            <table class="table tablePinjaman">
             <thead class="bg-secondary text-light">
                 <tr>
                 <th scope="col">No</th>
@@ -446,7 +473,8 @@
                 <th scope="col">Bunga</th>
                 <th scope="col">Pinjaman</th>
                 <th scope="col">Aktif</th>
-                <%if session("HA8DA2") = true OR session("HA8DA3") = true OR session("HA8DA4") = true then%>
+                <th scope="col">PotGaji</th>
+                <%if session("HT2AB") = true OR session("HT2AC") = true OR session("HT2AD") = true then%>
                   <th scope="col" class="text-center">Aksi</th>
                 <%end if%>
                 </tr>
@@ -459,7 +487,7 @@
                 recordcounter = recordcounter + 1
                 %>
                 <tr>
-                    <th scope="row"><%= rs("TPK_ID") %></th>
+                    <th scope="row"><%= rs("TPK_ID_Elektronik") %></th>
                     <td><%= rs("TPK_Tanggal") %></td>
                     <td><%= rs("TPK_Nip") %></td>
                     <td><%= rs("Kry_Nama") %></td>
@@ -467,20 +495,21 @@
                     <td><%= rs("TPK_Bunga") %></td>
                     <td><%= replace(formatCurrency(rs("TPK_PP")),"$","") %></td>
                     <td><%if rs("TPK_AktifYN") = "Y" then %>Aktif <% else %> NonAktif <% end if %></td>
+                    <td><%if rs("TPK_PotongGajiYN") = "Y" then %>Yes <%else%>No <%end if%></td>
                     <td>
                       <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                        <%if session("HA8DA2") = true then%>
-                          <button type="button" class="btn btn-primary btn-sm py-0 px-2" onclick="return updatePinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_Nip") %>','<%= rs("TPK_Tanggal") %>','<%= rs("Kry_Nama") %>','<%= rs("TPK_ket") %>','<%= rs("TPK_pp") %>','<%= rs("TPK_Bunga") %>','<%= rs("TPK_lama") %>')" data-bs-toggle="modal" data-bs-target="#modalPimjaman">Edit</button>
+                        <%if session("HT2AB") = true then%>
+                          <button type="button" class="btn btn-primary btn-sm py-0 px-2" onclick="return updatePinjaman('<%=rs("TPK_ID_Elektronik")%>','<%= rs("TPK_Nip") %>','<%= rs("TPK_Tanggal") %>','<%= rs("Kry_Nama") %>','<%= rs("TPK_ket") %>','<%= rs("TPK_pp") %>','<%= rs("TPK_Bunga") %>','<%= rs("TPK_lama") %>','<%= rs("TPK_PotongGajiYN") %>')" data-bs-toggle="modal" data-bs-target="#modalPimjaman">Edit</button>
                         <%end if%>
-                        <%if session("HA8DA3") = true then%>
+                        <%if session("HT2AC") = true then%>
                           <% if rs("TPK_AktifYN") = "Y" then %>
-                            <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return aktifPinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">NonAktif</button>
+                            <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return aktifPinjaman('<%=rs("TPK_ID_Elektronik")%>','<%= rs("TPK_AktifYN") %>','<%= rs("TPK_Nip") %>')">NonAktif</button>
                           <% else %>
-                            <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return aktifPinjaman('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">Aktif</button>
+                            <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return aktifPinjaman('<%=rs("TPK_ID_Elektronik")%>','<%= rs("TPK_AktifYN") %>','<%= rs("TPK_Nip") %>')">Aktif</button>
                           <% end if %>
                         <% end if %>
-                        <%if session("HA8DA4") = true then%>
-                          <button type="button" class="btn btn-secondary btn-sm py-0 px-2" onclick="window.open('EXPORT-Pinjaman.asp?p=<%= rs("TPK_ID") %>')">Cetak</button>
+                        <%if session("HT2AD") = true then%>
+                          <button type="button" class="btn btn-secondary btn-sm py-0 px-2" onclick="window.open('EXPORT-Pinjaman.asp?p=<%= rs("TPK_ID_Elektronik") %>')">Cetak</button>
                         <%end if%>
                       </div>
                     </td>
@@ -637,6 +666,19 @@
             <input type="text" class="form-control form-control-sm" id="cicilan" name='cicilan' value="0" readonly>
           </div>
         </div>
+        <div class="row mb-3">
+          <label for="cicilan" class="col-sm-4 col-form-label col-form-label-sm">Potonga Gaji</label>
+          <div class="col-sm-4">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="potgaji" id="potgajiY" value="Y">
+              <label class="form-check-label" for="potgajiY">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="potgaji" id="potgajiN" value="N">
+              <label class="form-check-label" for="potgajiN">No</label>
+            </div>
+          </div>
+        </div>
       </div>
       
       <div class="modal-footer">
@@ -649,18 +691,16 @@
   </div>
 </div>
 <script>
-$('#nama').on('keyup', function (result) {
-     $.get(`cariKaryawan.asp?key=${$('#nama').val().toUpperCase().replace(' ', '%20')}`, function (data) {
-      $(".tableKaryawan").show();
-      $(".tableKaryawan").html(data);
-    });
-})
-function clickRadio(value1,value2){
-  $('#nip').val(value1);
-  $('#nama').val(value2);
-  $(".tableKaryawan").hide();
-}
+  $('#nama').on('keyup', function (result) {
+      $.get(`cariKaryawan.asp?key=${$('#nama').val().toUpperCase().replace(' ', '%20')}`, function (data) {
+        $(".tableKaryawan").show();
+        $(".tableKaryawan").html(data);
+      });
+  })
+  function clickRadio(value1,value2){
+    $('#nip').val(value1);
+    $('#nama').val(value2);
+    $(".tableKaryawan").hide();
+  }
 </script>
 <!-- #include file='../../layout/footer.asp' -->   
-
-<!-- #include file='../../layout/footer.asp' -->

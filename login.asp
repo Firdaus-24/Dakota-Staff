@@ -1,14 +1,14 @@
 <!-- #include file='nconnection.asp' -->
 <% 
-dim cabang_cmd, cabang
-session.Abandon()
+    dim cabang_cmd, cabang
+    session.Abandon()
 
-set cabang_cmd = Server.CreateObject("ADODB.Command")
-cabang_cmd.activeConnection = MM_Cargo_String
+    set cabang_cmd = Server.CreateObject("ADODB.Command")
+    cabang_cmd.activeConnection = MM_Cargo_String
 
-cabang_cmd.commandText = "SELECT agen_id, agen_nama FROM GLB_M_Agen WHERE Agen_AktifYN = 'Y' order by agen_nama"
-set cabang = cabang_cmd.execute
- %>
+    cabang_cmd.commandText = "SELECT agen_id, agen_nama FROM GLB_M_Agen WHERE Agen_AktifYN = 'Y' order by agen_nama"
+    set cabang = cabang_cmd.execute
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +18,6 @@ set cabang = cabang_cmd.execute
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <!-- #include file='layout/header.asp' -->
-    <link rel="stylesheet" href="<%= url %>/layout/font-awesome/css/font-awesome.min.css">
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
     body{

@@ -1,32 +1,48 @@
-<% 
-if session("username") = "" then
-response.Redirect("../../login.asp")
-end if
- %>
 <!-- #include file='../../connection.asp' -->
-<!-- #include file='../../constend/constanta.asp' -->
 <!-- #include file='../../layout/header.asp' -->
 <% 
+if session("HT2AB") = false then
+    response.Redirect("pinjaman.asp")
+end if
+
 dim update_cmd
 dim id, tgl, nip, keterangan, bunga, lama, kode,hutang, thutang
 
 id = Request.Form("id")
-nomor = Request.Form("nomor")
-tgl = Request.Form("tgl")
-nip = Request.Form("nip")
-hutang = replace(replace(replace(Request.Form("hutang"),".",""),"-",""),",","")
-thutang = replace(replace(replace(Request.Form("tpinjaman"),".",""),"-",""),",","")
-bunga = replace(replace(replace(Request.Form("bunga"),".",""),"-",""),",","")
-lama = Request.Form("lama")
+nomor = trim(Request.Form("nomor"))
+tgl = trim(Request.Form("tgl"))
+nip = trim(Request.Form("nip"))
+hutang = trim(replace(replace(replace(Request.Form("hutang"),".",""),"-",""),",",""))
+thutang = trim(replace(replace(replace(Request.Form("tpinjaman"),".",""),"-",""),",",""))
+bunga = trim(replace(replace(replace(Request.Form("bunga"),".",""),"-",""),",",""))
+lama = trim(Request.Form("lama"))
+potgaji = trim(Request.Form("potgaji"))
 
 set update_cmd = Server.CreateObject("ADODB.Command")
 update_cmd.activeConnection = mm_cargo_String
 
-update_cmd.commandText = "UPDATE HRD_T_PK SET TPK_ID = '"& nomor &"', TPK_Tanggal = '"& tgl &"', TPK_Nip = '"& nip &"', TPK_PP = '"& hutang &"', TPK_Bunga = '"& bunga &"', TPK_Lama = '"& lama &"', TPK_updateID = '"& id &"', TPK_UpdateTIme = '"& date() &"' WHERE TPK_ID = '"& nomor &"'"
-' Response.Write update_cmd.commandText
-update_cmd.execute
+update_cmd.commandText = "SELECT * FROM HRD_T_PK_Elektronik WHERE TPK_ID_Elektronik = '"& nomor &"' AND TPK_Nip = '"& nip &"' AND TPK_AktifYN = 'Y'"
+set data = update_cmd.execute
 
-Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data tersimpan</span><img src='../../logo/berhasil_dakota.PNG'><a href='pinjaman.asp' class='btn btn-primary'>kembali</a></div>"
+if not data.eof then
+    update_cmd.commandText = "UPDATE HRD_T_PK_Elektronik SET TPK_Tanggal = '"& tgl &"', TPK_PP = '"& hutang &"', TPK_Bunga = '"& bunga &"', TPK_Lama = '"& lama &"', TPK_updateID = '"& id &"', TPK_UpdateTIme = '"& date() &"', TPK_PotongGajiYN = '"& potgaji &"' WHERE TPK_ID_elektronik = '"& nomor &"'"
+    ' Response.Write update_cmd.commandText
+    update_cmd.execute
 
- %>
- <!-- #include file='../../layout/footer.asp' -->
+    'updateLog system
+    ip = Request.ServerVariables("remote_addr") & " [" & session("lat") & "," & session("lon") & "]"
+    browser = Request.ServerVariables("http_user_agent")
+    dateTime = now()
+    eventt = "UPDATE"
+    key = nomor
+    url = ""
+
+    keterangan = "UPDATE PINJAMAN BARANG KARYAWAN UNTUK NIP ("& nip &") DENGAN NOMOR "& nomor
+    call updateLog(eventt,url,key,session("username"),session("server-id"),dateTime,ip,browser,keterangan)
+
+    Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data tersimpan</span><img src='../../logo/berhasil_dakota.PNG'><a href='pinjaman.asp' class='btn btn-primary'>kembali</a></div>"
+else
+    Response.Write "<div class='notiv-gagal' data-aos='fade-up'><span>Data Tidak Terdaftar</span><img src='../../logo/gagal_dakota.PNG'><a href='pinjaman.asp' class='btn btn-primary'>kembali</a></div>"
+end if
+%>
+<!-- #include file='../../layout/footer.asp' -->

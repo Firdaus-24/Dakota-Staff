@@ -1,5 +1,9 @@
 <!-- #include file='../../connection.asp' -->
 <%  
+    if session("HT2AD") = false Then    
+        Response.Redirect("pinjaman.asp")
+    end if
+
     Response.ContentType = "application/vnd.ms-excel"
     Response.AddHeader "content-disposition", "filename=LAPORANPINJAMANBARANGELEKTRONIK.xls"
 
@@ -31,10 +35,10 @@
     set pinjaman_cmd = Server.CreateObject("ADODB.Command")
     pinjaman_cmd.activeConnection = mm_cargo_String
 
-    query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_M_Karyawan.Kry_Nip, HRD_M_Jabatan.Jab_Nama,HRD_T_PK.TPK_ID, HRD_T_PK.TPK_Tanggal, HRD_T_PK.TPK_Nip, HRD_T_PK.TPK_Ket, HRD_T_PK.TPK_PP, HRD_T_PK.TPK_Bunga, HRD_T_PK.TPK_Lama, HRD_T_PK.TPK_AktifYN, GLB_M_Agen.Agen_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_PK ON HRD_M_karyawan.Kry_Nip = HRD_T_PK.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID LEFT OUTER JOIN HRD_M_Jabatan ON HRD_M_karyawan.Kry_JabCode = HRD_M_Jabatan.Jab_Code WHERE HRD_M_Karyawan.Kry_AktifYN = 'Y' AND HRD_T_PK.TPK_Ket LIKE '%ELEKTRONIK KE%' AND TPK_ID IS NOT NULL"
+    query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_M_Karyawan.Kry_Nip, HRD_M_Jabatan.Jab_Nama,HRD_T_PK_Elektronik.TPK_ID_Elektronik, HRD_T_PK_Elektronik.TPK_Tanggal, HRD_T_PK_Elektronik.TPK_Nip, HRD_T_PK_Elektronik.TPK_Ket, HRD_T_PK_Elektronik.TPK_PP, HRD_T_PK_Elektronik.TPK_Bunga, HRD_T_PK_Elektronik.TPK_Lama, HRD_T_PK_Elektronik.TPK_AktifYN, GLB_M_Agen.Agen_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_PK_Elektronik ON HRD_M_karyawan.Kry_Nip = HRD_T_PK_Elektronik.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID LEFT OUTER JOIN HRD_M_Jabatan ON HRD_M_karyawan.Kry_JabCode = HRD_M_Jabatan.Jab_Code WHERE HRD_M_Karyawan.Kry_AktifYN = 'Y' AND HRD_T_PK_Elektronik.TPK_Ket LIKE '%ELEKTRONIK KE%' AND TPK_ID_Elektronik IS NOT NULL"
 
     if tgla <> "" and tgle <> "" then
-        filterTgl = " AND HRD_T_PK.TPK_tanggal BETWEEN '"& Cdate(tgla) &"' AND '"& Cdate(tgle) &"'"
+        filterTgl = " AND HRD_T_PK_Elektronik.TPK_tanggal BETWEEN '"& Cdate(tgla) &"' AND '"& Cdate(tgle) &"'"
     else
         filterTgl = ""
     end if
@@ -63,7 +67,7 @@
     elseIf ckNama <> "" then
         root = query + filterNama + orderBy
     elseIf ckArea <> "" then
-        root = query + filterAre + orderBy
+        root = query + filterArea + orderBy
     else
         root = query + orderBy
     end if   
@@ -110,7 +114,7 @@
             
         <tr >
             <td colspan="11" style="text-align: center;">
-                LAPORAN PINJAMAN KARYAWAN
+                LAPORAN PINJAMAN ELEKTRONIK
             </td>
         </tr>
         <tr>
@@ -152,7 +156,7 @@
                         <td><%= pinjaman("Kry_Nama") %></td>
                         <td><%= pinjaman("Jab_nama") %></td>
                         <td><%= pinjaman("TPK_Tanggal") %></td>
-                        <td style="mso-number-format:\@;"><%= pinjaman("TPK_ID") %></td>
+                        <td style="mso-number-format:\@;"><%= pinjaman("TPK_ID_Elektronik") %></td>
                         <td><%= pinjaman("TPK_Ket") %></td>
                         <td><%= Replace(FormatCurrency(pinjaman("TPK_PP")),"$","") %></td>
                         <td><%= Replace(FormatCurrency(pinjaman("TPK_Bunga")),"$","") %></td>

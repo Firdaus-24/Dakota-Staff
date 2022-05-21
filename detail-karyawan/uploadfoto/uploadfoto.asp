@@ -149,7 +149,7 @@ function onSubmitForm(objForm) {
     .upload img{
         max-width:15%;
         margin-top:-8%;
-         float: right;
+        float: right;
     }
 </style>
 
@@ -193,7 +193,7 @@ function onSubmitForm(objForm) {
         <li>Kami hanya menerima foto dalam bentuk format file *.jpg</li>
 
         <button type="button" onclick="window.location.href='tambah.asp'" class="btn btn-danger mt-4">Kembali</button>
-        <img src="Foto/Dakota_1.PNG">
+        <img src="../Foto/Dakota_1.PNG">
     </div>
 </div>
 <!-- #include file='../../layout/footer.asp' -->

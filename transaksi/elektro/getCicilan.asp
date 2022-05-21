@@ -8,12 +8,12 @@
     set cicilan_cmd = Server.CreateObject("ADODB.Command")
     cicilan_cmd.activeConnection = mm_cargo_string
 
-    cicilan_cmd.commandTExt = "SELECT COUNT(TPK_ID) + 1 AS ke FROM HRD_T_BK WHERE TPK_Ket LIKE '%"& key &"%'"
+    cicilan_cmd.commandTExt = "SELECT COUNT(TPK_ID_Elektronik) + 1 AS ke FROM HRD_T_BK_Elektronik WHERE TPK_Ket LIKE '%"& key &"%'"
     ' Response.Write cicilan_cmd.commandText & "<br>"
     set cicilan = cicilan_cmd.execute
 
 
-    tpk_cmd.commandText = "SELECT TPK_Lama FROM HRD_T_PK WHERE TPK_ID = '"& key &"'"
+    tpk_cmd.commandText = "SELECT TPK_Lama FROM HRD_T_PK_Elektronik WHERE TPK_ID_Elektronik = '"& key &"'"
     ' Response.Write tpk_cmd.commandText & "<br>"
     set tpk = tpk_cmd.execute
 

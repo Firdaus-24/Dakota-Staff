@@ -1,9 +1,4 @@
 <!-- #include file='../connection.asp' -->
-<% 
-if session("HA8") = false then
-  response.Redirect(url & "/dashboard.asp")
-end if
- %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +6,7 @@ end if
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRANSAKSI</title>
+    <title>KATEGORI</title>
     <!-- #include file='../layout/header.asp' -->
     <style>
       @import url('https://fonts.googleapis.com/css?family=Heebo:400,700|Open+Sans:400,700');
@@ -40,9 +35,9 @@ end if
         display: grid;
         justify-content: center;
         align-items: center;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-gap: 4rem;
-        padding: 4rem;
+        padding: 2rem;
         margin: 0 auto;
         width: max-content;
       }
@@ -51,8 +46,8 @@ end if
         font-family: 'Heebo';
         --bg-filter-opacity: 0.5;
         background-image: linear-gradient(rgba(0,0,0,var(--bg-filter-opacity)),rgba(0,0,0,var(--bg-filter-opacity))), var(--bg-img);
-        height: 20em;
-        width: 15em;
+        height: 15em;
+        width: 10em;
         font-size: 1.5em;
         color: white;
         border-radius: 1em;
@@ -62,11 +57,11 @@ end if
         align-items: flex-end;
         background-size: cover;
         background-position: center;
-        box-shadow: 0 0 5em -1em black;
+        box-shadow: 0 0 3em -1em black;
         transition: all, var(--transition-time);
         position: relative;
         overflow: hidden;
-        border: 10px solid #ccc;
+        border: 5px solid #ccc;
         text-decoration: none;
       }
 
@@ -210,16 +205,15 @@ end if
 <body>
 <!-- #include file='../landing.asp' -->
 <section class="info">
-  <h3 class="text-center">TRANSAKSI KARYAWAN</h3>
+  <h3 class="text-center">KATEGORI PROSES TRANSAKSI KARYAWAN</h3>
 </section>
 <section class="cards-wrapper">
-  <%if session("HA8A") = true then%>
+  <%if session("HT1") = true then%>
   <div class="card-grid-space">
-    <a class="card" href="pinjaman/pinjamanKaryawan.asp" style="--bg-img: url(../logo/dolarpinjaman.jpg)">
+    <a class="card" href="klaim" style="--bg-img: url(../logo/dolarpinjaman.jpg)">
       <div>
-        <h1>PINJAMAN KARYWAAN</h1>
+        <h2>KLAIM PINJAMAN</h2>
         <p>SEMUA RINCIAN PINJAMAN KARYAWAN</p>
-        <div class="date"><%= date %></div>
         <div class="tags">
           <div class="tag"><i class="fa fa-forward" aria-hidden="true"></i> NEXT</div>
         </div>
@@ -227,13 +221,12 @@ end if
     </a>
   </div>
   <%end if%>
-  <%if session("HA8B") = true then%>
+  <%if session("HT2") = true then%>
   <div class="card-grid-space">
-    <a class="card" href="pembayaran/index.asp" style="--bg-img: url('../logo/pembayaran.jpg')">
+    <a class="card" href="elektro" style="--bg-img: url(../logo/elektro.jpg)">
       <div>
-        <h1>PEMBAYARAN PINJAMAN KARYAWAN</h1>
-        <p>Rincian Pembayaran Pinjaman Karyawan Dakota Cargo</p>
-        <div class="date"><%= date %></div>
+        <h2>PINJAMAN ELEKTRONIK</h2>
+          <p>Proses untuk karyawan yang mengambil dan membayar barang barang elektronik</p>
         <div class="tags">
           <div class="tag"><i class="fa fa-forward" aria-hidden="true"></i> NEXT</div>
         </div>
@@ -241,13 +234,12 @@ end if
     </a>
   </div>
   <%end if%>
-  <%if session("HA8C") = true then%>
+  <%if session("HT3") = true then%>
   <div class="card-grid-space">
-    <a class="card" href="mutasi" style="--bg-img: url('../logo/mutasipinjaman.jpg')">
+    <a class="card" href="bank" style="--bg-img: url(../logo/bank.jpg)">
       <div>
-        <h1>MUTASI PINJAMAN KARYAWAN</h1>
-        <p>Rincian Mutasi Pinjaman Karyawan</p>
-        <div class="date"><%= date %></div>
+        <h2>PINJAMAN BANK</h2>
+        <p>Pinjaman karyawan ke bank</p>
         <div class="tags">
           <div class="tag"><i class="fa fa-forward" aria-hidden="true"></i> NEXT</div>
         </div>
@@ -255,28 +247,12 @@ end if
     </a>
   </div>
   <%end if%>
-  <%if session("HA8D") = true then%>
+  <%if session("HT4") = true then%>
   <div class="card-grid-space">
-    <a class="card" href="elektro/" style="--bg-img: url('../logo/elektro.jpg')">
+    <a class="card" href="personal" style="--bg-img: url(../logo/personal.jpg)">
       <div>
-        <h1>PINJAMAN DAN PEMBAYARAN BARANG ELEKTRONIK</h1>
-        <p>Proses ini hanya untuk karyawan yang mengambil dan membayar barang barang elektronik</p>
-        <div class="date"><%= date %></div>
-        <div class="tags">
-          <div class="tag"><i class="fa fa-forward" aria-hidden="true"></i> NEXT</div>
-        </div>
-      </div>
-    </a>
-  </div>
-  <%end if%>
-  <%if session("HA8E") = true then%>
-  <div class="card-grid-space">
-    <a class="card" href="proses.asp" style="--bg-img: url('../logo/prosestransaksi.jpg')">
-      <div>
-        <h1>PROSES PINJAMAN KARYAWAN</h1>
-        <p>WARNING!!</p>
-        <p>Sebelum Anda Cek Mutasi Pembayaran Mohon Untuk Proses Terlebih Dahulu</p>
-        <div class="date"><%= date %></div>
+        <h2>PINJAMAN PRIBADI</h2>
+        <p>Pinjaman Pribadi karyawan</p>
         <div class="tags">
           <div class="tag"><i class="fa fa-forward" aria-hidden="true"></i> NEXT</div>
         </div>

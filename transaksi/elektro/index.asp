@@ -1,7 +1,7 @@
 <!-- #include file='../../connection.asp' -->
 <%
-    if session("HA8D") = false then
-        Response.Redirect(url &"/transaksi/index.asp")
+    if session("HT2") = false then
+        Response.Redirect("../index.asp")
     end if
 %>
 <!DOCTYPE html>
@@ -23,37 +23,49 @@
         </div>
     </div>
     <div class="row">
-        <% if session("HA8DA") = true then%>
-        <div class="col-sm-4 mb-3 d-flex justify-content-center">
+        <% if session("HT2A") = true then%>
+        <div class="col-sm-3 mb-3 d-flex justify-content-center">
             <a href="pinjaman.asp">
                 <div class="card" style="background:url(../../logo/elektro1.jpg);background-size: cover;background-position: center; position: relative;">
                     <div class="card-body layer">
                         <h3 class="card-title">PINJAMAN BARANG</h3>
-                        <p>Detail data semua karyawan yang terdaftar pegambilan barang elektronik</p>
+                        <p>Detail data karyawan yang terdaftar pengambilan barang elektronik</p>
                     </div>
                 </div>
             </a>
         </div>
         <%end if%>
-        <%if session("HA8DB") = true then%>
-        <div class="col-sm-4 mb-3  d-flex justify-content-center" >
+        <%if session("HT2B") = true then%>
+        <div class="col-sm-3 mb-3  d-flex justify-content-center" >
             <a href="pembayaran.asp" >
                 <div class="card" style="background:url(../../logo/elektro2.jpg);background-size: cover;background-position: center; position: relative;">
                     <div class="card-body layer">
-                        <h3 class="card-title">PEMBAYARAN CICILAN</h3>
+                        <h3 class="card-title">PEMBAYARAN</h3>
                         <p>Detail data karyawan pembayaran cicilan</p>
                     </div>
                 </div>
-            </a>
+            </a>                                                                       
         </div>
         <%end if%>
-        <%if session("HA8DC") = true then%>
-        <div class="col-sm-4 mb-3  d-flex justify-content-center" >
-            <a href="laporan_elektro.asp" >
+        <%if session("HT2C") = true then%>
+        <div class="col-sm-3 mb-3  d-flex justify-content-center" >
+            <a href="mutasi.asp" >
                 <div class="card" style="background:url(../../logo/elektro4.jpg);background-size: cover;background-position: center; position: relative;">
                     <div class="card-body layer">
                         <h3 class="card-title">LAPORAN</h3>
                         <p>Detail Pengambilan dan pembayaran barang elektronik karyawan </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <%end if%>
+        <%if session("HT2D") = true then%>
+        <div class="col-sm-3 mb-3  d-flex justify-content-center" >
+            <a href="proses.asp" >
+                <div class="card" style="background:url(../../logo/elektroproses.jpg);background-size: cover;background-position: center; position: relative;">
+                    <div class="card-body layer">
+                        <h3 class="card-title">PROSES</h3>
+                        <p>Proses Pengambilan dan pembayaran barang elektronik karyawan </p>
                     </div>
                 </div>
             </a>

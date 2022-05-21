@@ -1,7 +1,7 @@
 <!-- #include file='../../connection.asp' -->
 <% 
-  if session("HA8DB") = false then
-    Response.Redirect(url&"/transaksi/elektro/index.asp")
+  if session("HT2B") = false then
+    Response.Redirect("index.asp")
   end if
 
   dim pembayaran_cmd, pembayaran
@@ -48,10 +48,10 @@
   end if
 
   ' setting default query 
-  query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_T_PK.TPK_ID, HRD_T_BK.TPK_ID, HRD_T_BK.TPK_Tanggal, HRD_T_BK.TPK_Nip, HRD_T_BK.TPK_Ket, HRD_T_BK.TPK_PP, HRD_T_BK.TPK_AktifYN, HRD_T_BK.TPK_UpdateID, HRD_T_BK.TPK_UpdateTime FROM HRD_M_Karyawan RIGHT OUTER JOIN HRD_T_BK ON HRD_M_karyawan.Kry_Nip = HRD_T_BK.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID LEFT OUTER JOIN HRD_T_PK ON SUBSTRING(HRD_T_BK.TPK_Ket,1,18) = HRD_T_PK.TPK_ID WHERE HRD_M_Karyawan.kry_AktifYN = 'Y' AND HRD_T_PK.TPK_Ket LIKE '%ELEKTRONIK%' "
+  query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_T_BK_Elektronik.TPK_ID_Elektronik, HRD_T_BK_Elektronik.TPK_Tanggal, HRD_T_BK_Elektronik.TPK_Nip, HRD_T_BK_Elektronik.TPK_Ket, HRD_T_BK_Elektronik.TPK_PP, HRD_T_BK_Elektronik.TPK_AktifYN, HRD_T_BK_Elektronik.TPK_UpdateID, HRD_T_BK_Elektronik.TPK_UpdateTime FROM HRD_M_Karyawan RIGHT OUTER JOIN HRD_T_BK_Elektronik ON HRD_M_karyawan.Kry_Nip = HRD_T_BK_Elektronik.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE HRD_M_Karyawan.kry_AktifYN = 'Y'" 
 
   if tgla <> "" And tgle <> "" then
-    filterTgl =  " AND HRD_T_BK.TPK_tanggal BETWEEN '"& Cdate(tgla) &"' AND '"& Cdate(tgle) &"'"
+    filterTgl =  " AND HRD_T_BK_Elektronik.TPK_tanggal BETWEEN '"& Cdate(tgla) &"' AND '"& Cdate(tgle) &"'"
   else 
     filterTgl = ""
   end if
@@ -67,7 +67,8 @@
   else
     filterArea = ""
   end if
-  orderBy = " GROUP BY HRD_M_Karyawan.Kry_Nama, HRD_T_BK.TPK_ID, HRD_T_PK.TPK_ID, HRD_T_BK.TPK_Tanggal, HRD_T_BK.TPK_Nip, HRD_T_BK.TPK_Ket, HRD_T_BK.TPK_PP, HRD_T_BK.TPK_AktifYN, HRD_T_BK.TPK_UpdateID, HRD_T_BK.TPK_UpdateTime ORDER BY HRD_T_BK.TPK_Tanggal DESC" 
+
+  orderBy = " ORDER BY HRD_T_BK_Elektronik.TPK_Tanggal DESC" 
 
   If ckTgl <> "" and ckNama <> "" then
     root = query + filterTgl + filterNama + orderBy
@@ -80,9 +81,9 @@
   elseIf ckNama <> "" then
     root = query + filterNama + orderBy
   elseIf ckArea <> "" then
-    root = query + filterAre + orderBy
+    root = query + filterArea + orderBy
   else
-    root = query 
+    root = query + orderBy
   end if  
 
   ' execute table data
@@ -90,10 +91,11 @@
   pembayaran_cmd.activeConnection = mm_cargo_string
 
   pembayaran_cmd.commandText = root
+  ' Response.Write pembayaran_cmd.commandText & "<br>"
   set pembayaran = pembayaran_cmd.execute
 
   ' pencarian berdasarkan agen
-  pembayaran_cmd.commandText = "SELECT Agen_id, Agen_Nama FROM HRD_M_Karyawan INNER JOIN HRD_T_BK ON HRD_M_Karyawan.Kry_Nip = HRD_T_BK.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON GLB_M_Agen.Agen_ID = HRD_M_Karyawan.Kry_AgenID WHERE GLB_M_Agen.Agen_AktifYN = 'Y' GROUP BY Agen_id, Agen_Nama ORDER BY Agen_Nama ASC"
+  pembayaran_cmd.commandText = "SELECT Agen_id, Agen_Nama FROM HRD_M_Karyawan INNER JOIN HRD_T_BK_Elektronik ON HRD_M_Karyawan.Kry_Nip = HRD_T_BK_Elektronik.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON GLB_M_Agen.Agen_ID = HRD_M_Karyawan.Kry_AgenID WHERE GLB_M_Agen.Agen_AktifYN = 'Y' GROUP BY Agen_id, Agen_Nama ORDER BY Agen_Nama ASC"
   set agen = pembayaran_cmd.execute
 
   ' paggination
@@ -156,7 +158,7 @@
       lastrecord = 1
     end if	
   loop
- %>
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -210,15 +212,15 @@
         $('#nip').val(nip);
         $('#nama').val(nama).attr("readonly", true);
         $('#cicilan').val(format(pp));
-        $("#pembayaranke").val(arraychar[0]);
+        $("#pembayaranke").val(arraychar[0].replace(/-/g,""));
         $("#inplama").val(arraychar[1]);
 
         $('.modal-body form').attr('action', 'update_pembayaran.asp');
 
       }
-      function aktifPembayaran(e,i){
+      function aktifPembayaran(e,i,nip){
         if (confirm("ANDA YAKIN UNTUK MERUBAH???") == true){
-          window.location.href="aktif_pembayaran.asp?p="+e+"&i="+i
+          window.location.href="aktif_pembayaran.asp?p="+e+"&i="+i+"&nip="+nip
         }
       }
       function getTgl(){
@@ -251,16 +253,30 @@
         width:15px;
         margin-top:7px;
       }
-      .col-form-label-sm {text-align: left;}
-      @media only screen and (max-width: 600px){
-        #cariPenjaman{
-          margin-top:15px;
-        }
-        .modalPinjaman{
-          max-width:410px;
-        }
+      .tablePembayaran{
+        font-size:12px;
+        overflow-x:scroll;
+        display:block;
       }
-      #notifPinjaman{
+      .tablePembayaran td{
+        padding:10px;
+        width:150px;
+      }
+      .tablePembayaran thead{
+        background-color:gray;
+        color:#fff;
+        border-color:#fff;
+        white-space: nowrap;
+        border:1px solid black;
+      }
+      .btn-group button{
+        font-size:12px;
+      }
+      .tableKaryawanPinjam{
+        margin-top:-23px;
+        
+      }
+      #notifPembayaran{
         width:70%;
         height:15vh;
         margin:auto;
@@ -268,16 +284,19 @@
         text-align: center;
         position:relative;
       }
-      #notifPinjaman h2{
+      #notifPembayaran h2{
         position:absolute;
         top:60%;
         left:50%;
         transform:translate(-50%, -50%);
       }
-      @media screen and (min-width: 676px) {
-          .modal-dialog {
-            max-width: 600px;
-          }
+      @media (min-width: 576px) {
+        .tablePembayaran{
+          font-size:14px;
+        }
+        .btn-group button{
+          font-size:14px;
+        }
       }
     </style>
 </head>
@@ -293,12 +312,14 @@
       <div class='col'>
         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
           <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='index.asp'"><i class="fa fa-backward" aria-hidden="true"></i> Kembali</button>
-          <%if session("HA8DB1") = true then%>
+          <%if session("HT2BA") = true then%>
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPembayaran" onclick="return tambahPembayaran()"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
           <%end if%>
-          <%if session("HA8DB4") = true then%>
-            <% if tgla <> "" OR tgle <> "" OR nama <> "" OR area <> "" then %>
-              <button type="button" class="btn btn-success btn-sm" onclick="window.open('Export-Allpembayaran.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&nip=<%=nip%>&nama=<%=nama%>&area=<%=area%>&ckTgl=<%=ckTgl%>&ckNama=<%=ckNama%>&ckArea=<%=ckArea%>')"><i class="fa fa-print" aria-hidden="true"></i> Cetak</button>
+          <%if not rs.eof then%>
+            <%if session("HT2BD") = true then%>
+              <% if tgla <> "" OR tgle <> "" OR nama <> "" OR area <> "" then %>
+                <button type="button" class="btn btn-success btn-sm" onclick="window.open('Export-Allpembayaran.asp?tgla=<%=tgla%>&tgle=<%=tgle%>&nip=<%=nip%>&nama=<%=nama%>&area=<%=area%>&ckTgl=<%=ckTgl%>&ckNama=<%=ckNama%>&ckArea=<%=ckArea%>')"><i class="fa fa-print" aria-hidden="true"></i> Cetak</button>
+              <% end if %>
             <% end if %>
           <% end if %>
         </div>
@@ -358,7 +379,7 @@
               </select>
               <hr>
             </div>
-            <div class='col align-self-end'>
+            <div class='col align-self-end mt-3'>
               <button type="submit" class="btn btn-primary btn-sm" id="cariPembayaran"><i class="fa fa-search" aria-hidden="true"></i> cari</button>
             </div>
       </form>
@@ -369,14 +390,14 @@
     <div class='row'>
       <div class='col text-center'>
         <% if rs.eof then%>
-          <div data-aos="zoom-out" data-aos-duration="1500" id="notifPinjaman"><h3>DATA TIDAK TERDAFTAR ATAU ANDA SALAH MEMASUKAN KEYWORD MOHON COBA KEMBALI</h3></div>
+          <div data-aos="zoom-out" data-aos-duration="1500" id="notifPembayaran"><h3>DATA TIDAK TERDAFTAR ATAU ANDA SALAH MEMASUKAN KEYWORD MOHON COBA KEMBALI</h3></div>
         <% else %>
       </div>
     </div>
 
     <div class='row'>
         <div class='col'>
-            <table class="table">
+            <table class="table tablePembayaran">
                 <thead class="bg-secondary text-light">
                     <tr>
                     <th scope="col">Nomor</th>
@@ -385,7 +406,7 @@
                     <th scope="col">Nama</th>
                     <th scope="col">Ketarangan</th>
                     <th scope="col">Aktif</th>
-                    <%if session("HA8DB2") = true OR session("HA8DB3") = true OR session("HA8DB4") = true then%>
+                    <%if session("HT2BB") = true OR session("HT2BC") = true OR session("HT2BD") = true then%>
                       <th scope="col" class="text-center">Aksi</th>
                     <%end if%>
                     </tr>
@@ -398,7 +419,7 @@
                 recordcounter = recordcounter + 1
                 %>
                 <tr>
-                    <th><%= rs("TPK_ID") %></th>
+                    <th><%= rs("TPK_ID_Elektronik") %></th>
                     <td><%= rs("TPK_Tanggal") %></td>
                     <td><%= rs("TPK_Nip") %></td>
                     <td><%= rs("Kry_Nama") %></td>
@@ -410,20 +431,20 @@
                         No
                       <% end if %>
                     </td>
-                    <td>
+                    <td class="text-center">
                       <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                        <%if session("HA8DB2") = true then%>
-                          <button type="button" class="btn btn-primary btn-sm py-0 px-2" onclick="return updatePembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_tanggal") %>','<%= rs("TPK_Nip") %>','<%= rs("Kry_Nama") %>','<%= rs("TPK_Ket") %>','<%= rs("TPK_PP") %>')" data-bs-toggle="modal" data-bs-target="#modalPembayaran">Edit</button>
+                        <%if session("HT2BB") = true then%>
+                          <button type="button" class="btn btn-primary btn-sm py-0 px-2" onclick="return updatePembayaran('<%=rs("TPK_ID_Elektronik")%>','<%= rs("TPK_tanggal") %>','<%= rs("TPK_Nip") %>','<%= rs("Kry_Nama") %>','<%= rs("TPK_Ket") %>','<%= rs("TPK_PP") %>')" data-bs-toggle="modal" data-bs-target="#modalPembayaran">Edit</button>
                         <%end if%>
-                        <%if session("HA8DB3") = true then%>
+                        <%if session("HT2BC") = true then%>
                           <% if rs("TPK_AktifYN") = "Y" then %>
-                            <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return aktifPembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">NonAktif</button>
+                            <button type="button" class="btn btn-danger btn-sm py-0 px-2" onclick="return aktifPembayaran('<%=rs("TPK_ID_Elektronik")%>','<%= rs("TPK_AktifYN") %>', '<%= rs("TPK_Nip") %>')">NonAktif</button>
                           <% else %>
-                            <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return aktifPembayaran('<%=rs("TPK_ID")%>','<%= rs("TPK_AktifYN") %>')">Aktif</button>
+                            <button type="button" class="btn btn-warning btn-sm py-0 px-2" onclick="return aktifPembayaran('<%=rs("TPK_ID_Elektronik")%>','<%= rs("TPK_AktifYN") %>', '<%= rs("TPK_Nip") %>')">Aktif</button>
                           <% end if %>
                         <% end if %>
-                        <%if session("HA8DB4") = true then%>
-                          <button type="button" class="btn btn-secondary btn-sm py-0 px-2" onclick="window.open('EXPORT-Pembayaran.asp?p=<%= rs("TPK_ID") %>')">Cetak</button>
+                        <%if session("HT2BD") = true then%>
+                          <button type="button" class="btn btn-secondary btn-sm py-0 px-2" onclick="window.open('EXPORT-Pembayaran.asp?p=<%= rs("TPK_ID_Elektronik") %>')">Cetak</button>
                         <%end if%>
                       </div>
                     </td>
@@ -590,13 +611,16 @@
 <script>
     // seach nama karyawan
     $('#nama').on('keyup', function (result) {
+        if ($("#nama").val() == "" ){
+          $(".tableKaryawan").hide();
+        }else{
           $.get(`cari_karyawan_pinjam.asp?key=${$('#nama').val().toUpperCase().replace(' ', '%20')}`, function (data) {
             $(".tableKaryawan").show();
             $(".tableKaryawan").html(data);
           });
+        }
     });
     function clickRadio(value1,value2){
-      // console.log(value1);
       $.get(`c_pinjaman.asp?nip=${value2}`, function (data) {
           $(".cariKeterangan").show();
           $(".cariKeterangan").html(data);

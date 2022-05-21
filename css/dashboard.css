@@ -22,19 +22,20 @@
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
-  --bs-gradient: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.15),
-    rgba(255, 255, 255, 0)
-  );
+  --bs-gradient: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0));
 }
+
 @font-face {
   font-family: "valorant";
   src: url("../layout/font/valorant.ttf");
 }
+
 #carouselExampleFade {
   height: 550px;
 }
+
 section .akun {
   position: fixed;
   right: 0;
@@ -46,6 +47,7 @@ section .akun {
   background-color: var(--bs-gray);
   z-index: 100;
 }
+
 section .akun i {
   position: absolute;
   color: #fff;
@@ -53,6 +55,7 @@ section .akun i {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 .carousel-control-next,
 .carousel-control-prev {
   position: absolute;
@@ -69,6 +72,7 @@ section .akun i {
   opacity: 0;
   transition: opacity 0.15s ease;
 }
+
 .container h3 {
   font-family: "valorant";
   color: #fff;
@@ -77,41 +81,50 @@ section .akun i {
   font-size: 40px;
   margin: -5px;
 }
+
 .loaderdasboard {
   padding: 5px;
   top: 5px;
 }
+
 .loaderdasboard img {
   position: absolute;
   top: -2px;
   left: 10;
   display: none;
 }
+
 section {
   position: relative;
   width: 100%;
   padding: 20px;
-  background: var(--bs-blue);
+  background: slategray;
   overflow: hidden;
 }
+
 .card-setcuti {
   background-color: var(--bs-orange);
 }
+
 .card-laporan {
   background-color: var(--bs-indigo);
   position: relative;
 }
+
 .card-convert {
   background-color: var(--bs-danger);
   position: relative;
 }
+
 .card-gaji {
   background-color: var(--bs-success);
   position: relative;
 }
+
 .card-title {
   position: relative;
 }
+
 /* style icon card */
 .card-laporan #reportlogo {
   font-size: 110px;
@@ -120,6 +133,7 @@ section {
   top: 65px;
   color: #510bc4;
 }
+
 .card-convert #reportlogo {
   font-size: 110px;
   position: absolute;
@@ -127,6 +141,7 @@ section {
   top: 58px;
   color: #ba202f;
 }
+
 .card-gaji #reportlogo {
   font-size: 120px;
   position: absolute;
@@ -134,6 +149,7 @@ section {
   top: 58px;
   color: #146c43;
 }
+
 .card-setcuti #reportlogo {
   font-size: 120px;
   position: absolute;
@@ -141,18 +157,22 @@ section {
   top: 58px;
   color: #e46a00;
 }
+
 /* end style */
 .card-text {
   position: relative;
 }
+
 .laporanCuti {
   border-color: var(--bs-pink);
   background-color: var(--bs-pink);
 }
+
 .laporanCuti:hover {
   border-color: var(--bs-pinkTua);
   background-color: var(--bs-pinkTua);
 }
+
 /* button laporan */
 .buttonLaporan {
   position: relative;
@@ -161,7 +181,8 @@ section {
   padding: 7px;
   width: 90px;
   text-align: center;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
+  /* Safari */
   transition-duration: 0.4s;
   text-decoration: none;
   overflow: hidden;
@@ -192,6 +213,7 @@ section {
   opacity: 1;
   transition: 0s;
 }
+
 /* end button laporan */
 /* button convert */
 .buttonConvert {
@@ -201,7 +223,8 @@ section {
   padding: 7px;
   width: 90px;
   text-align: center;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
+  /* Safari */
   transition-duration: 0.4s;
   text-decoration: none;
   overflow: hidden;
@@ -232,6 +255,7 @@ section {
   opacity: 1;
   transition: 0s;
 }
+
 /* end button convert */
 
 /* button  hapus gaji */
@@ -242,7 +266,8 @@ section {
   padding: 7px;
   width: 90px;
   text-align: center;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
+  /* Safari */
   transition-duration: 0.4s;
   text-decoration: none;
   overflow: hidden;
@@ -273,6 +298,7 @@ section {
   opacity: 1;
   transition: 0s;
 }
+
 /* end button gaji */
 /* button set gaji */
 .setGaji {
@@ -282,7 +308,8 @@ section {
   padding: 7px;
   width: 90px;
   text-align: center;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
+  /* Safari */
   transition-duration: 0.4s;
   text-decoration: none;
   overflow: hidden;
@@ -313,6 +340,7 @@ section {
   opacity: 1;
   transition: 0s;
 }
+
 /* end button set gaji */
 /* button set cuti */
 .setCuti {
@@ -322,7 +350,8 @@ section {
   padding: 7px;
   width: 90px;
   text-align: center;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
+  /* Safari */
   transition-duration: 0.4s;
   text-decoration: none;
   overflow: hidden;
@@ -353,12 +382,14 @@ section {
   opacity: 1;
   transition: 0s;
 }
+
 /* end button */
 /* setmutasi */
 .card-mutasi {
   background-color: var(--bs-coklat);
   position: relative;
 }
+
 .card-mutasi #reportlogo {
   font-size: 120px;
   position: absolute;
@@ -366,6 +397,7 @@ section {
   top: 58px;
   color: #cc7000;
 }
+
 .setMutasi {
   position: relative;
   background-color: var(--bs-orange);
@@ -374,7 +406,8 @@ section {
   padding: 7px;
   width: 90px;
   text-align: center;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
+  /* Safari */
   transition-duration: 0.4s;
   text-decoration: none;
   overflow: hidden;
@@ -405,6 +438,7 @@ section {
   opacity: 1;
   transition: 0s;
 }
+
 /* end mutasi */
 
 /* setbpjs */
@@ -412,6 +446,7 @@ section {
   background-color: var(--bs-tomato);
   position: relative;
 }
+
 .card-bpjs #reportlogo {
   font-size: 120px;
   position: absolute;
@@ -419,6 +454,7 @@ section {
   top: 42px;
   color: #fd5133;
 }
+
 .setbpjs {
   position: relative;
   background-color: #fd5133;
@@ -427,7 +463,8 @@ section {
   padding: 7px;
   width: 90px;
   text-align: center;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
+  /* Safari */
   transition-duration: 0.4s;
   text-decoration: none;
   overflow: hidden;
@@ -458,6 +495,7 @@ section {
   opacity: 1;
   transition: 0s;
 }
+
 /* end bpjs */
 
 /* atasan */
@@ -466,6 +504,7 @@ section {
   background-color: #000080;
   position: relative;
 }
+
 .card-atasan #reportlogo {
   font-size: 120px;
   position: absolute;
@@ -473,6 +512,7 @@ section {
   top: 42px;
   color: #020255;
 }
+
 .setatasan {
   position: relative;
   background-color: #020255;
@@ -481,19 +521,20 @@ section {
   padding: 7px;
   width: 90px;
   text-align: center;
-  -webkit-transition-duration: 0.4s; /* Safari */
+  -webkit-transition-duration: 0.4s;
+  /* Safari */
   transition-duration: 0.4s;
   text-decoration: none;
   overflow: hidden;
 }
 
-.setbpjs:hover {
+.setatasan:hover {
   background: #fff;
   box-shadow: 0px 2px 10px 5px #97b1bf;
   color: #000;
 }
 
-.setbpjs:after {
+.setatasan:after {
   content: "";
   background: #fd5133;
   display: block;
@@ -506,12 +547,53 @@ section {
   transition: all 0.8s;
 }
 
-.setbpjs:active:after {
+.setatasan:active:after {
   padding: 0;
   margin: 0;
   opacity: 1;
   transition: 0s;
 }
+
+.importFile {
+  position: relative;
+  background-color: #660000;
+  border: none;
+  color: #fff;
+  padding: 7px;
+  width: 90px;
+  text-align: center;
+  -webkit-transition-duration: 0.4s;
+  /* Safari */
+  transition-duration: 0.4s;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.importFile:hover {
+  background: #fff;
+  box-shadow: 0px 2px 10px 5px #97b1bf;
+  color: #000;
+}
+
+.importFile:after {
+  content: "";
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s;
+}
+
+.importFile:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s;
+}
+
 /* end bpjs */
 /* end atasan */
 
@@ -535,14 +617,30 @@ section {
   margin-top: 0.5rem;
 }
 
+.setbpjs {
+  position: relative;
+  background-color: #fd5133;
+  border: none;
+  color: #fff;
+  padding: 7px;
+  width: 90px;
+  text-align: center;
+  -webkit-transition-duration: 0.4s;
+  /* Safari */
+  transition-duration: 0.4s;
+  text-decoration: none;
+  overflow: hidden;
+}
+
 @media only screen and (max-width: 600px) {
   section {
     position: relative;
     width: 100%;
     /* height:100vh; */
-    background: #3586ff;
+    background: slategray;
     overflow: hidden;
   }
+
   .card-laporan #reportlogo {
     font-size: 130px;
     position: absolute;
@@ -550,6 +648,7 @@ section {
     top: 55px;
     color: #510bc4;
   }
+
   .container h3 {
     font-family: "valorant";
     color: #fff;
@@ -558,10 +657,12 @@ section {
     font-size: 30px;
     margin: -5px;
   }
+
   .footer-content .row h4 {
     font-size: 15px;
   }
 }
+
 /* for tablet */
 @media (min-width: 768px) {
   .card {

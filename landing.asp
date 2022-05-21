@@ -10,7 +10,7 @@
           <% end if %>
         </li>
         <li class="icon-item" style="margin-right:25px;padding:0;">
-         <% if session("HA1") = true then %>
+          <% if session("HA1") = true then %>
           <a href="<%=url%>/index.asp" class="icon-link" style="display:flex;flex-direction:row;width: 178px;">
             <i class="fa fa-users" aria-hidden="true"></i>MASTER KARYAWAN
           </a>

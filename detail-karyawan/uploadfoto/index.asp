@@ -1,5 +1,4 @@
 ﻿<%@ Language=VBScript %>
-
 <% 
 option explicit 
 Response.Expires = -1
@@ -10,19 +9,20 @@ Server.ScriptTimeout = 600
 ' ****************************************************
 ' Change the value of the variable below to the pathname
 ' of a directory with write permissions, for example "C:\Inetpub\wwwroot"
-  Dim uploadsDirVar
- dim area
+Dim uploadsDirVar
+dim area
 	area = request("area")
 	if area = "" then
 		response.AddHeader "REFRESH","0:URL=index.asp?nip=000000000"
 	end if
 
-  uploadsDirVar = "D:\newsite\hrd\Foto\"
-  
+uploadsDirVar = "D:\newsite\hrd\Foto\"
+
 ' ****************************************************
 
-dim ID
+dim ID, nip
 id = request.querystring("id")
+nip = Request.QueryString("nip")
 
 function OutputForm()
 
@@ -84,15 +84,12 @@ function SaveFiles
             SaveFiles = SaveFiles & Upload.UploadedFiles(fileKey).FileName & " (" & Upload.UploadedFiles(fileKey).Length & "B) "
 			
         next
+		Response.Redirect("logFoto.asp?nip="&nip)
     else
         SaveFiles = "The file name specified in the upload form does not correspond to a valid file in the system."
     end if
 	
 end function
-
-dim nip
-nip = Request.QueryString("nip")
-
 %>
 <HTML>
 <HEAD>
@@ -162,7 +159,7 @@ function onSubmitForm(objForm) {
     .upload img{
         max-width:15%;
         margin-top:-8%;
-         float: right;
+        float: right;
     }
 </style>
 
@@ -213,7 +210,7 @@ function onSubmitForm(objForm) {
         <li>Kami hanya menerima foto dalam bentuk format file *.jpg</li>
 
         <button type="button" onclick="window.location.href='../index.asp?nip=<%= nip %>'" class="btn btn-danger mt-4">Kembali</button>
-        <img src="../../Foto/Dakota_1.PNG">
+        <img src="../Foto/Dakota_1.PNG">
     </div>
 </div>
 </body>
@@ -313,7 +310,6 @@ Class FreeASPUpload
 			streamFile.close
 			Set streamFile = Nothing
 			fileItem.Path = path & fileItem.FileName
-		 
 		Next
 	End Sub
 	
@@ -360,7 +356,7 @@ Class FreeASPUpload
 			response.write "Type: " & f.ContentType & "<br>"
 			response.write "Start: " & f.Start & "<br>"
 			response.write "Size: " & f.Length & "<br>"
-		 Next
+		Next
    	End Sub
 
 	Public Sub Upload()
@@ -625,5 +621,4 @@ Function GetFileName(strSaveToPath, FileName)
         End If
     Loop
 End Function 
- 
 %>

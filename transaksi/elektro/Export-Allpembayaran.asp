@@ -1,5 +1,8 @@
 <!-- #include file='../../connection.asp' -->
 <% 
+    if session("HT2BD") = false then
+        Response.Redirect("pembayaran.asp")
+    end if 
     Response.ContentType = "application/vnd.ms-excel"
     Response.AddHeader "content-disposition", "filename=LAPORANPEMBAYARANELEKTRONIK.xls"
 
@@ -14,10 +17,10 @@
     area = Request.QueryString("area")
 
     ' setting default query 
-    query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_T_PK.TPK_ID, HRD_T_BK.TPK_ID, HRD_T_BK.TPK_Tanggal, HRD_T_BK.TPK_Nip, HRD_T_BK.TPK_Ket, HRD_T_BK.TPK_PP, HRD_T_BK.TPK_AktifYN, HRD_T_BK.TPK_UpdateID, HRD_T_BK.TPK_UpdateTime FROM HRD_M_Karyawan RIGHT OUTER JOIN HRD_T_BK ON HRD_M_karyawan.Kry_Nip = HRD_T_BK.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID LEFT OUTER JOIN HRD_T_PK ON SUBSTRING(HRD_T_BK.TPK_Ket,1,18) = HRD_T_PK.TPK_ID WHERE HRD_M_Karyawan.kry_AktifYN = 'Y' AND HRD_T_PK.TPK_Ket LIKE '%ELEKTRONIK%' "
+    query = "SELECT HRD_M_Karyawan.Kry_Nama, HRD_T_PK_Elektronik.TPK_ID_Elektronik, HRD_T_BK_Elektronik.TPK_ID_Elektronik, HRD_T_BK_Elektronik.TPK_Tanggal, HRD_T_BK_Elektronik.TPK_Nip, HRD_T_BK_Elektronik.TPK_Ket, HRD_T_BK_Elektronik.TPK_PP, HRD_T_BK_Elektronik.TPK_AktifYN, HRD_T_BK_Elektronik.TPK_UpdateID, HRD_T_BK_Elektronik.TPK_UpdateTime FROM HRD_M_Karyawan RIGHT OUTER JOIN HRD_T_BK_Elektronik ON HRD_M_karyawan.Kry_Nip = HRD_T_BK_Elektronik.TPK_Nip LEFT OUTER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID LEFT OUTER JOIN HRD_T_PK_Elektronik ON SUBSTRING(HRD_T_BK_Elektronik.TPK_Ket,1,18) = HRD_T_PK_Elektronik.TPK_ID_Elektronik WHERE HRD_M_Karyawan.kry_AktifYN = 'Y' AND HRD_T_PK_Elektronik.TPK_Ket LIKE '%ELEKTRONIK%' "
 
     if tgla <> "" And tgle <> "" then
-        filterTgl =  " AND HRD_T_BK.TPK_tanggal BETWEEN '"& Cdate(tgla) &"' AND '"& Cdate(tgle) &"'"
+        filterTgl =  " AND HRD_T_BK_Elektronik.TPK_tanggal BETWEEN '"& Cdate(tgla) &"' AND '"& Cdate(tgle) &"'"
     else 
         filterTgl = ""
     end if
@@ -33,7 +36,7 @@
     else
         filterArea = ""
     end if
-    orderBy = " GROUP BY HRD_M_Karyawan.Kry_Nama, HRD_T_BK.TPK_ID, HRD_T_PK.TPK_ID, HRD_T_BK.TPK_Tanggal, HRD_T_BK.TPK_Nip, HRD_T_BK.TPK_Ket, HRD_T_BK.TPK_PP, HRD_T_BK.TPK_AktifYN, HRD_T_BK.TPK_UpdateID, HRD_T_BK.TPK_UpdateTime ORDER BY HRD_T_BK.TPK_Tanggal DESC" 
+    orderBy = " GROUP BY HRD_M_Karyawan.Kry_Nama, HRD_T_BK_Elektronik.TPK_ID_Elektronik, HRD_T_PK_Elektronik.TPK_ID_Elektronik, HRD_T_BK_Elektronik.TPK_Tanggal, HRD_T_BK_Elektronik.TPK_Nip, HRD_T_BK_Elektronik.TPK_Ket, HRD_T_BK_Elektronik.TPK_PP, HRD_T_BK_Elektronik.TPK_AktifYN, HRD_T_BK_Elektronik.TPK_UpdateID, HRD_T_BK_Elektronik.TPK_UpdateTime ORDER BY HRD_T_BK_Elektronik.TPK_Tanggal DESC" 
 
     If ckTgl <> "" and ckNama <> "" then
         root = query + filterTgl + filterNama + orderBy
@@ -103,8 +106,8 @@
             <td style="font-size:10px;" colspan="6">Tanggal Cetak <%= (Now) %></td>
         </tr>
         <tr>
-            <th>No.Peminjaman</th>
-            <th>Tgl.Peminjaman</th>
+            <th>No.Pembayaran</th>
+            <th>Tgl.Pembayaran</th>
             <th>NIP</th>
             <th>Nama</th>
             <th>Ketarangan</th>
@@ -113,7 +116,7 @@
         <tbody>
         <% do until print.eof %>
             <tr>
-                <th style="mso-number-format:\@;"><%= print("TPK_ID") %></th>
+                <th style="mso-number-format:\@;"><%= print("TPK_ID_Elektronik") %></th>
                 <td><%= print("TPK_Tanggal") %></td>
                 <td style="mso-number-format:\@;"><%= print("TPK_Nip") %></td>
                 <td><%= print("Kry_Nama") %></td>

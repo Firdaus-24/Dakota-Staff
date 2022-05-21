@@ -1,21 +1,25 @@
 <!-- #include file='../../connection.asp' -->
 <% 
-dim p 
-dim pinjaman, cicilan
+    if session("HT2AD") = false then
+        Response.Redirect("pinjaman.asp")
+    end if
+    
+    dim p 
+    dim pinjaman, cicilan
 
-p = Request.QueryString("p")
+    p = Request.QueryString("p")
 
-' Response.ContentType = "application/vnd.ms-excel"
-' Response.AddHeader "content-disposition", "filename=LAPORAN PINJAMAN " & p & ".xls"
+    ' Response.ContentType = "application/vnd.ms-excel"
+    ' Response.AddHeader "content-disposition", "filename=LAPORAN PINJAMAN " & p & ".xls"
 
-set pinjaman = Server.CreateObject("ADODB.Command")
-pinjaman.activeConnection = mm_cargo_String
+    set pinjaman = Server.CreateObject("ADODB.Command")
+    pinjaman.activeConnection = mm_cargo_String
 
-pinjaman.commandText = "SELECT HRD_T_PK.*, HRD_M_Karyawan.Kry_Nama, HRD_M_Jabatan.Jab_Nama, GLB_M_Agen.Agen_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_PK ON HRD_M_Karyawan.Kry_Nip = HRD_T_PK.TPK_Nip LEFT OUTER JOIN HRD_M_Jabatan ON HRD_M_Karyawan.Kry_JabCode = HRD_M_Jabatan.Jab_Code LEFT OUTER JOIN GLB_M_agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE HRD_T_PK.TPK_ID = '"& p &"'"
-set pinjaman = pinjaman.execute
+    pinjaman.commandText = "SELECT HRD_T_PK_Elektronik.*, HRD_M_Karyawan.Kry_Nama, HRD_M_Jabatan.Jab_Nama, GLB_M_Agen.Agen_Nama FROM HRD_M_Karyawan LEFT OUTER JOIN HRD_T_PK_Elektronik ON HRD_M_Karyawan.Kry_Nip = HRD_T_PK_Elektronik.TPK_Nip LEFT OUTER JOIN HRD_M_Jabatan ON HRD_M_Karyawan.Kry_JabCode = HRD_M_Jabatan.Jab_Code LEFT OUTER JOIN GLB_M_agen ON HRD_M_Karyawan.Kry_AgenID = GLB_M_Agen.Agen_ID WHERE HRD_T_PK_Elektronik.TPK_ID_Elektronik = '"& p &"'"
+    set pinjaman = pinjaman.execute
 
-cicilan = pinjaman("TPK_PP") / pinjaman("TPK_Lama")
- %>
+    cicilan = pinjaman("TPK_PP") / pinjaman("TPK_Lama")
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,7 +48,7 @@ cicilan = pinjaman("TPK_PP") / pinjaman("TPK_Lama")
         <tr>
             <td>No.Peminjaman</td>
             <td>:</td>
-            <td style="mso-number-format:\@;"><%= pinjaman("TPK_ID") %></td>
+            <td style="mso-number-format:\@;"><%= pinjaman("TPK_ID_Elektronik") %></td>
         </tr>
         <tr>
             <td>Tgl.Peminjaman</td>

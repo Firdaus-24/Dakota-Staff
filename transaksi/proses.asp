@@ -1,7 +1,7 @@
 <!-- #include file='../connection.asp' -->
 <% 
 if session("HA8E") = false then
-    response.Redirect(url &"/transaksi/index.asp")
+    response.Redirect("index.asp")
 end if
 
 dim proses_cmd,proses, tanggal, tgl, tahun, tahunBaru, newYear
@@ -171,63 +171,63 @@ end if
     <title>PROSES PINJAMAN</title>
     <!-- #include file='../layout/header.asp' -->
     <style>
-    @font-face {
-        font-family: 'Source Sans Pro';
-        src: url('../layout/source-font/SourceSansPro-Regular.ttf');
-    }
+        @font-face {
+            font-family: 'Source Sans Pro';
+            src: url('../layout/source-font/SourceSansPro-Regular.ttf');
+        }
 
-    .container{
-        text-align:center;
-        height:100vh;
-        padding:5px;
-        position:relative;
-    }
-    h3{
-        font-family: 'Source Sans Pro';
-    }
-    .content{
-        position:absolute;
-        width:100%;
-        padding:10px;
-        border-radius:10px;
-        color:#fff;
-        height:auto;
-        top: 40%;
-        left: 50%;
-        margin-right: -50%;
-        transform: translate(-50%, -50%);
-        background:url('../logo/bgproses.jpg') no-repeat;
-    }
-    #tanggal{
-        color:#fff;
-        border:none;
-        background:transparent;
-    }
-    hr{
-        color:#fff;
-        margin-top:-3px;
-    }
-    #submit{
-        background:transparent;
-        text-transform:uppercase;
-        border-color:#fff;
-        font-family:'Source Sans Pro';
-    }
-    #submit:hover{
-        background:#D9A8C7;
-    }
-    .load{
-        position:absolute;
-        width:100%;
-        padding:10px;
-        border-radius:10px;
-        height:auto;
-        top: 40%;
-        left: 50%;
-        margin-right: -50%;
-        transform: translate(-50%, -50%);
-        display:none;
-    }
+        .container{
+            text-align:center;
+            height:100vh;
+            padding:5px;
+            position:relative;
+        }
+        h3{
+            font-family: 'Source Sans Pro';
+        }
+        .content{
+            position:absolute;
+            width:100%;
+            padding:10px;
+            border-radius:10px;
+            color:#fff;
+            height:auto;
+            top: 40%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
+            background:url('../logo/bgproses.jpg') no-repeat;
+        }
+        #tanggal{
+            color:#fff;
+            border:none;
+            background:transparent;
+        }
+        hr{
+            color:#fff;
+            margin-top:-3px;
+        }
+        #submit{
+            background:transparent;
+            text-transform:uppercase;
+            border-color:#fff;
+            font-family:'Source Sans Pro';
+        }
+        #submit:hover{
+            background:#D9A8C7;
+        }
+        .load{
+            position:absolute;
+            width:100%;
+            padding:10px;
+            border-radius:10px;
+            height:auto;
+            top: 40%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
+            display:none;
+        }
     </style>
 </head>
 

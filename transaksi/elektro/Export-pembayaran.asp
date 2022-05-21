@@ -1,18 +1,21 @@
-<!-- #include file='../../constend/constanta.asp' -->
 <!-- #include file='../../connection.asp' -->
 <% 
-dim p
-dim cetak 
+    if session("HT2BD") = false then
+        Response.Redirect("pembayaran.asp")
+    end if
 
-p = Request.QueryString("p")
+    dim p
+    dim cetak 
 
-set cetak = Server.CreateObject("ADODB.Command")
-cetak.activeConnection = mm_cargo_string
+    p = Request.QueryString("p")
 
-cetak.commandText = "SELECT HRD_T_BK.*, HRD_M_Karyawan.Kry_Nama FROM HRD_T_BK LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_BK.TPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE TPK_ID = '"& p &"'"
-set cetak = cetak.execute
- %>
- <!DOCTYPE html>
+    set cetak = Server.CreateObject("ADODB.Command")
+    cetak.activeConnection = mm_cargo_string
+
+    cetak.commandText = "SELECT HRD_T_BK_Elektronik.*, HRD_M_Karyawan.Kry_Nama FROM HRD_T_BK_Elektronik LEFT OUTER JOIN HRD_M_Karyawan ON HRD_T_BK_Elektronik.TPK_Nip = HRD_M_Karyawan.Kry_Nip WHERE TPK_ID_Elektronik = '"& p &"'"
+    set cetak = cetak.execute
+%>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -38,12 +41,12 @@ set cetak = cetak.execute
         </thead>
         <tbody>
             <tr>
-                <td>No.Peminjaman</td>
+                <td>No.Pembayaran</td>
                 <td>:</td>
-                <td><%= cetak("TPK_ID") %></td>
+                <td><%= cetak("TPK_ID_Elektronik") %></td>
             </tr>
             <tr>
-                <td>Tgl.Peminjaman</td>
+                <td>Tgl.Pembayaran</td>
                 <td>:</td>
                 <td><%= cetak("TPK_TAnggal") %></td>
             </tr>
@@ -63,7 +66,7 @@ set cetak = cetak.execute
                 <td><%= cetak("TPK_Ket") %></td>
             </tr>
             <tr>
-                <td>Besar Pinjaman</td>
+                <td>Besar Cicilan</td>
                 <td>:</td>
                 <td><%= replace(formatCurrency(cetak("TPK_PP")),"$","Rp.") %></td>
             </tr>
