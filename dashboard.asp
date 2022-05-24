@@ -202,7 +202,7 @@ loop
               <p class="card-text">Perubahan Log System</p>
                 <% 'if session("HL9")=true then %>
                   <button class="btn btn-warning btn-sm importFile" type="button" aria-expanded="false" onclick="window.location.href='forms/log.asp'">
-                    <i class="fa fa-cloud-download" aria-hidden="true"></i> Import
+                    <i class="fa fa-cloud-download" aria-hidden="true"></i> See
                   </button>
                 <% 'end if %>
             </div>
