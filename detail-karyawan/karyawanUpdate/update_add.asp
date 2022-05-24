@@ -184,7 +184,7 @@ if not karyawan.eof then
         rubahtlahir = ""
     end if 
     ' tglL
-    if oldTglLahir <> Cdate(tglL) THEN 
+    if oldTglLahir <> tglL THEN 
         rubahtglLahir = "PERUBAHAN TANGGAL LAHIR DARI " & OldTglLahir & " KE " & tglL  &","
     else 
         rubahtglLahir = ""
@@ -318,19 +318,18 @@ if not karyawan.eof then
         rubahnpwp = ""
     end if 
     ' tglmasuk
-    if oldTglMasuk <> CDate(tglmasuk) THEN 
+    if oldTglMasuk <> tglmasuk THEN 
         rubahtglmasuk = "PERUBAHAN TANGGAL MASUK DARI " & oldTglMasuk & " KE " & tglmasuk  &","
     else 
         rubahtglmasuk = ""
     end if 
     ' tglkeluar
-    if tglagaji <> "" THEN 
     if oldTglKeluar <> tglkeluar THEN 
-        rubahtglkeluar = "PERUBAHAN TANGGAL KELUAR DARI " & oldTglKeluar & " KE " & tglkeluar  &","
-    else 
-        rubahtglkeluar = ""
-    end if 
-    end if
+			rubahtglkeluar = "PERUBAHAN TANGGAL KELUAR DARI " & oldTglKeluar & " KE " & tglkeluar  &","
+	else 
+			rubahtglkeluar = ""
+	end if 
+    
     ' tglagaji 
     if tglagaji <> "" THEN 
         if oldTglStartGaji <> tglagaji THEN 
@@ -341,7 +340,7 @@ if not karyawan.eof then
     end if
     ' tglegaji
      if tglagaji <> "" THEN 
-        if oldTglStartGaji <> CDate(tglegaji) THEN 
+        if oldTglStartGaji <> tglegaji THEN 
             rubahegaji = "PERUBAHAN TANGGAL AKHIR GAJI DARI " & oldTglStartGaji & " KE " & tglagaji  &","
         else 
             rubahegaji = ""
