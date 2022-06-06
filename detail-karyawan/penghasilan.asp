@@ -1,4 +1,5 @@
 <!--#include file="../connection.asp"-->
+<!-- #include file='../landing.asp' -->
 <% 
     ' cek hakakses 
     if session("HA7")="" then 
@@ -618,8 +619,7 @@
 
         var nilai = 0;
         var hasilgaji = 0;
-
-          // // ambil data masuk karyawan
+        // ambil data masuk karyawan
         var bulan = 12;
 
         var arrybulan = document.getElementById("blnmasuk").value;
@@ -651,18 +651,19 @@
         
         var tunjanganlain = parseInt(jabatan);
         var honor = parseInt(insentif) + parseInt(thr) + parseInt(transport);
-
-        var premiasuransi = Math.floor(potonganbpjs) +  Math.ceil(tunjanganbpjstkjkk) +  Math.ceil(tunjanganbpjstkjkm) +  Math.ceil(tunjanganbpjsjp);
+        // asuransi 1%
+        var premiasuransi = Math.floor(potonganbpjs) +  Math.ceil(tunjanganbpjstkjkk) +  Math.ceil(tunjanganbpjstkjkm);
 
         var penghasilanbruto = pendapatan + tunjanganlain + honor + premiasuransi;
         var gajijabatan = penghasilanbruto;
 
         var potjabatan = (gajijabatan * 5) / 100;
-
         if ( potjabatan > 500000){
             potjabatan = 500000;
         }
-        var iuranpensiun = Math.round(potonganbpjstkjhtk) + Math.round(potonganbpjstkjpk) + Math.round(potonganbpjstkjpk);
+        // iuran pensiun cuman 2%
+        var iuranpensiun = Math.round(potonganbpjstkjhtk) + Math.round(potonganbpjstkjpk);
+
         var totaliuran = potjabatan + iuranpensiun;
         var penghasilannetto = gajijabatan - totaliuran;
 
@@ -1027,7 +1028,6 @@
     </script>
 </head>
 <body>
-<!-- #include file='../landing.asp' -->
 <!--#include file="template-detail.asp"-->
 <div class="container">
     <!-- header start -->
@@ -1195,216 +1195,215 @@
                 <% 
                 gaji.movenext
                 loop
-                 %>
+                %>
                 </tbody>
             </table>
         </div>
-     </div>
+    </div>
 </div>
 
 <!--modal -->
 <div class="modal fade" id="modalTambahGaji" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg" >
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Gaji Editor</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-       
-        <form action="penghasilan_add.asp" method="post" name="tambah-gaji" id="tambah-gaji">
-        <div class="row labelGapok">
-            <label for="nomor" class="col-sm-2 col-form-label">Nomor</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control mb-2" id="nomor-penghasilan" name="nomor" readonly>
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Gaji Editor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="hidden">
-                <input type="text" class="form-control mb-2" id="nip" name="nip" value="<%=nip%>">
-                <p>ptkp</p>
-                    <input type="text" class="form-control mb-2" id="ptkp" name="ptkp" value="<%=PTKP%>" >
-                <label>pkppct</label>
-                    <input type="text" class="form-control mb-2" id="pkppct" name="pkppct" value="<%=pkp("PKP_Pct")%>" >
-                <label>tanggungan</label>
-                    <input type="text" class="form-control mb-2" id="tanggungan" name="tanggungan" value="<%=tanggungan%>" >
-                <label>umur</label>
-                    <input type="text" class="form-control mb-2" id="umur" name="umur" value="<%=umur%>" >
-                <% 
-                dim blnmsk, bln, thn, thnmsk
-                blnmsk = month(kry("Kry_TglMasuk"))
-                thn = year(kry("Kry_TglMasuk"))  
-                %>
-                <label>blnmasuk</label><input type="text" class="form-control mb-2" id="blnmasuk" name="blnmasuk" value="<%=blnmsk%>" >
-                <label>tahunmasuk</label><input type="text" class="form-control mb-2" id="thnmasuk" name="thnmasuk" value="<%=thn%>" >
+            <div class="modal-body">
+                <form action="penghasilan_add.asp" method="post" name="tambah-gaji" id="tambah-gaji">
+                <div class="row labelGapok">
+                    <label for="nomor" class="col-sm-2 col-form-label">Nomor</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control mb-2" id="nomor-penghasilan" name="nomor" readonly>
+                    </div>
+                    <div class="hidden">
+                        <input type="text" class="form-control mb-2" id="nip" name="nip" value="<%=nip%>">
+                        <p>ptkp</p>
+                            <input type="text" class="form-control mb-2" id="ptkp" name="ptkp" value="<%=PTKP%>" >
+                        <label>pkppct</label>
+                            <input type="text" class="form-control mb-2" id="pkppct" name="pkppct" value="<%=pkp("PKP_Pct")%>" >
+                        <label>tanggungan</label>
+                            <input type="text" class="form-control mb-2" id="tanggungan" name="tanggungan" value="<%=tanggungan%>" >
+                        <label>umur</label>
+                            <input type="text" class="form-control mb-2" id="umur" name="umur" value="<%=umur%>" >
+                        <% 
+                        dim blnmsk, bln, thn, thnmsk
+                        blnmsk = month(kry("Kry_TglMasuk"))
+                        thn = year(kry("Kry_TglMasuk"))  
+                        %>
+                        <label>blnmasuk</label><input type="text" class="form-control mb-2" id="blnmasuk" name="blnmasuk" value="<%=blnmsk%>" >
+                        <label>tahunmasuk</label><input type="text" class="form-control mb-2" id="thnmasuk" name="thnmasuk" value="<%=thn%>" >
 
-                <% 
-                dim i
-                i = 0
-                do until pkp.eof
-                i = i + 1
-                %>
-                    <label>pkpawal <%= i %></label>
-                        <input type="text" class="form-control mb-2" id="pkpawal<%=i%>" name="pkpawal" value="<%=pkp("PKP_Awal")%>" >
-                    <label>pkpakhir <%= i %></label>
-                        <input type="text" class="form-control mb-2" id="pkpakhir<%=i%>" name="pkpakhir" value="<%=pkp("PKP_Akhir")%>" >
-                <% 
-                pkp.movenext
-                loop
-                %> 
-            </div>
+                        <% 
+                        dim i
+                        i = 0
+                        do until pkp.eof
+                        i = i + 1
+                        %>
+                            <label>pkpawal <%= i %></label>
+                                <input type="text" class="form-control mb-2" id="pkpawal<%=i%>" name="pkpawal" value="<%=pkp("PKP_Awal")%>" >
+                            <label>pkpakhir <%= i %></label>
+                                <input type="text" class="form-control mb-2" id="pkpakhir<%=i%>" name="pkpakhir" value="<%=pkp("PKP_Akhir")%>" >
+                        <% 
+                        pkp.movenext
+                        loop
+                        %> 
+                    </div>
 
 
-            <label for="tgl" class="col-sm-2 col-form-label">Tanggal</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control mb-2" id="tgl" name="tgl" readonly >
-            </div>
-            <label for="gapok" class="col-sm-2 col-form-label">Gaji Pokok</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value,'gapok', '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="gapok" name="gapok" maxlength="50" value="0" >
-            </div>
-            <label for="insentif" class="col-sm-2 col-form-label">Insentif</label>
-            <div class="col-sm-4">
-                    <input type="text" onchange="rupiah(this.value,'insentif',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="insentif" name="insentif" maxlength="50" value="0">
-            </div>
-            <label for="THR" class="col-sm-2 col-form-label">THR</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'thr',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="thr" name="thr" maxlength="50" value="0">
-            </div>
-            <label for="THR" class="col-sm-2 col-form-label">Pot.Pengembalian</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'potpengembalian',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="potpengembalian" name="potpengembalian" maxlength="50" value="0">
-            </div>
-            <label for="THR" class="col-sm-2 col-form-label">insentif DPT</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'insentifDTP',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="insentifDTP" name="insentifDTP" maxlength="50" value="0">
-            </div>
-        </div>
-        <hr>
-        <label><b>TUNJANGAN</b></label>
-        <div class='row mb-2 tunjangan'>
-            <label for="bpjs" class="col-sm-2 col-form-label">BPJS KES.P</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'bpjs' )" class="form-control mb-2" id="bpjs" name="bpjs" value="0" readonly>
-            </div>
-            <label for="bpjs" class="col-sm-2 col-form-label">BPJS TK-JHT.P</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'bpjs' )" class="form-control mb-2" id="bpjsjht" name="bpjsjht" value="0" readonly>
-            </div>
-            <label for="bpjstkjkk" class="col-sm-2 col-form-label">BPJS TK-JKK.P</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'bpjstkjkk')" class="form-control mb-2" id="bpjstkjkk" name="bpjstkjkk" readonly>
-            </div>
-            <label for="bpjstkjkm" class="col-sm-2 col-form-label">BPJS TK-JKM.P</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'bpjstkjkm')" class="form-control mb-2" id="bpjstkjkm" name="bpjstkjkm" readonly>
-            </div>
-            <label for="bpjsjp" class="col-sm-2 col-form-label">BPJS TK-JP.P</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'bpjsjp')" class="form-control mb-2" id="bpjsjp" name="bpjsjp" readonly>
-            </div>
-            <label for="transport" class="col-sm-2 col-form-label">Transport</label>
-            <div class="col-sm-4">
-                    <input type="text" onchange="rupiah(this.value, 'transport',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="transport" name="transport" maxlength="50" value="0">
-            </div>
-            <label for="kesehatan" class="col-sm-2 col-form-label">Kesehatan</label>
-            <div class="col-sm-4"> 
-                    <input type="text" onchange="rupiah(this.value, 'kesehatan',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2 kesehatan" id="kesehatan" name="kesehatan" value="0">
-            </div>
-            <label for="keluarga" class="col-sm-2 col-form-label">Keluarga</label>
-            <div class="col-sm-4">
-                    <input type="text" onchange="rupiah(this.value, 'keluarga',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="keluarga" name="keluarga" maxlength="50" value="0">
-            </div>
-            <label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label>
-            <div class="col-sm-4">
-                    <input type="text" onchange="rupiah(this.value, 'jabatan',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="jabatan" name="jabatan" maxlength="50" value="0">
-            </div>
-            
-            <label for="ttunjangan" class="col-sm-2 col-form-label">Total Tunjangan</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'ttunjangan')" class="form-control mb-2" id="ttunjangan" name="ttunjangan" readonly>
-            </div>
-        </div>
-        <hr>
-        <label><b>POTONGAN</b></label>
-        <div class='row mb-2 potongan'>
-            <label for="bpjstkjht" class="col-sm-2 col-form-label">BPJS TK-JHT.P</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'bpjstkjht')" class="form-control mb-2" id="bpjstkjht" name="bpjstkjht" readonly>
-            </div>
-            <label for="bpjstkjhtk" class="col-sm-2 col-form-label">BPJS TK-JHT.K</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'bpjstkjht')" class="form-control mb-2" id="bpjstkjhtk" name="bpjstkjhtk" readonly>
-            </div>
-            <label for="bpjsjkk" class="col-sm-2 col-form-label">BPJS TK-JKK.P</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'bpjsjkk')" class="form-control mb-2" id="bpjsjkk" name="bpjsjkk" readonly>
-            </div>
-            <label for="bpjstkjpk" class="col-sm-2 col-form-label">BPJS TK-JP.K</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'bpjstkjpk')" class="form-control mb-2" id="bpjstkjpk" name="bpjstkjpk" readonly>
-            </div>
-            <label for="bpjstkjp" class="col-sm-2 col-form-label">BPJS TK-JP.P</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'bpjstkjp')" class="form-control mb-2" id="bpjstkjp" name="bpjstkjp" readonly>
-            </div>
-            <label for="BPJSK" class="col-sm-2 col-form-label">BPJS KES.K</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'bpjsk')" class="form-control mb-2" id="bpjsk" name="bpjsk" readonly>
-            </div>
-            <label for="potbpjstkjkm" class="col-sm-2 col-form-label">BPJS TK-JKM.P</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'potbpjstkjkm')" class="form-control mb-2" id="potbpjstkjkm" name="potbpjstkjkm" readonly>
-            </div>
-            <label for="koperasi" class="col-sm-2 col-form-label">Koperasi</label>
-            <div class="col-sm-4">
-                    <input type="text" onchange="rupiah(this.value, 'koperasi',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="koperasi" name="koperasi" maxlength="50" value="0">
-            </div>
-            <label for="BPJSP" class="col-sm-2 col-form-label">BPJS KES.P</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'bpjsp')" class="form-control mb-2" id="bpjsp" name="bpjsp" readonly>
-            </div>
-            <label for="klaim" class="col-sm-2 col-form-label">Klaim</label>
-            <div class="col-sm-4">
-                    <input type="text" onchange="rupiah(this.value, 'klaim',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="klaim" name="klaim" maxlength="50" value="0">
-            </div>
-            <label for="potabsen" class="col-sm-2 col-form-label">Pot. Absen</label>
-            <div class="col-sm-4">
-                    <input type="text" onchange="rupiah(this.value, 'potabsen',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="potabsen" name="potabsen" maxlength="50" value="0">
-            </div>
-            <label for="lain" class="col-sm-2 col-form-label">Lain-lain</label>
-            <div class="col-sm-4">
-                    <input type="text" onchange="rupiah(this.value, 'lain',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="lain" name="lain" maxlength="50" value="0">
-            </div>
-            <label for="potpph21" class="col-sm-2 col-form-label">PPH21</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, '0')" class="form-control mb-2" id="potpph21" name="potpph21" value="0" readonly>
-                <button type="button" name="clickme" id="clickme" class="btn btn-primary btn-sm" onclick="hitungNilai()">Click Me</button>
-            </div> 
-            <label for="tpot" class="col-sm-2 col-form-label">Total Potongan</label>
-            <div class="col-sm-4">
-                <input type="text" onchange="rupiah(this.value, 'tpot')" class="form-control mb-2" id="tpot" name="tpot" value="0" readonly>
-            </div>
-        </div>
-        <hr>
-        <div class='row'>
-                <div class="input-group input-group-default">
-                    <span class="input-group-text" id="inputGroup-sizing-default">TOTAL GAJI</span>
-                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" name="labelGaji" id="labelGaji" readonly>
+                    <label for="tgl" class="col-sm-2 col-form-label">Tanggal</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control mb-2" id="tgl" name="tgl" readonly >
+                    </div>
+                    <label for="gapok" class="col-sm-2 col-form-label">Gaji Pokok</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value,'gapok', '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="gapok" name="gapok" maxlength="50" value="0" >
+                    </div>
+                    <label for="insentif" class="col-sm-2 col-form-label">Insentif</label>
+                    <div class="col-sm-4">
+                            <input type="text" onchange="rupiah(this.value,'insentif',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="insentif" name="insentif" maxlength="50" value="0">
+                    </div>
+                    <label for="THR" class="col-sm-2 col-form-label">THR</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'thr',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="thr" name="thr" maxlength="50" value="0">
+                    </div>
+                    <label for="THR" class="col-sm-2 col-form-label">Pot.Pengembalian</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'potpengembalian',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="potpengembalian" name="potpengembalian" maxlength="50" value="0">
+                    </div>
+                    <label for="THR" class="col-sm-2 col-form-label">insentif DPT</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'insentifDTP',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="insentifDTP" name="insentifDTP" maxlength="50" value="0">
+                    </div>
                 </div>
-        </div>
-        <hr>
-        <div class='row'>
-            <div class="input-group">
-                <span class="input-group-text">CATATAN</span>
-                <textarea class="form-control" aria-label="CATATAN" name="catatan" id="catatan" maxlength="50"></textarea>
+                <hr>
+                <label><b>TUNJANGAN</b></label>
+                <div class='row mb-2 tunjangan'>
+                    <label for="bpjs" class="col-sm-2 col-form-label">BPJS KES.P</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'bpjs' )" class="form-control mb-2" id="bpjs" name="bpjs" value="0" readonly>
+                    </div>
+                    <label for="bpjs" class="col-sm-2 col-form-label">BPJS TK-JHT.P</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'bpjs' )" class="form-control mb-2" id="bpjsjht" name="bpjsjht" value="0" readonly>
+                    </div>
+                    <label for="bpjstkjkk" class="col-sm-2 col-form-label">BPJS TK-JKK.P</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'bpjstkjkk')" class="form-control mb-2" id="bpjstkjkk" name="bpjstkjkk" readonly>
+                    </div>
+                    <label for="bpjstkjkm" class="col-sm-2 col-form-label">BPJS TK-JKM.P</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'bpjstkjkm')" class="form-control mb-2" id="bpjstkjkm" name="bpjstkjkm" readonly>
+                    </div>
+                    <label for="bpjsjp" class="col-sm-2 col-form-label">BPJS TK-JP.P</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'bpjsjp')" class="form-control mb-2" id="bpjsjp" name="bpjsjp" readonly>
+                    </div>
+                    <label for="transport" class="col-sm-2 col-form-label">Transport</label>
+                    <div class="col-sm-4">
+                            <input type="text" onchange="rupiah(this.value, 'transport',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="transport" name="transport" maxlength="50" value="0">
+                    </div>
+                    <label for="kesehatan" class="col-sm-2 col-form-label">Kesehatan</label>
+                    <div class="col-sm-4"> 
+                            <input type="text" onchange="rupiah(this.value, 'kesehatan',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2 kesehatan" id="kesehatan" name="kesehatan" value="0">
+                    </div>
+                    <label for="keluarga" class="col-sm-2 col-form-label">Keluarga</label>
+                    <div class="col-sm-4">
+                            <input type="text" onchange="rupiah(this.value, 'keluarga',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="keluarga" name="keluarga" maxlength="50" value="0">
+                    </div>
+                    <label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label>
+                    <div class="col-sm-4">
+                            <input type="text" onchange="rupiah(this.value, 'jabatan',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="jabatan" name="jabatan" maxlength="50" value="0">
+                    </div>
+                    
+                    <label for="ttunjangan" class="col-sm-2 col-form-label">Total Tunjangan</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'ttunjangan')" class="form-control mb-2" id="ttunjangan" name="ttunjangan" readonly>
+                    </div>
+                </div>
+                <hr>
+                <label><b>POTONGAN</b></label>
+                <div class='row mb-2 potongan'>
+                    <label for="bpjstkjht" class="col-sm-2 col-form-label">BPJS TK-JHT.P</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'bpjstkjht')" class="form-control mb-2" id="bpjstkjht" name="bpjstkjht" readonly>
+                    </div>
+                    <label for="bpjstkjhtk" class="col-sm-2 col-form-label">BPJS TK-JHT.K</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'bpjstkjht')" class="form-control mb-2" id="bpjstkjhtk" name="bpjstkjhtk" readonly>
+                    </div>
+                    <label for="bpjsjkk" class="col-sm-2 col-form-label">BPJS TK-JKK.P</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'bpjsjkk')" class="form-control mb-2" id="bpjsjkk" name="bpjsjkk" readonly>
+                    </div>
+                    <label for="bpjstkjpk" class="col-sm-2 col-form-label">BPJS TK-JP.K</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'bpjstkjpk')" class="form-control mb-2" id="bpjstkjpk" name="bpjstkjpk" readonly>
+                    </div>
+                    <label for="bpjstkjp" class="col-sm-2 col-form-label">BPJS TK-JP.P</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'bpjstkjp')" class="form-control mb-2" id="bpjstkjp" name="bpjstkjp" readonly>
+                    </div>
+                    <label for="BPJSK" class="col-sm-2 col-form-label">BPJS KES.K</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'bpjsk')" class="form-control mb-2" id="bpjsk" name="bpjsk" readonly>
+                    </div>
+                    <label for="potbpjstkjkm" class="col-sm-2 col-form-label">BPJS TK-JKM.P</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'potbpjstkjkm')" class="form-control mb-2" id="potbpjstkjkm" name="potbpjstkjkm" readonly>
+                    </div>
+                    <label for="koperasi" class="col-sm-2 col-form-label">Koperasi</label>
+                    <div class="col-sm-4">
+                            <input type="text" onchange="rupiah(this.value, 'koperasi',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="koperasi" name="koperasi" maxlength="50" value="0">
+                    </div>
+                    <label for="BPJSP" class="col-sm-2 col-form-label">BPJS KES.P</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'bpjsp')" class="form-control mb-2" id="bpjsp" name="bpjsp" readonly>
+                    </div>
+                    <label for="klaim" class="col-sm-2 col-form-label">Klaim</label>
+                    <div class="col-sm-4">
+                            <input type="text" onchange="rupiah(this.value, 'klaim',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="klaim" name="klaim" maxlength="50" value="0">
+                    </div>
+                    <label for="potabsen" class="col-sm-2 col-form-label">Pot. Absen</label>
+                    <div class="col-sm-4">
+                            <input type="text" onchange="rupiah(this.value, 'potabsen',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="potabsen" name="potabsen" maxlength="50" value="0">
+                    </div>
+                    <label for="lain" class="col-sm-2 col-form-label">Lain-lain</label>
+                    <div class="col-sm-4">
+                            <input type="text" onchange="rupiah(this.value, 'lain',  '<%= mutbpjs("Mut_BPJSKet") %>','<%= mutbpjs("Mut_BPJSKes") %>')" class="form-control mb-2" id="lain" name="lain" maxlength="50" value="0">
+                    </div>
+                    <label for="potpph21" class="col-sm-2 col-form-label">PPH21</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, '0')" class="form-control mb-2" id="potpph21" name="potpph21" value="0" readonly>
+                        <button type="button" name="clickme" id="clickme" class="btn btn-primary btn-sm" onclick="hitungNilai()">Click Me</button>
+                    </div> 
+                    <label for="tpot" class="col-sm-2 col-form-label">Total Potongan</label>
+                    <div class="col-sm-4">
+                        <input type="text" onchange="rupiah(this.value, 'tpot')" class="form-control mb-2" id="tpot" name="tpot" value="0" readonly>
+                    </div>
+                </div>
+                <hr>
+                <div class='row'>
+                        <div class="input-group input-group-default">
+                            <span class="input-group-text" id="inputGroup-sizing-default">TOTAL GAJI</span>
+                            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" name="labelGaji" id="labelGaji" readonly>
+                        </div>
+                </div>
+                <hr>
+                <div class='row'>
+                    <div class="input-group">
+                        <span class="input-group-text">CATATAN</span>
+                        <textarea class="form-control" aria-label="CATATAN" name="catatan" id="catatan" maxlength="50"></textarea>
+                    </div>
+                </div>
             </div>
+            <div class="modal-footer">
+                <button type="submit" name="submit" id="submit" class="btn btn-primary">Save</button>
+            </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" name="submit" id="submit" class="btn btn-primary">Save</button>
-        </form>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
     </div>
-  </div>
+    </div>
 </div>
 <!-- #include file='../layout/footer.asp' -->

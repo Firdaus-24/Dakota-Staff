@@ -18,7 +18,7 @@
     cuti_cmd.ActiveConnection = MM_Cargo_string
 
     ' tampil data taun ini
-    cuti_cmd.commandText = "SELECT * FROM dbo.HRD_T_IzinCutiSakit WHERE dbo.HRD_T_IzinCutiSakit.ICS_NIP = '"& nip &"' AND Year(ICS_StartDate) = '"& year(date) &"' AND year(ICS_EndDate) = '"& year(date) &"' ORDER BY ICS_StartDate DESC"
+    cuti_cmd.commandText = "SELECT * FROM dbo.HRD_T_IzinCutiSakit WHERE dbo.HRD_T_IzinCutiSakit.ICS_NIP = '"& nip &"' AND Year(ICS_StartDate) = '"& year(date) &"' AND year(ICS_EndDate) = '"& year(date) &"' AND ICS_aktifYN = 'Y' ORDER BY ICS_StartDate DESC"
     ' Response.Write cuti_cmd.commandText & "<br>"
     set cuti = cuti_cmd.execute
 
@@ -62,7 +62,7 @@
             ajuancuti = ajuancuti + (najuan("notcuti")+ 1)
         najuan.movenext
         loop
- %> 
+%> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -347,7 +347,6 @@
                         <option value="C">Cuti</option>
                         <option value="G">Dispensasi</option>
                         <option value="I">Izin</option>
-                        <option value="K">Klaim Obat</option>
                         <option value="S">Sakit</option>
                     </select>   
                 </div>
