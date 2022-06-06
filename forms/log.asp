@@ -1,9 +1,19 @@
 <!-- #include file='../connection.asp' -->
 <%
-    p_event = request.form ("event")
-    user = request.form ("user")
-    file = request.form ("file")
+    p_event = request.QueryString("event")
+    if len(p_event) = 0 then 
+        p_event = request.form ("event")
+    end if
 
+    user = request.QueryString("user")
+    if len(user) = 0 then 
+        user = request.form ("user")
+    end if
+
+    file = request.QueryString("file")
+    if len(file) = 0 then 
+        file = request.form ("file")
+    end if
     set event_cmd = Server.CreateObject("ADODB.Command")
     event_cmd.activeConnection = mm_cargo_string
 
@@ -27,7 +37,7 @@
 
 
     if p_event <> "" then 
-        filterEvent = " AND LogEvent='"& p_event &"' "
+        filterEvent = " AND LogEvent LIKE '%"& p_event &"%' "
     else 
         filterEvent = ""
     end if
@@ -42,12 +52,11 @@
         filterFile = ""
     end if
 
-    root = "SELECT * FROM HRD_T_LOG LEFT OUTER JOIN WebLogin ON HRD_T_LOG.LogUser = WebLogin.username WHERE WebLogin.user_aktifYN =  'Y' "&filterEvent&" "&filterUser&" "&filterFile&""
+    root = "SELECT * FROM HRD_T_LOG INNER JOIN WebLogin ON HRD_T_LOG.LogUser = WebLogin.username WHERE WebLogin.user_aktifYN =  'Y' "&filterEvent&" "&filterUser&" "&filterFile&""
 
     log_cmd.commandText = root
     ' response.write Log_cmd.commandText & "<br>"
     set data = log_cmd.execute
-
     ' paggination
     set conn = Server.CreateObject("ADODB.Connection")
     conn.open MM_Cargo_string
@@ -62,7 +71,7 @@
 
     page = Request.QueryString("page")
     
-    orderBy = "ORDER BY LogEvent ASC"
+    orderBy = "ORDER BY LogDateTime DESC"
 
     set rs = Server.CreateObject("ADODB.Recordset")
 
@@ -95,6 +104,7 @@
     set rs = server.CreateObject("ADODB.RecordSet")
 
     sqlawal = root
+    ' Response.Write sqlawal & "<br>"
     sql=sqlawal + orderBy
 
     rs.open sql, conn
@@ -222,15 +232,15 @@
                     recordcounter = recordcounter + 1
                     %>
                     <tr>
-                        <td><%= data("LogEvent") %></td>
-                        <td><%= data("LogKeterangan") %></td>
-                        <td><%= data("LogURL") %></td>
-                        <td><%= data("LogKey") %></td>
-                        <td><%= data("LogUser") %></td>
-                        <td><%= data("LogAgenID") %></td>
-                        <td><%= data("LogDateTime") %></td>
-                        <td><%= data("LogIP") %></td>
-                        <td><%= data("LogBrowser") %></td>
+                        <td><%= rs("LogEvent") %></td>
+                        <td><%= rs("LogKeterangan") %></td>
+                        <td><%= rs("LogURL") %></td>
+                        <td><%= rs("LogKey") %></td>
+                        <td><%= rs("LogUser") %></td>
+                        <td><%= rs("LogAgenID") %></td>
+                        <td><%= rs("LogDateTime") %></td>
+                        <td><%= rs("LogIP") %></td>
+                        <td><%= rs("LogBrowser") %></td>
                     </tr>
                     <%
                         showrecords = showrecords - 1
@@ -259,7 +269,7 @@
 							npage = page - 1
 						end if
 						if requestrecords <> 0 then %>
-							<a class="page-link" href="log.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>">&#x25C4; Previous </a>
+							<a class="page-link" href="log.asp?offset=<%= requestrecords - recordsonpage%>&page=<%=npage%>&event=<%= p_event %>&user=<%= user %>&file=<%= file %>">&#x25C4; Previous </a>
 							<% else %>
 							<p class="page-link-p">&#x25C4; Previous </p>
 						<% end if %>
@@ -280,9 +290,9 @@
 									
 									if Cint(page) = pagelistcounter then
 						%>
-                        <a class="page-link hal d-flex bg-primary text-light" href="log.asp?offset=<%= pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a>  
+                        <a class="page-link hal d-flex bg-primary text-light" href="log.asp?offset=<%= pagelist %>&page=<%=pagelistcounter%>&event=<%= p_event %>&user=<%= user %>&file=<%= file %>"><%= pagelistcounter %></a>  
 							<% else %>
-							<a class="page-link hal d-flex" href="log.asp?offset=<%= pagelist %>&page=<%=pagelistcounter%>"><%= pagelistcounter %></a>  
+							<a class="page-link hal d-flex" href="log.asp?offset=<%= pagelist %>&page=<%=pagelistcounter%>&event=<%= p_event %>&user=<%= user %>&file=<%= file %>"><%= pagelistcounter %></a>  
 						<%	
                             end if
 								pagelist = pagelist + recordsonpage
@@ -292,14 +302,14 @@
                     <li class="page-item"
                     <% 
 						if page = "" then
-						   page = 1
+						    page = 1
 						else
-						   page = page + 1
+						    page = page + 1
 						end if
 					%>
                     %>
 						<% if(recordcounter > 1) and (lastrecord <> 1) then %>
-						<a class="page-link next" href="log.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>">Next &#x25BA;</a>
+						<a class="page-link next" href="log.asp?offset=<%= requestrecords + recordsonpage %>&page=<%=page%>&event=<%= p_event %>&user=<%= user %>&file=<%= file %>">Next &#x25BA;</a>
 						<% else %>
 						<p class="page-link next-p">Next &#x25BA;</p>
 						<% end if %>

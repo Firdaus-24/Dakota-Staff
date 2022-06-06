@@ -1,5 +1,4 @@
 <!-- #include file='../connection.asp' -->
-<!-- #include file='../constend/constanta.asp' -->
 <% 
 dim nip, data, cuti, cuti_cmd
 
@@ -9,7 +8,7 @@ data = Request.QueryString("data")
 set cuti_cmd = Server.CreateObject("ADODB.Command")
 cuti_cmd.activeconnection = MM_Cargo_String
 
-cuti_cmd.commandText = "SELECT * FROM HRD_T_IzinCutiSakit WHERE ICS_Nip = '"& nip &"' and year(ICS_StartDate) = '"& data &"' and year(ICS_EndDate) = '"& data &"' ORDER BY HRD_T_IzinCutiSakit.ICS_StartDate DESC"
+cuti_cmd.commandText = "SELECT * FROM HRD_T_IzinCutiSakit WHERE ICS_Nip = '"& nip &"' and year(ICS_StartDate) = '"& data &"' and year(ICS_EndDate) = '"& data &"' AND ICS_aktifYN = 'Y' ORDER BY HRD_T_IzinCutiSakit.ICS_StartDate DESC"
 ' Response.Write cuti_cmd.commandText
 set cuti = cuti_cmd.execute
 

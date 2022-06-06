@@ -1,38 +1,38 @@
 <!-- #include file="connection.asp"-->
 <!--#include file="landing.asp"-->
 <% 
-' koneksi ke divisi
-set divisi_cmd = Server.CreateObject("ADODB.Command")
-divisi_cmd.ActiveConnection = MM_cargo_STRING
+    ' koneksi ke divisi
+    set divisi_cmd = Server.CreateObject("ADODB.Command")
+    divisi_cmd.ActiveConnection = MM_cargo_STRING
 
 
-' koneksi area
-set area_cmd = Server.CreateObject("ADODB.Command")
-area_cmd.ActiveConnection = MM_cargo_STRING
+    ' koneksi area
+    set area_cmd = Server.CreateObject("ADODB.Command")
+    area_cmd.ActiveConnection = MM_cargo_STRING
 
-' koneksi ke db jabatan
-set jabatan_cmd = Server.CreateObject("ADODB.Command")
-jabatan_cmd.ActiveConnection = MM_cargo_STRING
+    ' koneksi ke db jabatan
+    set jabatan_cmd = Server.CreateObject("ADODB.Command")
+    jabatan_cmd.ActiveConnection = MM_cargo_STRING
 
-' koneksi grup shift
-set gs_cmd = Server.CreateObject("ADODB.Command")
-gs_cmd.ActiveConnection = MM_cargo_STRING
+    ' koneksi grup shift
+    set gs_cmd = Server.CreateObject("ADODB.Command")
+    gs_cmd.ActiveConnection = MM_cargo_STRING
 
-'jenjang
-set jenjang_cmd = Server.CreateObject("ADODB.Command")
-jenjang_cmd.ActiveConnection = MM_cargo_STRING
+    'jenjang
+    set jenjang_cmd = Server.CreateObject("ADODB.Command")
+    jenjang_cmd.ActiveConnection = MM_cargo_STRING
 
-'agama
-set agama_cmd = Server.CreateObject("ADODB.Command")
-agama_cmd.ActiveConnection = MM_cargo_STRING
+    'agama
+    set agama_cmd = Server.CreateObject("ADODB.Command")
+    agama_cmd.ActiveConnection = MM_cargo_STRING
 
-'pendidikan
-Set pendidikan_cmd = Server.CreateObject ("ADODB.Command")
-pendidikan_cmd.ActiveConnection = MM_cargo_STRING
+    'pendidikan
+    Set pendidikan_cmd = Server.CreateObject ("ADODB.Command")
+    pendidikan_cmd.ActiveConnection = MM_cargo_STRING
 
-'class intisiasi
+    'class intisiasi
 
- %>
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,6 +55,19 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
             height:auto;
             background-color:linear-gradient(to right, #000046, #1cb5e0);
             position:relative;
+        }
+        .table{
+            margin-top:10px;
+            font-size:12px;
+            display:block;
+            height:15em;
+            width:100%;
+            overflow-y:scroll;
+            white-space: nowrap;
+        }
+        .table button{
+            max-width:20em;
+            font-size:10px;
         }
     </style>
     <script>
@@ -125,6 +138,20 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
             }
 
         }
+        function atasan(e,n){
+            if (e == ""){
+                $('.contentAtasan').hide();
+            }else{
+                $.get("detail-karyawan/karyawanUpdate/atasan.asp?key="+e+"&n="+n,function(result){
+                    $('.contentAtasan').show();
+                    $('.contentAtasan').html(result);
+                });
+            }
+        }
+        function getAtasan(e,n){
+            const atasan1 = n == 1 ? $('#atasan1').val(e) : $('#atasan2').val(e);
+            $('.contentAtasan').hide();
+        }
     </script>
 </head>
 <body>
@@ -179,9 +206,9 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
                         </div>
                         <br/>
                         <label>Telphone 1</label>
-                            <input type="number" class="form-control" name="tlp1" id="tlp1" required>
+                            <input type="text" class="form-control" name="tlp1" id="tlp1" maxlength="12" required>
                         <label>Telphone 2</label>
-                            <input type="number" class="form-control" name="tlp2" id="tlp2">
+                            <input type="text" class="form-control" name="tlp2" id="tlp2" maxlength="12">
                         <div class="row">
                             <div class="col-6">
                                 <label>Kota</label>
@@ -189,7 +216,7 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
                             </div>
                             <div class="col-6">
                                 <label>Pos</label>
-                                    <input type="text" class="form-control" name="pos" id="pos" required>
+                                    <input type="text" class="form-control" name="pos" id="pos" maxlength="5" required>
                             </div>
                         </div>
                     </div>
@@ -211,7 +238,7 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
                 <div class="row">
                     <div class="col-md-8">
                         <label>Email</label>
-                            <input type="text" name="email" class="form-control" id="email" required>
+                            <input type="email" name="email" class="form-control" id="email" required>
                     </div>
                     <div class="col-md-4">
                         <label>Agama</label>
@@ -258,7 +285,7 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
                         <input type="number" name="tanggungan" class="form-control" id="tanggungan" value="0" required>
                     </div>
                 </div>  
-                 <div class="row">
+                <div class="row">
                     <div class="col-md-6">
                         <% 
                         pendidikan_cmd.commandText = "SELECT JDdk_Nama, JDdk_ID FROM HRD_M_JenjangDidik"
@@ -300,16 +327,16 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
                     <% 
                     pendidikan_cmd.commandText = "SELECT Bank_ID, Bank_Name FROM GL_M_Bank WHERE Bank_AktifYN = 'Y' ORDER BY Bank_Name ASC"
                     set bank = pendidikan_cmd.execute
-                     %>
-                        <label>Bank Id</label>
+                    %>
+                        <label>Bank</label>
                             <select class="form-select" aria-label="Default select example" name="bankID" id="bankID" required>
                                 <option value="">pilih</option>
-                                <% do until bank.eof %>
+                                <% do while not bank.eof %>
                                     <option value="<%= bank("Bank_ID") %>"><%= bank("Bank_Name") %></option>
                                 <% 
                                 bank.movenext
                                 loop
-                                 %>
+                                %>
                             </select>
                     </div>
                     <div class="col">
@@ -332,11 +359,16 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
                 <div class="row">
                     <div class="col-6">
                         <label>Atasan 1</label>
-                            <input type="number" name="atasan1" class="form-control" id="atasan1" max placeholder="nip atasan" maxlength="10" autocomplete="off">
+                            <input type="text" name="atasan1" class="form-control" id="atasan1" max placeholder="nip atasan" autocomplete="off" onkeyup="atasan(this.value,'1')">
                     </div>
                     <div class="col-6">
                         <label>Atasan 2</label>
-                            <input type="number" class="form-control" name="atasan2" id="atasan2" placeholder="nip atasan" maxlength="10" autocomplete="off">
+                            <input type="text" class="form-control" name="atasan2" id="atasan2" placeholder="nip atasan" autocomplete="off" onkeyup="atasan(this.value,'2')">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col contentAtasan">
+
                     </div>
                 </div>
                     <%
@@ -363,7 +395,6 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
                         <% area.movenext 
                         loop%> 
                     </select>
-                   
                     <% 
                     jabatan_cmd.commandText = "SELECT Jab_Code, Jab_Nama FROM HRD_M_Jabatan WHERE Jab_AktifYN = 'Y' ORDER BY Jab_Nama ASC"
                     set jabatan = jabatan_cmd.execute
@@ -412,11 +443,11 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
                 <div class="row">
                     <div class="col">
                         <label>No KTP</label>
-                            <input type="number" name="ktp" class="form-control" id="ktp" required>
+                            <input type="number" name="ktp" class="form-control" id="ktp" maxlength="16" required>
                     </div>
                     <div class="col">
                         <label>NPWP</label>
-                            <input type="text" name="npwp" class="form-control" id="npwp">
+                            <input type="text" name="npwp" class="form-control" id="npwp" maxlength="16">
                     </div>
                 </div>
             </div>
@@ -459,7 +490,7 @@ pendidikan_cmd.ActiveConnection = MM_cargo_STRING
                     <div class="col">
                         <label>Jenis SIM</label>
                         <select class="form-select" aria-label="Default select example" name="jsim" id="jsim">
-                            <option value="">Pilih</option>
+                            <option value="-1">Pilih</option>
                             <option value="0">A</option>
                             <option value="1">B1</option>
 							<option value="2">B1 UMUM</option>

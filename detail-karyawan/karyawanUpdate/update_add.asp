@@ -60,7 +60,6 @@ atasan2 = trim(Request.Form("atasan2"))
 vaksin = trim(Request.Form("vaksin"))
 goldarah = trim(Request.Form("goldarah"))
 
-
 karyawan_cmd.commandText = "SELECT * FROM HRD_M_Karyawan WHERE Kry_Nip = '"& nip &"'"
 set karyawan = karyawan_cmd.execute
 
@@ -68,7 +67,7 @@ if not karyawan.eof then
 
     oldNama = karyawan("Kry_Nama")
     oldDDBID = karyawan("Kry_DDBID")
-    oldActiveAgenID = karyawan("Kry_ActiveAgenID")
+    oldAgenID = karyawan("Kry_AgenID")
     oldJabCode = karyawan("Kry_JabCode")
     oldJJID = karyawan("Kry_JJID")
     oldAddr1 = karyawan("Kry_Addr1")
@@ -92,7 +91,7 @@ if not karyawan.eof then
     oldJnsID = karyawan("Kry_JnsID")
     oldIDValidDate = karyawan("Kry_IDValidDate")
     oldNoSIM = karyawan("Kry_NoSim")
-    oldSIMValidDate = karyawan("Kry_SIMValidDate")
+    oldSIMValiDate = karyawan("Kry_SIMValidDate")
     oldJsSIM = karyawan("Kry_JnsSIM")
     oldJmlTanggungan = karyawan("Kry_JmlTanggungan")
     oldJmlCuti = karyawan("Kry_JmlCuti")
@@ -116,20 +115,14 @@ if not karyawan.eof then
     oldatasanNip1 = karyawan("Kry_atasanNip1")
     oldatasanNip2 = karyawan("Kry_atasanNip2")
     oldJenisVaksin = karyawan("Kry_JenisVaksin")
-    oldgolDarah = karyawan("Kry_golDarah")
     oldBPJSKesYN = karyawan("Kry_BPJSKesYN")
     
-
-
-    
-
     '  nama
     if oldNama <> nama THEN 
         rubahnama = "PERUBAHAN NAMA DARI " & oldNama & " KE " & nama & ","
     else 
         rubahnama = ""
     end if 
-   
     '  alamat
     if oldAddr1 <> alamat THEN 
         rubahalamat = "PERUBAHAN ALAMAT DARI " & oldAddr1 & " KE " & alamat & ","
@@ -149,42 +142,41 @@ if not karyawan.eof then
         rubahbpjs = ""
     end if 
     ' tlp1
-    if oldTelp1 <> "" THEN
-        if oldTelp1 <> tlp1 THEN 
-            rubahtelp1 = "PERUBAHAN TELP1 DARI " & OldTelp1 & " KE " & Tlp1  &","
-        else 
-            rubahtelp1 = ""
-        end if 
-    end if
+    ' if oldTelp1 <> "" THEN
+    if oldTelp1 <> tlp1 THEN 
+        rubahtelp1 = "PERUBAHAN TELP1 DARI " & oldTelp1 & " KE " & tlp1  &","
+    else 
+        rubahtelp1 = ""
+    end if 
+    ' end if
     ' tlp2
-    if oldTelp2 <> "" THEN
-
-            if oldTelp2 <> tlp2 THEN 
-                rubahtelp2 = "PERUBAHAN TELP2 DARI " & OldTelp2 & " KE " & Tlp2  &","
-            else 
-                rubahtelp2 = ""
-            end if 
-    end if
+    ' if oldTelp2 <> "" THEN
+    if oldTelp2 <> tlp2 THEN 
+        rubahtelp2 = "PERUBAHAN TELP2 DARI " & oldTelp2 & " KE " & tlp2  &","
+    else 
+        rubahtelp2 = ""
+    end if 
+    ' end if
     ' kota
     if oldKota <> kota THEN 
-        rubahkota = "PERUBAHAN KOTA DARI " & OldKota & " KE " & kota  &","
+        rubahkota = "PERUBAHAN KOTA DARI " & oldKota & " KE " & kota  &","
     else 
         rubahkota = ""
     end if 
     ' pos
     if oldKdPos <> pos THEN 
-        rubahpos = "PERUBAHAN POS DARI " & OldKdPos & " KE " & Pos  &","
+        rubahpos = "PERUBAHAN POS DARI " & oldKdPos & " KE " & pos  &","
     else 
         rubahpos = ""
     end if 
     ' tmpt
     if oldTmpLahir <> tmpt THEN 
-        rubahtlahir = "PERUBAHAN TEMPAT LAHIR DARI " & OldTmpLahir & " KE " & tmpt  &","
+        rubahtlahir = "PERUBAHAN TEMPAT LAHIR DARI " & oldTmpLahir & " KE " & tmpt  &","
     else 
         rubahtlahir = ""
     end if 
     ' tglL
-    if oldTglLahir <> tglL THEN 
+    if oldTglLahir <> Cdate(tglL) THEN 
         rubahtglLahir = "PERUBAHAN TANGGAL LAHIR DARI " & OldTglLahir & " KE " & tglL  &","
     else 
         rubahtglLahir = ""
@@ -192,11 +184,10 @@ if not karyawan.eof then
     
     ' email
     if oldFax <> email THEN 
-        rubahfax = "PERUBAHAN EMAIL DARI " & OldFax & " KE " & email  &","
+        rubahfax = "PERUBAHAN EMAIL DARI " & oldFax & " KE " & email  &","
     else 
         rubahfax = ""
     end if 
-    ' response.write rubahemail & "<br>"
     ' agama
     if oldAgamaID <> CInt(agama) THEN 
         rubahagama = "PERUBAHAN AGAMA DARI " & oldAgamaID & " KE " & agama  &","
@@ -210,9 +201,6 @@ if not karyawan.eof then
     else 
         rubahsex = ""
     end if 
-    
-
-    ' response.write rubahsex & "<br>"
     ' ssosial
     if oldSttSosial <> CInt(ssosial) THEN 
         rubahsttsosial = "PERUBAHAN STATUS SOSIAL DARI " & oldSttSosial & " KE " & ssosial  &","
@@ -276,14 +264,14 @@ if not karyawan.eof then
         rubahpgwi = ""
     end if 
     ' SubCabang
-    if oldActiveAgenID <> CInt(SubCabang) THEN 
-        rubahaID = "PERUBAHAN ACTIVE ID DARI " & oldActiveAgenID & " KE " & SubCabang  &","
+    if oldAgenID <> CInt(SubCabang) THEN 
+        rubahaID = "PERUBAHAN SUB CABANG ID DARI " & oldAgenID & " KE " & SubCabang  &","
     else 
         rubahaID = ""
     end if 
     ' Jabatan
-    if oldJabCode <> Jabatan THEN 
-        rubahjbtn = "PERUBAHAN JABATAN DARI " & oldJabCode & " KE " & Jabatan  &","
+    if oldJabCode <> jabatan THEN 
+        rubahjbtn = "PERUBAHAN JABATAN DARI " & oldJabCode & " KE " & jabatan  &","
     else 
         rubahjbtn = ""
     end if 
@@ -306,11 +294,13 @@ if not karyawan.eof then
         rubahjcuti = ""
     end if 
     ' nKTP
-    if oldNoID <> nKTP THEN 
-        rubahktp = "PERUBAHAN NO KTP DARI " & oldNoID & " KE " & nKTP  &","
-    else 
-        rubahktp = ""
-    end if 
+    if nKTP <> "" then
+        if oldNoID <> nKTP THEN 
+            rubahktp = "PERUBAHAN NO KTP DARI " & oldNoID & " KE " & nKTP  &","
+        else 
+            rubahktp = ""
+        end if 
+    end if
     ' npwp
     if oldNPWP <> npwp THEN 
         rubahnpwp = "PERUBAHAN NO NPWP DARI " & oldNPWP & " KE " & npwp  &","
@@ -318,18 +308,19 @@ if not karyawan.eof then
         rubahnpwp = ""
     end if 
     ' tglmasuk
-    if oldTglMasuk <> tglmasuk THEN 
+    if oldTglMasuk <> Cdate(tglmasuk) THEN 
         rubahtglmasuk = "PERUBAHAN TANGGAL MASUK DARI " & oldTglMasuk & " KE " & tglmasuk  &","
     else 
         rubahtglmasuk = ""
     end if 
     ' tglkeluar
-    if oldTglKeluar <> tglkeluar THEN 
-			rubahtglkeluar = "PERUBAHAN TANGGAL KELUAR DARI " & oldTglKeluar & " KE " & tglkeluar  &","
-	else 
-			rubahtglkeluar = ""
-	end if 
-    
+    if tglkeluar <> "" then
+        if oldTglKeluar <> tglkeluar THEN 
+                rubahtglkeluar = "PERUBAHAN TANGGAL KELUAR DARI " & oldTglKeluar & " KE " & tglkeluar  &","
+        else 
+                rubahtglkeluar = ""
+        end if 
+    end if 
     ' tglagaji 
     if tglagaji <> "" THEN 
         if oldTglStartGaji <> tglagaji THEN 
@@ -339,7 +330,7 @@ if not karyawan.eof then
         end if 
     end if
     ' tglegaji
-     if tglagaji <> "" THEN 
+    if tglegaji <> "" THEN 
         if oldTglStartGaji <> tglegaji THEN 
             rubahegaji = "PERUBAHAN TANGGAL AKHIR GAJI DARI " & oldTglStartGaji & " KE " & tglagaji  &","
         else 
@@ -347,18 +338,18 @@ if not karyawan.eof then
         end if 
     end if
     ' jsim
-    if oldJsSIM <> CInt(jsim) THEN 
-        rubahjsim = "PERUBAHAN JSIM DARI " & oldJsSIM & " KE " & jsim  &","
+    if oldJsSIM  <> Cint(jsim) THEN 
+        rubahjsim = "PERUBAHAN JENIS SIM DARI " & oldJsSIM & " KE " & jsim  &","
     else 
         rubahjsim = ""
     end if 
     ' nsim
-    if oldNoSIM <> "" THEN
-    if oldNoSIM <> nsim THEN 
-        rubahnsim = "PERUBAHAN NSIM DARI " & oldNoSIM & " KE " & nsim  &","
-    else 
-        rubahnsim = ""
-    end if 
+    if nsim <> "" THEN
+        if oldNoSIM <> nsim THEN 
+            rubahnsim = "PERUBAHAN NSIM DARI " & oldNoSIM & " KE " & nsim  &","
+        else 
+            rubahnsim = ""
+        end if 
     end if
     ' kesehatan
     if oldNoBPJS <> kesehatan THEN 
@@ -366,18 +357,19 @@ if not karyawan.eof then
     else 
         rubahnobpjs = ""
     end if 
-    ' jamsostek\
+    ' jamsostek
     if oldNoJamsostek <> jamsostek THEN 
         rubahjamsos = "PERUBAHAN JAMSOSTEK DARI " & oldNoJamsostek & " KE " & jamsostek  &","
     else 
         rubahjamsos = ""
     end if 
-    
     ' berlakuSIM
-    if oldSIMValidate <> berlakuSIM THEN 
-        rubahsimv = "PERUBAHAN BERLAKU SIM DARI " & oldSIMValidate & " KE " & berlakuSIM  &","
-    else 
-        rubahsimv = ""
+    if berlakuSIM <> "" then
+        if oldSIMValidate <> Cdate(berlakuSIM) THEN 
+            rubahsim = "PERUBAHAN BERLAKU SIM DARI " & oldSIMValidate & " KE " & berlakuSIM  &","
+        else 
+            rubahsim = ""
+        end if 
     end if 
     ' bpjskes
     if oldBPJSKesYN <> bpjskes THEN 
@@ -398,30 +390,24 @@ if not karyawan.eof then
         rubahanip2 = ""
     end if 
     ' vaksin
-    if oldJenisVaksin <> "" THEN
     if oldJenisVaksin <> vaksin THEN 
         rubahvaksin = "PERUBAHAN JENIS VAKSIN DARI " & oldJenisVaksin & " KE " & vaksin  &","
     else 
         rubahvaksin = ""
     end if 
-    end if
     ' goldarah
-    if oldJenisVaksin <> "" THEN
-        if oldgolDarah <> goldarah THEN 
-            rubahgoldarah = "PERUBAHAN GOLONGAN DARAH DARI " & oldgolDarah & " KE " & goldarah  &","
-        else 
-            rubahgoldarah = ""
-       end if
+    if karyawan("Kry_golDarah") <> goldarah THEN 
+        rubahgoldarah = ""
+    else 
+        rubahgoldarah = ""
     end if
-
-    pket = "UPDATE " & rubahNama & rubahalamat & rubahkelurahan & rubahbpjs & rubahtelp1 & rubahtelp2 & rubahkota & rubahpos & rubahtmpt & rubahtglLahir & rubahfax & rubahagama & rubahsex & rubahsttsosial & rubahanak & rubahtanggungan & rubahpendidikan & rubahpegawai & rubahsaudara & rubahanake & rubahbankid & rubahnorek & rubahpgwi & rubahaID & rubahjbtn & rubahjenjang & rubahdivisi & rubahjcuti & rubahktp & rubahnpwp & rubahtglmasuk & rubahtglkeluar & rubahtglagaji & rubahegaji & rubahjsim & rubahnsim & rubahnobpjs & rubahjamsos & rubahsimv & rubahbpjskes & rubahanip1 & rubahanip2 & rubahvaksin & rubahgoldarah & " DENGAN KARYAWAN ("& nip &") "
-    ' pket = "UPDATE " & rubahNama & rubahalamat &  " DENGAN KARYAWAN ("& nip &") "
-
-    
 
     update.commandText = "UPDATE HRD_M_Karyawan SET  Kry_Nip = '"& nip &"', Kry_DDBID = '"& divisi &"', Kry_Sex='"& jkelamin &"',Kry_AgenID ='"& SubCabang &"', Kry_JabCode = '"& jabatan &"',Kry_JJID = '"& jenjang &"', Kry_Nama = '"& nama &"', Kry_Addr1 = '"& alamat &"', Kry_Addr2 = '"& kelurahan &"', Kry_Kota = '"& kota &"', Kry_KdPos = '"& pos &"', Kry_Telp1 = '"& tlp1 &"', Kry_Telp2 = '"& tlp2 &"', Kry_Fax ='"& email &"', Kry_TmpLahir = '"& tmpt &"', Kry_TglLahir = '"& tglL &"', Kry_SttSosial = '"& ssosial &"', Kry_JmlAnak ='"& janak &"', Kry_JmlSaudara ='"& saudara &"', Kry_AnakKe = '"& anakke &"', Kry_AgamaID = '"& agama &"', Kry_JDdkID = '"& pendidikan &"', Kry_NoID = '"& nKTP &"', Kry_NoSIM = '"& nsim &"', Kry_JnsSIM = '"& jsim &"', Kry_SIMValidDate = '"& berlakuSIM &"', Kry_JmlTanggungan = '"& tanggungan &"', Kry_JmlCuti = '"& jcuti &"', Kry_TglMasuk = '"& tglmasuk &"', Kry_tglKeluar = '"& tglkeluar &"', Kry_tglStartGaji =  '"&tglagaji &"', Kry_TglEndGaji = '"& tglegaji &"', Kry_BankID = '"& bankID &"', Kry_NoRekening = '"& norek &"', Kry_SttKerja = '"& spegawai &"', Kry_NPWP = '"& npwp &"', Kry_NoJamsostek = '"& jamsostek &"', Kry_BPJSYN = '"& bpjs &"', Kry_NoBPJS = '"& kesehatan &"' , Kry_Pegawai = '"& pegawai &"', Kry_BPJSKesYN = '"& bpjskes &"', Kry_atasanNip1 = '"& atasan1 &"', Kry_atasanNip2 = '"& atasan2 &"', Kry_JenisVaksin = '"& vaksin &"', Kry_golDarah = '"& goldarah &"' WHERE Kry_Nip = '"& nip &"'"
     ' Response.Write update.commandText
     update.execute
+
+    ' update log system
+    pket = "UPDATE " & rubahNama & rubahalamat & rubahkelurahan & rubahbpjs & rubahtelp1 & rubahtelp2 & rubahkota & rubahpos & rubahtlahir & rubahtglLahir & rubahfax & rubahagama & rubahsex & rubahsttsosial & rubahanak & rubahtanggungan & rubahpendidikan & rubahpegawai & rubahsaudara & rubahanake & rubahbankid & rubahnorek & rubahpgwi & rubahaID & rubahjbtn & rubahjenjang & rubahdivisi & rubahjcuti & rubahktp & rubahnpwp & rubahtglmasuk & rubahtglkeluar & rubahtglagaji & rubahegaji & rubahjsim & rubahnsim & rubahnobpjs & rubahjamsos & rubahsim & rubahbpjskes & rubahanip1 & rubahanip2 & rubahvaksin & rubahgoldarah & " DENGAN KARYAWAN ("& nip &") "
 
     'updateLog system
     tip = Request.ServerVariables("remote_addr") & " [" & session("lat") & "," & session("lon") & "]"
@@ -435,28 +421,28 @@ if not karyawan.eof then
 
 
     ' update bpjsYN
-    ' bpjs_cmd.commandText = "SELECT * FROM HRD_T_MutasiBPJS WHERE Mut_KRYNip = '"& nip &"' AND month(Mut_Tanggal) = '"& month(now) &"' AND year(Mut_tanggal) = '"& year(now) &"' AND Mut_AktifYN = 'Y'"
+    bpjs_cmd.commandText = "SELECT * FROM HRD_T_MutasiBPJS WHERE Mut_KRYNip = '"& nip &"' AND month(Mut_Tanggal) = '"& month(now) &"' AND year(Mut_tanggal) = '"& year(now) &"' AND Mut_AktifYN = 'Y'"
 
-    ' set bpjsAdd = bpjs_cmd.execute
+    set bpjsAdd = bpjs_cmd.execute
 
-    ' if bpjsAdd.eof then
-    '     bpjs_cmd.commandText = "exec sp_ADDHRD_T_MutasiBPJS "& pegawai &",'"& nip &"','"& bpjskes &"','"& bpjs &"','"& date &"','"& session("username") &"'"
-    '     ' Response.Write bpjs_cmd.commandText & "<br>"
+    if bpjsAdd.eof then
+        bpjs_cmd.commandText = "exec sp_ADDHRD_T_MutasiBPJS "& pegawai &",'"& nip &"','"& bpjskes &"','"& bpjs &"','"& date &"','"& session("username") &"'"
+        ' Response.Write bpjs_cmd.commandText & "<br>"
         
-    '     set bpjs = bpjs_cmd.execute
+        set bpjs = bpjs_cmd.execute
         
-    '     data = bpjs("ID")
+        data = bpjs("ID")
 
-    '     'updateLog system
-    '     ip = Request.ServerVariables("remote_addr") & " [" & session("lat") & "," & session("lon") & "]"
-    '     browser = Request.ServerVariables("http_user_agent")
-    '     dateTime = now()
-    '     eventt = "CREATE"
-    '     key = data
-    '     url = ""
+        'updateLog system
+        ip = Request.ServerVariables("remote_addr") & " [" & session("lat") & "," & session("lon") & "]"
+        browser = Request.ServerVariables("http_user_agent")
+        dateTime = now()
+        eventt = "CREATE"
+        key = data
+        url = ""
 
-    '     keterangan = "TAMBAH MUTASI BPJS KARYAWAN ("&nip&") DENGAN NOMOR " & data 
-    '     call updateLog(eventt,url,key,session("username"),session("server-id"),dateTime,ip,browser,keterangan) 
+        keterangan = "TAMBAH MUTASI BPJS KARYAWAN ("&nip&") DENGAN NOMOR " & data 
+        call updateLog(eventt,url,key,session("username"),session("server-id"),dateTime,ip,browser,keterangan) 
 
         
     ' else
@@ -475,7 +461,7 @@ if not karyawan.eof then
     '     keterangan = "UPDATE MUTASI BPJS KARYAWAN ("&nip&") DI PROSES " & NOW 
     '     call updateLog(eventt,url,key,session("username"),session("server-id"),dateTime,ip,browser,keterangan) 
 
-    ' end if
+    end if
     Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data tersimpan</span><img src='../../logo/berhasil_dakota.PNG'><a href='../index.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"
 else
     Response.Write "<div class='notiv-gagal' data-aos='fade-up'><span>Data Tidak Terdaftar</span><img src='../../logo/gagal_dakota.PNG'><a href='../index.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"

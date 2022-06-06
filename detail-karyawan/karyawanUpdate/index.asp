@@ -1,16 +1,5 @@
 <!-- #include file="../../connection.asp"-->
 <!--#include file="../../landing.asp"-->
-<!-- #include file='../../constend/constanta.asp' -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Karyawan</title>
-    <!--#include file="../../layout/header.asp"-->
-</head>
-<body>
 <% 
 
     Set karyawan_cmd = Server.CreateObject ("ADODB.Command")
@@ -62,7 +51,48 @@
     Set pendidikan_cmd = Server.CreateObject ("ADODB.Command")
     pendidikan_cmd.ActiveConnection = MM_cargo_STRING
 
- %>
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Karyawan</title>
+    <!--#include file="../../layout/header.asp"-->
+    <script>
+        function atasan(e,n){
+            if (e == ""){
+                $('.contentAtasan').hide();
+            }else{
+                $.get("atasan.asp?key="+e+"&n="+n,function(result){
+                    $('.contentAtasan').show();
+                    $('.contentAtasan').html(result);
+                });
+            }
+        }
+        function getAtasan(e,n){
+            const atasan1 = n == 1 ? $('#atasan1').val(e) : $('#atasan2').val(e);
+            $('.contentAtasan').hide();
+        }
+    </script>
+    <style>
+        .table{
+            margin-top:10px;
+            font-size:12px;
+            display:block;
+            height:15em;
+            width:100%;
+            overflow-y:scroll;
+            white-space: nowrap;
+        }
+        .table button{
+            max-width:20em;
+            font-size:10px;
+        }
+    </style>
+</head>
+<body>
 <!--judul-->
 <section class="content-detail" name="content-detail" id="content-detail">
 		<h3 class="text-center mt-3 mb-3">UPDATE DATA KARYAWAN</h3>
@@ -126,9 +156,9 @@
                         </div>
                         <br>
                         <label>Telphone 1</label>
-                            <input type="text" class="form-control" name="tlp1" id="tlp1" value="<%= karyawan("Kry_Telp1") %>">
+                            <input type="text" class="form-control" name="tlp1" id="tlp1" maxlength="12" value="<%= karyawan("Kry_Telp1") %>">
                         <label>Telphone 2</label>
-                            <input type="text" class="form-control" name="tlp2" id="tlp2" value="<%= karyawan("Kry_Telp2") %>">
+                            <input type="text" class="form-control" name="tlp2" id="tlp2" maxlength="12" value="<%= karyawan("Kry_Telp2") %>">
                         <div class="row">
                             <div class="col-6">
                                 <label>Kota</label>
@@ -136,7 +166,7 @@
                             </div>
                             <div class="col-6">
                                 <label>Pos</label>
-                                    <input type="text" class="form-control" name="pos" id="pos" value="<%= karyawan("Kry_KdPos") %>">
+                                    <input type="text" class="form-control" name="pos" id="pos" maxlength="5" value="<%= karyawan("Kry_KdPos") %>">
                             </div>
                         </div>
                     </div>
@@ -216,7 +246,7 @@
                                 else 
                                     Response.Write "Janda/Duda"
                                 end if
-                                 %> </option>
+                                %> </option>
                                 <option value="0">Belum Menikah</option>
                                 <option value="1">Menikah</option>
                                 <option value="2">Janda / Duda</option>
@@ -233,19 +263,18 @@
                         <input type="text" name="tanggungan" class="form-control" id="tanggungan" value="<%= karyawan("Kry_JmlTanggungan") %>">
                     </div>
                 </div>
-
                 <% 
-                pendidikan_cmd.commandText = "SELECT JDdk_Nama, JDdk_ID FROM HRD_M_JenjangDidik where JDdk_ID = '"& karyawan("Kry_JDdkID") &"'"
-				'response.write pendidikan_cmd.commandText & "<BR>"
-                set pendidikan = pendidikan_cmd.execute
+                    pendidikan_cmd.commandText = "SELECT JDdk_Nama, JDdk_ID FROM HRD_M_JenjangDidik where JDdk_ID = '"& karyawan("Kry_JDdkID") &"'"
+                    'response.write pendidikan_cmd.commandText & "<BR>"
+                    set pendidikan = pendidikan_cmd.execute
 
-                if not pendidikan.eof then
-                    idpddk = pendidikan("JDdk_ID")
-                    namepddk = pendidikan("JDdk_Nama")
-                else
-                    idpddk = ""
-                    namepddk = ""
-                end if
+                    if not pendidikan.eof then
+                        idpddk = pendidikan("JDdk_ID")
+                        namepddk = pendidikan("JDdk_Nama")
+                    else
+                        idpddk = ""
+                        namepddk = ""
+                    end if
                 %> 
                 <div class="row">
                     <div class="col-md-6">
@@ -307,19 +336,22 @@
                             <select class="form-select" aria-label="Default select example" value="<%= karyawan("Kry_BankID") %> " name="bankID" id="bankID">
                                 <option value="<%= karyawan("Kry_BankID") %>">
                                 <%
-                                    if karyawan("Kry_BankID") = 0 then
+                                    if karyawan("Kry_BankID") = 1 then
+                                        Response.Write "BCA"
+                                    elseIf karyawan("Kry_BankID") = 2 then
                                         Response.Write "Bank Central Asia (PST)"
-                                    elseIf karyawan("Kry_BankID") = 1 then
+                                    elseIf karyawan("Kry_BankID") = 3 then
                                         Response.Write "Mandiri"
                                     else
-                                        Response.Write "BCA"
+                                        Response.Write "" & "<br>"
                                     end if
                                 
                                 %>
                                 </option>
-                                <option value="0">Bank Central Asia (PST)</option>
-                                <option value="1">Mandiri</option>
-                                <option value="2">BCA</option>
+                                <option value="0">Pilih</option>
+                                <option value="1">BCA</option>
+                                <option value="2">Bank Central Asia (PST)</option>
+                                <option value="3">Mandiri</option>
                             </select>
                     </div>
                     <div class="col">
@@ -342,11 +374,16 @@
                 <div class="row">
                     <div class="col-6">
                         <label>Atasan 1</label>
-                            <input type="text" name="atasan1" class="form-control" id="atasan1" value ="<%= atasan1 %>" maxlength="10" autocomplete="off">
+                            <input type="text" name="atasan1" class="form-control" id="atasan1" value ="<%= atasan1 %>" maxlength="10" autocomplete="off" onkeyup="atasan(this.value,'1')">
                     </div>
                     <div class="col-6">
                         <label>Atasan 2</label>
-                            <input type="text" class="form-control" name="atasan2" id="atasan2" value="<%= atasan2 %>" maxlength="10" autocomplete="off">
+                            <input type="text" class="form-control" name="atasan2" id="atasan2" value="<%= atasan2 %>" maxlength="10" autocomplete="off" onkeyup="atasan(this.value,'2')">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col contentAtasan">
+
                     </div>
                 </div>
                 <%
@@ -356,6 +393,7 @@
                     area_cmd.commandText = "select agen_ID, agen_nama from glb_m_agen WHERE agen_ID = '"& karyawan("Kry_Pegawai")  &"' "
                     set pegawai = area_cmd.execute
                     
+                    ' kry_agenID
                     area_cmd.commandText = "select agen_ID, agen_nama from glb_m_agen WHERE agen_ID = '"& karyawan("Kry_AgenID") &"'"
                     set aktif = area_cmd.execute
 
@@ -365,6 +403,19 @@
                         aktifID = ""
                     end if
                 %>
+                <label>Sub Cabang</label>
+                <select class="form-select" aria-label="Default select example" name="ActiveId"  id="ActiveId">
+                    <option value="<%= karyawan("Kry_AgenID") %>"><%= aktifID %></option>
+                    <% 
+                    do until area.EOF
+                    %> 
+                        <option value="<%= area("agen_ID") %> "><%= area("agen_nama") %> </option>
+                    <% 
+                    area.movenext 
+                    loop
+                    area.movefirst 
+                    %> 
+                </select>
                 <label>Pegawai</label>
                     <select class="form-select" aria-label="Default select example" name="pegawai"  id="pegawai">
                         <option value="<%= pegawai("agen_ID") %>"><%= pegawai("agen_nama") %></option>
@@ -373,20 +424,8 @@
                         <% 
                         area.movenext 
                         loop
-                        area.movefirst  
-
                         %> 
                     </select>
-                <label>Sub Cabang</label>
-                <select class="form-select" aria-label="Default select example" name="ActiveId"  id="ActiveId">
-                    <option value="<%= karyawan("Kry_ActiveAgenID") %>"><%= aktifID %></option>
-                    <% 
-                    do until area.EOF
-                    %> 
-                        <option value="<%= area("agen_ID") %> "><%= area("agen_nama") %> </option>
-                    <% area.movenext 
-                    loop%> 
-                </select>
                 <% 
 
                     jabatan_cmd.commandText = "SELECT Jab_Code, Jab_Nama FROM HRD_M_Jabatan WHERE Jab_AktifYN = 'Y' ORDER BY Jab_Nama ASC"
@@ -518,12 +557,12 @@
                     </div>
                     <div class="col">
                         <label>Jenis SIM</label>
-                        <select class="form-select" aria-label="Default select example" name="jsim" id="jsim" value="<%=  karyawan("Kry_JnsSIM") %> ">
+                        <select class="form-select" aria-label="Default select example" name="jsim" id="jsim" value="<%= karyawan("Kry_JnsSIM") %>" >
 								<% if karyawan("Kry_JnsSIM") = "0" then%> 
 									<option value="0">A</option>
 								<% elseIf karyawan("Kry_JnsSIM") = "1" then %> 
 									<option value="1">B1</option>
-								<% elseIf karyawan("Kry_JnsSIM") = "2" then %> 
+								<% elseIf karyawan("Kry_JnsSIM") = "2" then %>  
 									<option value="2">B1 UMUM</option>
 								<% elseIf karyawan("Kry_JnsSIM") = "3" then %> 
 									<option value="3">A UMUM</option>
@@ -532,9 +571,9 @@
 								<% elseIf karyawan("Kry_JnsSIM") = "5" then %> 
 									<option value="5">C</option>
 								<% else %>
-									<option value="">PILIH</option>
+									<option value=-1></option>
 								<% end if %> 
-							
+							<option value=-1>Pilih</option>
                             <option value="0">A</option>
                             <option value="1">B1</option>
 							<option value="2">B1 UMUM</option>
@@ -556,7 +595,7 @@
                     <div class="col-6">
                         <label>Golongan Darah</label>
                         <select class="form-select" aria-label="Default select example" name="goldarah" id="goldarah">
-                            <%if karyawan.eof then %>
+                            <%if karyawan("Kry_golDarah") = "" then %>
                                 <option value="">Pilih</option>
                             <%else%>
                                 <option value="<%= karyawan("Kry_golDarah") %>"><%=karyawan("Kry_golDarah")%></option>

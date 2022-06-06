@@ -43,9 +43,6 @@ end if
 
     set nip = Request.QueryString("nip")
 
-    ' karyawan_cmd.commandText ="SELECT * from HRD_M_Karyawan where Kry_Nip = '" & nip & "' "
-    ' set karyawan = karyawan_cmd.execute
-
     karyawan_cmd.commandText = "SELECT HRD_M_Karyawan.*, GLB_M_Agama.Agama_Nama, HRD_M_JenjangDidik.JDdk_Nama, Gl_M_Bank.Bank_Name, HRD_M_Jabatan.Jab_Nama, HRD_M_Jenjang.JJ_Nama, HRD_M_Divisi.Div_Nama, (GLB_M_Agen.Agen_nama) AS pegawai FROM HRD_M_Karyawan LEFT OUTER JOIN GLB_M_Agama ON HRD_M_Karyawan.Kry_AgamaID = GLB_M_Agama.Agama_ID LEFT OUTER JOIN HRD_M_JenjangDidik ON HRD_M_Karyawan.Kry_JDdkID = HRD_M_JenjangDidik.JDdk_ID LEFT OUTER JOIN GL_M_Bank ON HRD_M_Karyawan.Kry_BankID = GL_M_Bank.Bank_ID LEFT OUTER JOIN HRD_M_Jabatan ON HRD_M_Karyawan.Kry_JabCode = HRD_M_Jabatan.Jab_Code LEFT OUTER JOIN HRD_M_Jenjang ON HRD_M_Karyawan.Kry_JJID = HRD_M_Jenjang.JJ_ID LEFT OUTER JOIN HRD_M_Divisi ON HRD_M_Karyawan.Kry_DDBID = HRD_M_Divisi.Div_COde INNER JOIN GLB_M_Agen ON HRD_M_Karyawan.Kry_Pegawai = GLB_M_Agen.Agen_ID WHERE HRD_M_Karyawan.Kry_Nip = '"& nip &"' "
     'response.write karyawan_cmd.commandText & "<BR>"
     set karyawan = karyawan_cmd.execute
@@ -214,7 +211,7 @@ end if
             </div>
             <div class="row">
                 <div class="col">
-                    <label>Bank Id</label>
+                    <label>Bank</label>
                     <input type=text name="Bank Id" class="form-control" id="Bank Id" value="<%=karyawan("Bank_name")%>" readonly> 
                 </div>
                 <div class="col">
@@ -244,12 +241,6 @@ end if
                     <input type="text" class="form-control" name="atasan2" id="atasan2" value="<%= karyawan("Kry_atasanNip2") %>" readonly>
             </div>
         </div>
-        <label>Pegawai</label>
-            <% if not karyawan.eof then %>
-                <input type=text name="pegawai" class="form-control" id="pegawai" value="<%= karyawan("pegawai") %>" readonly>
-            <% else %>
-                <input type=text name="pegawai" class="form-control" id="pegawai" value="" readonly>
-            <% end if %>
         <label>Sub Cabang</label>
             <%
                 pegawai_cmd.commandText = "select agen_nama from glb_m_agen where agen_ID = '"& karyawan("Kry_AgenID") &"' "
@@ -271,6 +262,13 @@ end if
                 end if
             %>
             <input type=text name="ActiveId" class="form-control" id="ActiveId" value="<%= cabang %>" readonly>
+        <label>Pegawai</label>
+            <% if not karyawan.eof then %>
+                <input type=text name="pegawai" class="form-control" id="pegawai" value="<%= karyawan("pegawai") %>" readonly>
+            <% else %>
+                <input type=text name="pegawai" class="form-control" id="pegawai" value="" readonly>
+            <% end if %>
+        
             <label>Jabatan</label>
                 <input type=text name="Jabatan" class="form-control" id="Jabatan" value="<%=jabatan%>" readonly>
             <label>Jenjang</label>
@@ -332,7 +330,7 @@ end if
                         <input type="text" name="berlalkusim" class="form-control" id="berlalkusim" <% if  karyawan("Kry_SIMValidDate") = "1/1/1900" then %> value="" <% else %> value="<%= karyawan("Kry_SIMValidDate") %>" <% end if %> readonly>
                 </div>
                 <div class="col">
-                    <label>Jenis SIM</label>
+                    <label>Jenis SIM</label>    
                         <% if karyawan("Kry_JnsSIM") = "0" then%> 
                             <input type="text" name="jsim" class="form-control" id="jsim" value="A" readonly>
                         <% elseIf karyawan("Kry_JnsSIM") = "1" then %> 

@@ -1,5 +1,4 @@
 <!-- #include file="../connection.asp"-->
-<!--#include file="../constend/constanta.asp"-->
 <% 
 if session("username") = "" then
 response.Redirect("../login.asp")
@@ -341,7 +340,7 @@ loop
 			</table>
 		</div>
 	</div>
-		 <!-- paggination -->
+		<!-- paggination -->
 		<nav aria-label="Page navigation example">
 		
 			<ul class="pagination">
