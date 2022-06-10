@@ -56,7 +56,6 @@
         ' Response.Write cuti_cmd.commandText & "<br>"
         set najuan = cuti_cmd.execute
 
-
         ajuancuti = 0
         do while not najuan.eof
             ajuancuti = ajuancuti + (najuan("notcuti")+ 1)
@@ -159,9 +158,7 @@
                         <th scope="col">Status</th>
                         <th scope="col">Keterangan</th>
                         <th scope="col">Potong</th>
-                        <th scope="col">Biaya Pengobatan</th>
                         <th scope="col">Aktif</th>
-                        <th scope="col">Tanpa Form</th>
                         <th scope="col">Atasan 1</th>
                         <th scope="col">Atasan 2</th>
                         <th scope="col">Surat Dokter</th>
@@ -234,9 +231,7 @@
                                 <label class="form-check-label" for="inlineCheckbox3">Cuti</label>
                             </div>
                         </td>
-                        <td><%=cuti("ICS_Obat")%></td>
                         <td class="text-center"><%=aktif%></td>
-                        <td class="text-center"><%=surat%></td>
                         <% 
                         if cuti("ICS_AtasanApproveYN") = "Y" then
                         %>
@@ -372,17 +367,9 @@
                 </div>
             </div>        
             <div class="mb-3 row">
-                <label for="sform" class="col-sm-4 col-form-label">Form</label>
-                <div class="col-sm-5">
-                    <div class="form-check form-check-inline gaji">
-                        <input class="form-check-input" type="checkbox" name="sform" id="sform">
-                    </div>
-                </div>
-            </div>        
-            <div class="mb-3 row">
                 <label for="ket" class="col-sm-4 col-form-label">Keterangan</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" name="ket" id="ket" autocomplete="off" placeholder="keterangan" required>
+                    <input type="text" class="form-control" name="ket" id="ket" autocomplete="off" placeholder="keterangan" maxlength="50" required>
                 </div>
             </div>        
             <div class="mb-3 row">
@@ -414,7 +401,7 @@
                 <label for="atasanUpper" class="col-sm-4 col-form-label">Atasan Kedua</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" name="atasanUpper" id="atasanUpper" placeholder="nip atasan kedua" autocomplete="off"  <% if not karyawan.eof then %> value="<%= karyawan("Kry_atasanNip2") %>" <% else %> value="" <% end if %> onkeyup="return cariAtasan2(this.value)">
-                     <!--set tampil atasan 2-->
+                    <!--set tampil atasan 2-->
                     <img src="../loader/newloader.gif" id="loader1" style="width:70px;margin-left:10px;display:none;">
                     <div class='tampilAtasan2'  style="overflow-x:scroll;">
 
@@ -434,14 +421,14 @@
                     </div>
                 </div>
             </div>        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" name="submit"  id="submit" class="btn btn-primary btnModal">Save</button>
-        </form>
-      </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" name="submit"  id="submit" class="btn btn-primary btnModal">Save</button>
+            </form>
+        </div>
     </div>
-  </div>
+    </div>
 </div>
 <script>
     let tgllama;
@@ -503,12 +490,6 @@
                     $('#tgla').val(arry[1]);
                     $('#tgle').val(arry[2]);
                     
-                    // if ($("#atasan").val() == ""){
-                    //     $('#atasan').val(arry[5]);
-                    // }
-                    // if ($("#atasanUpper").val() == ""){
-                    //     $('#atasanUpper').val(arry[12]);
-                    // }
                         this.tgllama = arry[1];
                         this.tglbaru = arry[2];
                         this.atasan = $("#atasan").val();
@@ -558,10 +539,9 @@
         const diffTime = Math.abs(date2 - date1);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
         let totalajuan
-        
         // checkbox cuti
         let cuti = $('#pcuti').is(":checked");
-
+        
         // cek tanggal lama jika di update 
         if (this.tgllama == 0 || this.tglbaru == 0 ){
             totalajuan = ajuancuti + diffDays;
@@ -573,40 +553,13 @@
             let mindiffDays = diffDays - 1;
             totalajuan = (ajuancuti - diffDaysLast) + mindiffDays;
         }  
+
         if ( $("#cutimaster").val() != 0 ){
             if ( date1.getTime() > date2.getTime() ){
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'BULAN KEDUA ANDA SALAH PILIH',
-                });
-                return false;
-            }else if (saldocuti == 0 && cuti == true){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'SALDO CUTI ANDA HABIS!!',
-                });
-                return false;
-            }else if ( totalajuan > saldocuti && cuti == true){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Pengajuan Cuti Melebihi Batas!',
-                });
-                return false;
-            }else if ( diffDays > saldocuti && cuti == true ){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'SALDO CUTI ANDA TIDAK CUKUP!!',
-                });
-                return false;
-            }else if ( ket > 50 ){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'MAXIMAL KETERANGAN 50 CHARAKTER',
                 });
                 return false;
             }else{
@@ -617,8 +570,8 @@
                 }
             }
         }else{
-            let formInput = $("#form-cuti").serialize();
-            let url = $("#form-cuti").attr('action');
+            let formInput = $("#form-cuti").serialize(); //mengambil smua data yang ada di form
+            let url = $("#form-cuti").attr('action'); //mengambil action pada form
 
             const value = formInput;
             const newValue = value.split("&");
@@ -645,7 +598,7 @@
             let sform = postData.sform;
             let ket = postData.ket.replace(/%20/g, " ");
             let bpengobatan = postData.bpengobatan;
-
+       
             if ( date1.getTime() > date2.getTime() ){
                 Swal.fire({
                     icon: 'error',
@@ -653,21 +606,12 @@
                     text: 'BULAN KEDUA ANDA SALAH PILIH',
                 });
                 return false;
-            }else if ( cuti == true ){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'ANDA SALAH MEMILIH POTONGAN',
-                });
-                return false;
-            }else if ( ket > 50 ){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'MAXIMAL KETERANGAN 50 CHARAKTER',
-                });
-                return false;
             }else{
+                // if (confirm("YAKIN DATA INGIN DIRUBAH??") == true ){
+                //     return true;
+                // }else{
+                //     return false;
+                // }
                 Swal.fire({
                 title: 'Anda Yakin?',
                 text: "Pastikan Semua data sudah benar!",
@@ -687,13 +631,11 @@
                             tgle:tgle, 
                             status:status, 
                             pgaji:pgaji, 
-                            sform:sform, 
                             ket:ket, 
                             atasan:atasan, 
                             atasanApproveYN:atasanApproveYN,
                             atasanUpper:atasanUpper, 
                             atasanUpperApproveYN:atasanUpperApproveYN, 
-                            bpengobatan:bpengobatan 
                         },
                         function(data,status){
                             location.reload();

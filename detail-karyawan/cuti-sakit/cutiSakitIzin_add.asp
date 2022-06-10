@@ -28,12 +28,6 @@ pcuti = request.form("pcuti")
     else 
         pcuti = "N" 
     end if 
-sform = request.form("sform")
-    if sform <> "" then 
-        sform = "Y" 
-    else 
-        sform = "N"
-    end if 
 ket = request.form("ket")
 bpengobatan = request.form("bpengobatan")
 
@@ -88,44 +82,42 @@ interval = cint(DateDiff("d",tgla,tgle) + 1)
         if not cuti.eof then
             Response.Write "<div class='gagalSaldo'>GAGAL</div>"
         else
-            cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& tgla &"','"& tgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"','0', '"& pcuti &"','"& pgaji &"', '"& sform &"',''"
+            cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& tgla &"','"& tgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"','0', '"& pcuti &"','"& pgaji &"', 'Y',''"
             ' Response.Write cuti_add.commandText
             cuti_add.execute
             
             Response.Write "<div class='gagalSaldo'>BERHASIL</div>"
         end if
     else
-        if interval > sisacuti and pgaji = "Y" and pcuti = "Y" then
-            totalhari = interval - sisacuti
-            ' set date for potgaji
-            dpotcuti = dateadd("d",totalhari,tgla)
-            dpotgaji = dateadd("d",totalhari,tgla) - 1
-
-
-            ' store potongan cuti
-            cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& dpotcuti &"','"& tgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"','0', '"& pcuti &"','N', '"& sform &"',''"
-            ' Response.Write cuti_add.commandText & "<br>"
-            cuti_add.execute
-            
-            ' store potongan gaji
-            cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& tgla &"','"& dpotgaji &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"','0', 'N','"& pgaji &"', '"& sform &"',''"
-            ' Response.Write cuti_add.commandText & "<br>"
-            cuti_add.execute
-                
-            Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data tersimpan</span><img src='../../logo/berhasil_dakota.PNG'><a href='"& url &"/detail-karyawan/cutiSakitIzin.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"
-        elseif sisacuti = 0 and pcuti = "Y" then
+        if sisacuti = 0 and pcuti = "Y" then
             Response.Write "<div class='notiv-gagal' data-aos='fade-up'><span>Saldo Sudah Habis</span><img src='../../logo/gagal_dakota.PNG'><a href='"& url &"/detail-karyawan/cutiSakitIzin.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"
-        elseIf interval > sisacuti and pcuti = "Y" then
-            Response.Write "<div class='notiv-gagal' data-aos='fade-up'><span>Saldo Tidak Mencukupi</span><img src='../../logo/gagal_dakota.PNG'><a href='"& url &"/detail-karyawan/cutiSakitIzin.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"
         else
             if not cuti.eof then
                 Response.Write "<div class='notiv-gagal' data-aos='fade-up'><span>Data Sudah Terdaftar</span><img src='../../logo/gagal_dakota.PNG'><a href='"& url &"/detail-karyawan/cutiSakitIzin.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"
             else
-                cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& tgla &"','"& tgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"','0', '"& pcuti &"','"& pgaji &"', '"& sform &"',''"
-                ' Response.Write cuti_add.commandText
-                cuti_add.execute
-                
-                Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data tersimpan</span><img src='../../logo/berhasil_dakota.PNG'><a href='"& url &"/detail-karyawan/cutiSakitIzin.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"
+                if interval > sisacuti and pcuti = "Y" then
+                    ' cek jika interval cuti yang diambil melebihi sisa saldo cuti
+                    newTgle = DateAdd("d",sisacuti,tgla) - 1 'tgle baru untuk interval pertama potong cuti
+                    newTgla = newtgle + 1
+                    
+                    ' store potongan cuti
+                    cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& tgla &"','"& newTgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"','0', '"& pcuti &"','N', 'Y',''"
+
+                    cuti_add.execute
+                    
+                    ' store potongan gaji
+                    cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& newTgla &"','"& tgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"','0', 'N','Y', 'Y',''"
+
+                    cuti_add.execute
+                        
+                    Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data tersimpan</span><img src='../../logo/berhasil_dakota.PNG'><a href='"& url &"/detail-karyawan/cutiSakitIzin.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"  
+                else
+                    cuti_add.commandText = "exec sp_ADDHRD_T_IzinCutiSakit '"& key &"','"& nip &"','"& tgla &"','"& tgle &"','"& status &"','"& ket &"','"& atasan &"','"& atasanApproveYN &"','"& atasanUpper &"','"& atasanUpperApproveYN &"','0', '"& pcuti &"','"& pgaji &"', 'Y',''"
+
+                    cuti_add.execute
+                    
+                    Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data tersimpan</span><img src='../../logo/berhasil_dakota.PNG'><a href='"& url &"/detail-karyawan/cutiSakitIzin.asp?nip="& nip &"' class='btn btn-primary'>kembali</a></div>"
+                end if
             end if
         end if
     end if
