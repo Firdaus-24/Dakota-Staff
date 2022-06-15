@@ -16,7 +16,7 @@
     set user_id = Server.CreateObject("ADODB.Command")
     user_id.activeConnection = MM_Cargo_string
 
-    user_id.commandText = "SELECT username, ServerID FROM webLogin"
+    user_id.commandText = "SELECT username, ServerID,user_AktifYN FROM webLogin"
     set user = user_id.execute
 
 %>
@@ -130,7 +130,17 @@
                         <th scope="row"><%= i %></th>
                         <td><%=user("username")%></td>
                         <td><%=user("ServerID")%></td>
-                        <td><a href="<%=url%>/hakakses/checkakses.asp?username=<%=user("username")%>&serverid=<%=user("serverID")%>"><span class="badge rounded-pill bg-primary">Update</span></td>
+                        <td>
+                            <a href="<%=url%>/hakakses/checkakses.asp?username=<%=user("username")%>&serverid=<%=user("serverID")%>">
+                            <span class="badge rounded-pill bg-primary">Update</span></a>
+                            <% 
+                                if user("user_AktifYN")  = "Y" then
+                            %>
+                                <a href="<%=url%>/hakakses/aktifYN.asp?username=<%=user("username")%>&serverid=<%=user("serverID")%>"><span class="badge rounded-pill bg-danger">Non Aktif</span></a>
+                            <% else %>
+                                <a href="<%=url%>/hakakses/aktifYN.asp?username=<%=user("username")%>&serverid=<%=user("serverID")%>"><span class="badge rounded-pill bg-warning"> Aktif</span></a>
+                            <% end if %>
+                        </td>
                     </tr>
                     <% 
                     user.movenext

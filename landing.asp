@@ -56,7 +56,7 @@
           </a>
           <% end if %>
         </li>
-        <%if session("HA8") = true then%>
+        <%if session("HT1") = true OR session("HT2") = true OR session("HT3") = true OR session("HT4") = true then%>
         <li class="icon-item">
           <a href="<%=url%>/transaksi" class="icon-link">            
             <i class="fa fa-cog" aria-hidden="true"></i>TRANSAKSI
