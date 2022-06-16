@@ -266,6 +266,12 @@
                         </select>
                     </div>
                 </div>
+                <div class="mb-3 row">
+                    <label for="agenlama" class="col-sm-2 col-form-label">Penggajian Di-</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="labelAgen" name="labelAgen" value="<%= asalagen("Agen_Nama") %>" readonly>
+                    </div>
+                </div>
                 <!--end deskripsi -->
 
                 <div class='mb-3 row'>

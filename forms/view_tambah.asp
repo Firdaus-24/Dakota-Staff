@@ -31,7 +31,7 @@
                 let nama = $("#nama").val().replace('%20',' ');
                 // if (nama != ''){
                     $(".openName").show();
-                    $( ".openName" ).load( "cariNama.asp?key=" + nama);
+                    $( ".openName" ).load( "cariNama.asp?key=" + nama.toLowerCase());
                 // }
             });
         });
@@ -48,6 +48,7 @@
             $("#labeljj").val(jj);
             $("#labeldiv").val(div);
             $("#labelAgen").val(agen);
+            $("#labelgaji").val(agen);
         }
         function validateRadio (radios)
         {
@@ -237,7 +238,7 @@
                 <div class="mb-3 row">
                     <label for="agenlama" class="col-sm-2 col-form-label">Area Lama</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="labelAgen" name="labelAgen" readonly>
+                        <input type="text" class="form-control" id="labelgaji" name="labelgaji" readonly>
                         <input type="hidden" class="form-control" id="agenlama" name="agenlama" readonly>
                     </div>
                     <label for="agen" class="col-sm-2 col-form-label">Area Baru</label>
@@ -253,8 +254,13 @@
                         </select>
                     </div>
                 </div>
+                <div class="mb-3 row">
+                    <label for="agenlama" class="col-sm-2 col-form-label">Penggajian Di-</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="labelAgen" name="labelAgen" readonly>
+                    </div>
+                </div>
                 <!--end deskripsi -->
-
                 <div class='mb-3 row'>
                     <label for="nip" class="col-sm-2 col-form-label">Catatan/Memo</label>
                     <div class="col-sm-10">

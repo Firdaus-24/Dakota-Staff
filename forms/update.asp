@@ -39,37 +39,37 @@ mutasi.ActiveConnection = MM_cargo_STRING
 set karyawan = Server.CreateObject("ADODB.Command")
 karyawan.ActiveConnection = MM_cargo_STRING
 
-mutasi.commandText = "SELECT * FROM HRD_T_Mutasi WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"' AND month(Mut_tanggal) = '"& month(pengajuan) &"' AND Year(Mut_tanggal) = '"& year(pengajuan) &"' AND Mut_Status = '"& radioStatus &"' AND Mut_NoSurat = '"& nomor &"' AND Mut_AsalAgenID = '"& agenlama &"' AND Mut_AsalJabCode = '"& jablama &"' AND Mut_AsalJJID = '"& jjlama &"' AND Mut_AsalDDBID = '"& divlama &"' AND Mut_tujAgenID = '"& agen &"' AND Mut_TujJabCode = '"& jabatan &"' AND Mut_TujJJID = '"& jenjang &"' AND Mut_TujDDBID = '"& divisi &"' AND Mut_Memo = '"& catatan &"'"
+mutasi.commandText = "SELECT * FROM HRD_T_Mutasi WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
 ' Response.Write mutasi.commandText & "<br>"
 set mutasilama = mutasi.execute
 
-if mutasilama.eof then
+if not mutasilama.eof then
     if radioStatus = "" then
-        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_Nip = '"& nip &"', Mut_Tanggal = '"& pengajuan &"', Mut_Status = '', Mut_NoSurat = '"& nomor &"', Mut_Memo = '"& catatan &"', Mut_TujAgenId = '"& agen &"', Mut_TujJabCode = '"& jabatan &"', Mut_TujJJID = '"& jenjang &"', Mut_TujDDBID = '"& divisi &"' WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
+        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_Tanggal = '"& pengajuan &"', Mut_Status = '', Mut_NoSurat = '"& nomor &"', Mut_Memo = '"& catatan &"', Mut_TujAgenId = '"& agen &"', Mut_TujJabCode = '"& jabatan &"', Mut_TujJJID = '"& jenjang &"', Mut_TujDDBID = '"& divisi &"' WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
         ' Response.Write mutasi.commandText & "<BR>"
         mutasi.execute
 
     elseIf radioStatus = "1" then
         'karyawan demosi
-        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_Nip = '"& nip &"', Mut_Tanggal = '"& pengajuan &"', Mut_Status = '1', Mut_NoSurat = '"& nomor &"', Mut_Memo = '"& catatan &"', Mut_TujAgenId = '"& agen &"', Mut_TujJabCode = '"& jabatan &"', Mut_TujJJID = '"& jenjang &"', Mut_TujDDBID = '"& divisi &"', Mut_DemosiYN = 'Y' WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
+        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_Tanggal = '"& pengajuan &"', Mut_Status = '1', Mut_NoSurat = '"& nomor &"', Mut_Memo = '"& catatan &"', Mut_TujAgenId = '"& agen &"', Mut_TujJabCode = '"& jabatan &"', Mut_TujJJID = '"& jenjang &"', Mut_TujDDBID = '"& divisi &"', Mut_DemosiYN = 'Y' WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
 
         mutasi.execute
 
     elseIf radioStatus = "2" then
         'karyawan rotasi
-        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_Nip = '"& nip &"', Mut_Tanggal = '"& pengajuan &"', Mut_Status = '2', Mut_NoSurat = '"& nomor &"', Mut_Memo = '"& catatan &"', Mut_TujAgenId = '"& agen &"', Mut_TujJabCode = '"& jabatan &"', Mut_TujJJID = '"& jenjang &"', Mut_TujDDBID = '"& divisi &"' WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
+        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_Tanggal = '"& pengajuan &"', Mut_Status = '2', Mut_NoSurat = '"& nomor &"', Mut_Memo = '"& catatan &"', Mut_TujAgenId = '"& agen &"', Mut_TujJabCode = '"& jabatan &"', Mut_TujJJID = '"& jenjang &"', Mut_TujDDBID = '"& divisi &"' WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
 
         mutasi.execute
 
     elseIf radioStatus = "3" then
         'karyawan promorsi
-        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_Nip = '"& nip &"', Mut_Tanggal = '"& pengajuan &"', Mut_Status = '3', Mut_NoSurat = '"& nomor &"', Mut_Memo = '"& catatan &"', Mut_TujAgenId = '"& agen &"', Mut_TujJabCode = '"& jabatan &"', Mut_TujJJID = '"& jenjang &"', Mut_TujDDBID = '"& divisi &"', Mut_DemosiYN = 'N' WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
+        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_Tanggal = '"& pengajuan &"', Mut_Status = '3', Mut_NoSurat = '"& nomor &"', Mut_Memo = '"& catatan &"', Mut_TujAgenId = '"& agen &"', Mut_TujJabCode = '"& jabatan &"', Mut_TujJJID = '"& jenjang &"', Mut_TujDDBID = '"& divisi &"', Mut_DemosiYN = 'N' WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
 
         mutasi.execute
 
     elseIf radioStatus = "4" then
         'karyawan pensiun
-       mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_Nip = '"& nip &"', Mut_Tanggal = '"& pengajuan &"', Mut_Status = '4', Mut_NoSurat = '"& nomor &"', Mut_Memo = '"& catatan &"', Mut_TujAgenId = '"& agen &"', Mut_TujJabCode = '"& jabatan &"', Mut_TujJJID = '"& jenjang &"', Mut_TujDDBID = '"& divisi &"' WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
+        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_Tanggal = '"& pengajuan &"', Mut_Status = '4', Mut_NoSurat = '"& nomor &"', Mut_Memo = '"& catatan &"', Mut_TujAgenId = '"& agen &"', Mut_TujJabCode = '"& jabatan &"', Mut_TujJJID = '"& jenjang &"', Mut_TujDDBID = '"& divisi &"' WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
 
         mutasi.execute
 
@@ -77,7 +77,7 @@ if mutasilama.eof then
         karyawan.execute
     elseIf radioStatus = "5" then
         'karyawan keluartanpa kabar 
-        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_Nip = '"& nip &"', Mut_Tanggal = '"& pengajuan &"', Mut_Status = '5', Mut_NoSurat = '"& nomor &"', Mut_Memo = '"& catatan &"', Mut_TujAgenId = '"& agen &"', Mut_TujJabCode = '"& jabatan &"', Mut_TujJJID = '"& jenjang &"', Mut_TujDDBID = '"& divisi &"' WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
+        mutasi.commandText = "UPDATE HRD_T_Mutasi SET Mut_Tanggal = '"& pengajuan &"', Mut_Status = '5', Mut_NoSurat = '"& nomor &"', Mut_Memo = '"& catatan &"', Mut_TujAgenId = '"& agen &"', Mut_TujJabCode = '"& jabatan &"', Mut_TujJJID = '"& jenjang &"', Mut_TujDDBID = '"& divisi &"' WHERE Mut_ID = '"& key &"' AND Mut_Nip = '"& nip &"'"
 
         mutasi.execute
 
@@ -113,20 +113,7 @@ if mutasilama.eof then
 
     Response.Write "<div class='notiv-berhasil' data-aos='fade-up'><span>Data tersimpan</span><img src='../logo/berhasil_dakota.PNG'><a href='index.asp' class='btn btn-primary'>kembali</a></div>"
 else
-    Response.Write "<div class='notiv-gagal' data-aos='fade-up'><span>Data Sudah Terdaftar</span><img src='../logo/gagal_dakota.PNG'><a href='index.asp' class='btn btn-primary'>kembali</a></div>"
+    Response.Write "<div class='notiv-gagal' data-aos='fade-up'><span>Data Tidak Terdaftar</span><img src='../logo/gagal_dakota.PNG'><a href='index.asp' class='btn btn-primary'>kembali</a></div>"
 end if
- %>
- 
-<%
-
-' 'updateLog system
-' ip = Request.ServerVariables("remote_addr") & " [" & session("lat") & "," & session("lon") & "]"
-' browser = Request.ServerVariables("http_user_agent")
-' dateTime = now()
-' eventt = "CREATE"
-' key = aID
-' url = ""
-' call updateLog(eventt,url,key,session("username"),session("server-id"),dateTime,ip,browser)
-
 %>
- <!-- #include file='../layout/footer.asp' -->
+<!-- #include file='../layout/footer.asp' -->
