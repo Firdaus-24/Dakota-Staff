@@ -1,6 +1,3 @@
-
-
-
 <%
 
 Function updateLog(eventt,access,key,user,cabang,datetime,ip,browser,keterangan)
